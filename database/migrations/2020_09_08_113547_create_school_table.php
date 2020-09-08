@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSchoolsTable extends Migration
+class CreateSchoolTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateSchoolsTable extends Migration
      */
     public function up()
     {
-        Schema::table('schools', function (Blueprint $table) {
+        Schema::create('schools', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->string('name');
             $table->enum('school_stages',['nursery','KG','Primary','Secondary']);
             $table->enum('school_certificate',['National','IGCSE','SAT','IB']);
@@ -26,7 +27,6 @@ class CreateSchoolsTable extends Migration
             $table->text('description');
             $table->boolean('is_approved');
             $table->year('establishing_year');
-            $table->timestamps();
             //admin
             //facilities,urls,images
         });
@@ -39,8 +39,6 @@ class CreateSchoolsTable extends Migration
      */
     public function down()
     {
-        Schema::table('schools', function (Blueprint $table) {
-            Schema::dropIfExists('schools');
-        });
+        Schema::dropIfExists('schools');
     }
 }

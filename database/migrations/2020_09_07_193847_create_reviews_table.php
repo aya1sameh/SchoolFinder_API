@@ -20,6 +20,9 @@ class CreateReviewsTable extends Migration
             $table->text('description');
             $table->tinyInteger('rating');	
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
 

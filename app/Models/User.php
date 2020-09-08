@@ -37,4 +37,34 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //this user role is any but NOT app admin role
+    public function question_posts(){
+        //return $this->hasMany(Qpost::class);
+    }
+
+    //this user role is app admin role
+    public function announcment_posts(){
+        //return $this->hasMany(Apost::class);
+    }
+
+    public function comments(){
+        //return $this->hasMany(Comment::class);
+    }
+
+    public function reviews(){
+        //return $this->hasMany(Review::class);
+    }
+
+    public function notifications(){
+        //return $this->hasMany(Notification::class);
+    }
+
+    //there are two types of user_id here:
+    //1.written by user->school finder client role
+    //2.send to user->school admin role
+    public function messages(){
+        //return $this->hasMany(Message::class);
+    }
+
 }

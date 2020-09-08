@@ -17,6 +17,9 @@ class CreateFavoriteSchoolsTable extends Migration
             //is just a many:many rel table bet users and schools
             $table->bigInteger('user_id');
             $table->bigInteger('school_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
 

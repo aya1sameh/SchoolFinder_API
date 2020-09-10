@@ -17,8 +17,6 @@ class CreateSchoolTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->enum('school_stages',['nursery','KG','Primary','Secondary']);
-            $table->enum('school_certificate',['National','IGCSE','SAT','IB']);
             $table->enum('gender',['Mix','Girls Only','Boys Only']);
             $table->string('language');
             $table->string('address');
@@ -28,7 +26,7 @@ class CreateSchoolTable extends Migration
             $table->boolean('is_approved');
             $table->year('establishing_year');
             //admin
-            //facilities,urls,images
+            //facilities,urls
         });
     }
 

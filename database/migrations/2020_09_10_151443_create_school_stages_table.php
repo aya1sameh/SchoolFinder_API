@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReviewsTable extends Migration
+class CreateSchoolStagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('school_id');
-            $table->text('description');
-            $table->tinyInteger('rating');	
+        Schema::create('school_stages', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
+            $table->enum('stage',['nursery','KG','Primary','Secondary']);
+            $table->unsignedBigInteger('school_id');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
@@ -33,6 +31,6 @@ class CreateReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('school_stages');
     }
 }

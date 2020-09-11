@@ -39,6 +39,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function favoriteSchoolList()
+    {
+        return $this->hasOne('App\Models\FavoriteSchoolsList');
+    }
     //this user role is any but NOT app admin role
     public function question_posts(){
         //return $this->hasMany(Qpost::class);

@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 })->middleware('verified');
 
 
-Route::apiResource('user','User\UserController');
+Route::apiResource('user','User\UserController')->middleware('client');
 
+Route::apiResource('review','ReviewsController')->middleware('client');
 

@@ -15,11 +15,11 @@ class CreateFavoriteSchoolsTable extends Migration
     {
         Schema::create('favorite_schools', function (Blueprint $table) {
             //is just a many:many rel table bet users and schools
-            $table->bigInteger('user_id');
-            $table->bigInteger('school_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('school_id');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); 
+           // $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');//providing an error "Foreign key constraint is incorrectly formed"
         });
     }
 

@@ -14,10 +14,12 @@ class CreateAdsTable extends Migration
     public function up()
     {
         Schema::create('Ads',function(Blueprint $table){
-            $table->increments('Ad_id');
-            $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            
             $table->text('Ad_Content');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
             
         });
     }

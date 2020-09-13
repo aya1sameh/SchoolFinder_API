@@ -14,9 +14,10 @@ class CreateCommunityPostsTable extends Migration
     public function up()
     {
         Schema::create('Community_posts', function (Blueprint $table) {
-            $table->increments('CommunityPost_id');
+            $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
-            $table->text('CommunityPost_Content');
+            $table->text('CommunityPost_Content'); //will be updated later for the fancy stuff
             $table->timestamps();
         });
     }

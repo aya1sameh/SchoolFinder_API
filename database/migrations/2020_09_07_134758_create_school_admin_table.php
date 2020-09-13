@@ -15,8 +15,8 @@ class CreateSchoolAdminTable extends Migration
     {
         Schema::create('school_admin', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->bigInteger('school_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('school_id');
             $table->string('position_in_school');
             $table->timestamps();
         });

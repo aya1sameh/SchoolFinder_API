@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLikesOfQuestionPostsTable extends Migration
+class CreateAdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateLikesOfQuestionPostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('likes_of_question_posts', function (Blueprint $table) {
+        Schema::create('Ads',function(Blueprint $table){
+            $table->increments('Ad_id');
             $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
-            $table->foreign('QuestionPost_id')->references('QuestionPost_id')->on('question_posts')->onDelete('cascade');///relation with the AnnounPost table
+            $table->text('Ad_Content');
+            $table->timestamps();
+            
         });
     }
 
@@ -26,6 +29,6 @@ class CreateLikesOfQuestionPostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('likes_of_question_posts');
+        Schema::dropIfExists('Ads');
     }
 }

@@ -12,6 +12,10 @@ class Review extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'school_id', 'description','rating',
+        'user_id', 'school_id', 'Review_description','rating',
     ];
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

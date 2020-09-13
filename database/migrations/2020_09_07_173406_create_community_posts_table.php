@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuestionPostsTable extends Migration
+class CreateCommunityPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateQuestionPostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_posts', function (Blueprint $table) {
-            $table->increments('QuestionPost_id');
-            $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
-            $table->string('QuestionPost_Content');
+        Schema::create('Community_posts', function (Blueprint $table) {
+            $table->increments('CommunityPost_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
+            $table->text('CommunityPost_Content');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateQuestionPostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_posts');
+        Schema::dropIfExists('Community_posts');
     }
 }

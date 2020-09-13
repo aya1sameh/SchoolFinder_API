@@ -14,8 +14,8 @@ class CreateLikesOfQuestionPostsTable extends Migration
     public function up()
     {
         Schema::create('likes_of_question_posts', function (Blueprint $table) {
-            $table->integer('User_id'); ///relation with the user table
-            $table->integer('QuestionPost_id'); ///relation with the AnnounPost table
+            $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
+            $table->foreign('QuestionPost_id')->references('QuestionPost_id')->on('question_posts')->onDelete('cascade');///relation with the AnnounPost table
         });
     }
 

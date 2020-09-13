@@ -15,7 +15,7 @@ class CreateAnnouncementPostsTable extends Migration
     {
         Schema::create('Announcement_Posts',function(Blueprint $table){
             $table->increments('AnnounPost_id');
-            $table->integer('User_id'); ///relation with the user table
+            $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
             $table->string('AnnounPost_Content');
             $table->timestamps();
             

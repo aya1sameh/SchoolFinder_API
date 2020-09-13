@@ -15,7 +15,7 @@ class CreateQuestionPostsTable extends Migration
     {
         Schema::create('question_posts', function (Blueprint $table) {
             $table->increments('QuestionPost_id');
-            $table->integer('User_id'); ///relation with the user table
+            $table->foreign('User_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
             $table->string('QuestionPost_Content');
             $table->timestamps();
         });

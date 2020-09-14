@@ -19,8 +19,12 @@ class CreateSchoolCertificatesTable extends Migration
             $table->enum('certificate',['National','IGCSE','SAT','IB']);
             $table->unsignedBigInteger('school_id');
 
+
             $table->primary(['school_id','certificate']);
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            
+            //$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');//providing an error "Foreign key constraint is incorrectly formed"
+
         });
     }
 

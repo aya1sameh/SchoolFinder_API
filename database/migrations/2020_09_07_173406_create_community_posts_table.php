@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSchoolAdminTable extends Migration
+class CreateCommunityPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateSchoolAdminTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_admin', function (Blueprint $table) {
+        Schema::create('Community_posts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('school_id');
-            $table->string('position_in_school');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
+            //$table->foreign('school_id')->references('id')->on('school')->onDelete('cascade'); ///relation with the user table
+            $table->text('CommunityPost_Content'); //will be updated later for the fancy stuff
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateSchoolAdminTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_admin');
+        Schema::dropIfExists('Community_posts');
     }
 }

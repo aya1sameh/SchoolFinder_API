@@ -4,15 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class CommunityPost extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'user_id', 'school_id', 'Review_description','rating',
+    'CommunityPost_Content',
     ];
     public function users()
     {
@@ -20,6 +15,7 @@ class Review extends Model
     }
     public function schools()
     {
-        return $this->belongsTo(Schools::class);
+        return $this->belongsTo(School::class);
     }
+    
 }

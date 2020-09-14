@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class SchoolImage extends Model
+class SchoolFacility extends Model
 {
     /*Overriding primary key*/
-    protected $primaryKey = ['school_id', 'url'];
+    protected $primaryKey = ['school_id', 'type'];
     public $incrementing = false;
 
     /**

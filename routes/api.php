@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 
     Route::apiResource('user','User\UserController')->middleware('verified');
     Route::apiResource('review','ReviewsController')->middleware('verified');
+    Route::apiResource('/schools','School\schoolController');//->middleware('verified');
 
     //logout
     Route::get('logout', 'AuthController@logout'); 

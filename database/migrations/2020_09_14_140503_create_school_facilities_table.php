@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFavoriteSchoolsTable extends Migration
+class CreateSchoolFacilitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateFavoriteSchoolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('favorite_schools', function (Blueprint $table) {
-            //is just a many:many rel table bet users and schools
-            $table->bigInteger('user_id');
-            $table->bigInteger('school_id');
+        Schema::create('school_facilities', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->bigInteger('number');
+            $table->string('type');
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('school_id');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
@@ -30,6 +32,6 @@ class CreateFavoriteSchoolsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('favorite_schools');
+        Schema::dropIfExists('school_facilities');
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Posts;
 
 use Illuminate\Http\Request;
-use App\Models\Review;
+use App\Http\Controllers\Controller;
+use App\Models\CommunityPost;
+use Validator;
 
-class ReviewsController extends Controller
+class CommunityPostsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,9 +15,9 @@ class ReviewsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $reviews = Review::paginate(10);
-        return response()->json($reviews,200);
+    { 
+
+        return response()->json(CommunityPost::get(), 200);
     }
 
     /**
@@ -25,7 +27,7 @@ class ReviewsController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
@@ -41,20 +43,20 @@ class ReviewsController extends Controller
             "id"=> 'required',
             "user_id"=> 'required',
             "school_id"=> 'required',
-            'Review_description' => 'required|min:2|max:400',
-            'rating'=> 'required',
-            'created_at'=> 'required',	
-            'updated_at'=> 'required',
+            'CommunityPost_Content' => 'required|min:2|max:400',
+            "created_at"=> 'required',
+            "updated_at"=> 'required',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
-            echo "This Review can't be stored it doesn't match our restrictions";
-            echo "Content required min of characters:2 and max:400";
+            echo "This post can't be stored it doesn't match our restrictions";
+            echo "required min of characters:2 and max:400";
             return response()->json($validator->errors(),400);
         }
         
-       $review=Review::create($request->all());
+       $post=CommunityPost::create($request->all());
        return response()->json($post,201);
+        
     }
 
     /**
@@ -64,13 +66,13 @@ class ReviewsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        $review = Review::find($id);
-        if(is_null($review)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+    { 
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
         }
-        return response()->json($review,200);
-        
+        return response()->json($post,201);
+         
     }
 
     /**
@@ -93,12 +95,12 @@ class ReviewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $review=Review::find($id);
-        if(is_null($review)){
-          return response()->json(["message"=>"This review is not found!"],404);
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
         }
-        $review->update($request->all());
-        return response()->json($review,200);
+        $post->update($request->all());
+        return response()->json($post,200);
     }
 
     /**
@@ -109,11 +111,11 @@ class ReviewsController extends Controller
      */
     public function destroy($id)
     {
-        $review=Review::find($id);
-        if(is_null($review)){
-          return response()->json(["message"=>"This review is not found!"],404);
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
         }
-        $review->delete();
+        $post->delete();
         return response()->json(null,204);
     }
 }

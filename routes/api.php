@@ -23,3 +23,5 @@ Route::apiResource('user','User\UserController')->middleware('client');
 
 Route::apiResource('review','ReviewsController')->middleware('client');
 
+Route::get('user/{id}', 'UserController@showFavorites');
+

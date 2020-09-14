@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Posts;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityPost;
+use Validator;
 
 class CommunityPostsController extends Controller
 {
@@ -14,8 +15,9 @@ class CommunityPostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    { 
+
+        return response()->json(CommunityPost::get(), 200);
     }
 
     /**
@@ -36,7 +38,25 @@ class CommunityPostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $restrictions=[
+            
+            "id"=> 'required',
+            "user_id"=> 'required',
+            "school_id"=> 'required',
+            'CommunityPost_Content' => 'required|min:2|max:400',
+            "created_at"=> 'required',
+            "updated_at"=> 'required',
+        ];
+        $validator= Validator::make($request->all(),$restrictions);
+        if($validator->fails()){
+            echo "This post can't be stored it doesn't match our restrictions";
+            echo "required min of characters:2 and max:400";
+            return response()->json($validator->errors(),400);
+        }
+        
+       $post=CommunityPost::create($request->all());
+       return response()->json($post,201);
+        
     }
 
     /**
@@ -47,11 +67,12 @@ class CommunityPostsController extends Controller
      */
     public function show($id)
     { 
-        $post=CommunityPost::where('id',$id)->firstOrFail();
-        
-                
-        
-       // echo 'i am the post';
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
+        }
+        return response()->json($post,201);
+         
     }
 
     /**
@@ -74,7 +95,12 @@ class CommunityPostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
+        }
+        $post->update($request->all());
+        return response()->json($post,200);
     }
 
     /**
@@ -85,6 +111,11 @@ class CommunityPostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post=CommunityPost::find($id);
+        if(is_null($post)){
+          return response()->json(["message"=>"This Post is not found!"],404);
+        }
+        $post->delete();
+        return response()->json(null,204);
     }
 }

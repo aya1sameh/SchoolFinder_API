@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,4 +13,9 @@ class CommunityPost extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function schools()
+    {
+        return $this->belongsTo(School::class);
+    }
+    
 }

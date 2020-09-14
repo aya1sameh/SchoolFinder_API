@@ -18,4 +18,8 @@ class Review extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function schools()
+    {
+        return $this->belongsTo(Schools::class);
+    }
 }

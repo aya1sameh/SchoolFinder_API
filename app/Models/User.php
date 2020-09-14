@@ -6,18 +6,20 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
     //
+    protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'api_token',
+        'name', 'email', 'password','api_token','email_verified_at',
         'role','avatar','phone_no','address',
     ];
 
@@ -27,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','api_token',
     ];
 
     /**
@@ -43,6 +45,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne('App\Models\FavoriteSchoolsList');
     }
+
+    /*public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailNotification());
+    }*/
+
     //this user role is any but NOT app admin role
     public function question_posts(){
         //return $this->hasMany(Qpost::class);

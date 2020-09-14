@@ -40,15 +40,19 @@ class UserController extends Controller
     {
         //for validation 
         $rules = [
-            "name"=>"required",
-            "email"=>"required",
-            "password"=>"required",
+            'email' => 'required|string|email|unique:users', 
+            'password' => 'required|string|min:8|confirmed', 
+            'name' =>'required|string|unique:users',
         ];
         $validator = Validator::make($request->all(),$rules);
-        if($validator->fails()){
-            return response()->json($validator->errors(),400);//bad request
-        }
-        $user = User::create($request->all());
+        if ($validator->fails()) 
+            return response()->json(['error'=>$validator->errors()], 400); //bad request    
+        
+        $input = $request->all(); 
+        $input['password'] = Hash::make($input['password']); 
+
+        //create the user in the database and send email verification message
+        $user = User::create($input); 
         return response()->json($user,201);
     }
 

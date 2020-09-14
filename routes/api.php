@@ -14,12 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('verified');
+//Auth system routes
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
+Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+Route::group(['middleware' => 'auth:api'], function(){
 
-Route::apiResource('user','User\UserController')->middleware('client');
+    Route::apiResource('user','User\UserController')->middleware('verified');
+    Route::apiResource('review','ReviewsController')->middleware('verified');
 
-Route::apiResource('review','ReviewsController')->middleware('client');
-
+    //logout
+    Route::get('logout', 'AuthController@logout'); 
+});

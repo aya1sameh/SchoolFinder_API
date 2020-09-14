@@ -19,7 +19,7 @@ class CreateSchoolImagesTable extends Migration
             $table->unsignedBigInteger('school_id');
             $table->string('url');
 
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            //$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');//providing an error "Foreign key constraint is incorrectly formed"
         });
     }
 

@@ -4,6 +4,8 @@ namespace App\Http\Resources\Models;
 
 use App\Http\Resources\Models\SchoolStage as schoolStageResource;
 use App\Http\Resources\Models\SchoolCertificate as schoolCertificateResource;
+use App\Http\Resources\Models\SchoolImage as schoolImageResource;
+use App\Http\Resources\Models\SchoolFacility as schoolFacilityResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class School extends JsonResource
@@ -28,6 +30,8 @@ class School extends JsonResource
         "Annual fees"=>$this->fees,
         "description"=>$this->description,
         "estiblashing year"=>$this->establishing_year,
+        "gallery"=>schoolImageResource::collection($this->images),
+        "facilities"=>schoolFacilityResource::collection($this->facilities),
         ];
     }
 }

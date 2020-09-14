@@ -14,8 +14,8 @@ class CreateLikesOfReviewsTable extends Migration
     public function up()
     {
         Schema::create('likes_of_reviews', function (Blueprint $table) {
-            $table->integer('user_id');
-            $table->integer('review_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('review_id');
             $table->timestamps();
 
             $table->primary(array('user_id', 'review_id'));

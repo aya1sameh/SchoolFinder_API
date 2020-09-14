@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLikesOfAnnounPostsTable extends Migration
+class CreateCommentsOnPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,7 @@ class CreateLikesOfAnnounPostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('likes_of_announ_posts', function (Blueprint $table) {
-            $table->integer('User_id'); ///relation with the user table
-            $table->integer('AnnounPost_id'); ///relation with the AnnounPost table
-        });
+        //
     }
 
     /**
@@ -26,6 +23,6 @@ class CreateLikesOfAnnounPostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('likes_of_announ_posts');
+        //
     }
 }

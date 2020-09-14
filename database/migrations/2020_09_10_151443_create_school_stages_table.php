@@ -20,6 +20,8 @@ class CreateSchoolStagesTable extends Migration
 
             $table->primary(["school_id","stage"]);
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            
+            //$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');//providing an error "Foreign key constraint is incorrectly formed"
         });
     }
 

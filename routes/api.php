@@ -14,15 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('verified');
+//Auth system routes
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
+Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+Route::group(['middleware' => 'auth:api'], function(){
 
-Route::apiResource('/schools','School\schoolController');
+    Route::apiResource('user','User\UserController')->middleware('verified');
+    Route::apiResource('review','ReviewsController')->middleware('verified');
+    Route::apiResource('/schools','School\schoolController');//->middleware('verified');
 
+<<<<<<< HEAD
+Route::get('user/{id}', 'UserController@showFavorites');
 
-Route::apiResource('user','User\UserController')->middleware('client');
-
-Route::apiResource('review','ReviewsController')->middleware('client');
-
+=======
+    //logout
+    Route::get('logout', 'AuthController@logout'); 
+});
+>>>>>>> a6d94378781b1c0557f6ac008e9cbeabff8869d7

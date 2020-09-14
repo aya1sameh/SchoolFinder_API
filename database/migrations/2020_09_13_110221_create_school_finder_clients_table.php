@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSchoolImagesTable extends Migration
+class CreateSchoolFinderClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateSchoolImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_images', function (Blueprint $table) {
+        Schema::create('school_finder_clients', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('user_id');
+            $table->json('fav_school');
             $table->timestamps();
-            $table->unsignedBigInteger('school_id');
-            $table->string('url');
-
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
-            $table->primary(['school_id','url']);
         });
     }
 
@@ -30,6 +28,6 @@ class CreateSchoolImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_images');
+        Schema::dropIfExists('school_finder_clients');
     }
 }

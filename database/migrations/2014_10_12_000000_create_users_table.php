@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->json('favorites');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

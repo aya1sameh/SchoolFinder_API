@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSchoolCertificatesTable extends Migration
+class CreateSchoolFacilitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateSchoolCertificatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_certificates', function (Blueprint $table) {
+        Schema::create('school_facilities', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
-            $table->enum('certificate',['National','IGCSE','SAT','IB']);
+            $table->bigInteger('number');
+            $table->string('type');
+            $table->text('description')->nullable();
             $table->unsignedBigInteger('school_id');
 
-            $table->primary(['school_id','certificate']);
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
@@ -30,6 +32,6 @@ class CreateSchoolCertificatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_certificates');
+        Schema::dropIfExists('school_facilities');
     }
 }

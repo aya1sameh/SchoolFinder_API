@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class CommunityPost extends Model
 {
     protected $fillable = [
-    'CommunityPost_Content',
+            'CommunityPost_Content',
+            "id",
+            "user_id",
+            "school_id",
+        
+            "created_at",
+            "updated_at",
     ];
     public function users()
     {

@@ -16,8 +16,8 @@ class CommunityPostsController extends Controller
      */
     public function index()
     { 
-
-        return response()->json(CommunityPost::get(), 200);
+        $post = CommunityPost::paginate(10);
+        return response()->json($post, 200);
     }
 
     /**

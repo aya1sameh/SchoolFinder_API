@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Http\Resources\Models\School as SchoolResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\School;
 use Illuminate\Support\Facades\DB;
 use Validator;
+
+/*Used Models and Resources*/
+use App\Models\School;
+use App\Models\SchoolCertificate;
+use App\Models\SchoolStage;
+use App\Models\SchoolFacility;
+
+use App\Http\Resources\Models\School as SchoolResource;
+use App\Http\Resources\Models\SchoolFacility as ModelsSchoolFacility;
+use App\Http\Resources\Models\SchoolStage as SchoolStageResource;
 
 
 class SchoolController extends Controller
@@ -23,6 +31,7 @@ class SchoolController extends Controller
         return response()->json($schoolList,200);
     }
 
+
     /**
      * Display a listing of schools to the school finder user.
      *
@@ -33,6 +42,7 @@ class SchoolController extends Controller
         //DB::table('schools')->where('is_approved',true)->
     }
     
+
     /**
      * Store a newly created resource in storage.
      *
@@ -41,18 +51,72 @@ class SchoolController extends Controller
      */
     public function store(Request $request)
     {
+        /*Checking for required data*/
         $rules=[
-            'name'=>'required|min:3',
-            'iso'=>'required|min:2|max:2',
+            'name'=>'required|min:3|unique:schools',
+            'gender'=>'required',
+            'language'=>'required',
+            'address'=>'required',
+            'phone_number'=>'required|numeric|unique:schools',
+            'fees'=>'required|numeric',
+            'establishing_year'=>'required',
+            'certificates'=>'present|array',
+            'stages'=>'present|array',
         ];
 
         $validator= Validator::make($request->all(), $rules);
         if($validator->fails())
             return response()->json($validator->errors(),400);
+
+        /*Creating new school object*/
+        $school= School::create($request->except('certificates','stages'));
+
+        $id=$school->id;
+        /*Creating certificates,stages objects*/
+        for($index=0;$index<count($request->certificates);$index++)
+        {
+            SchoolCertificate::create([
+                'certificate'=>$request->certificates[$index],
+                'school_id'=>$id
+            ]);
+        }
         
-        $country= CountryModel::create($request->all());
-        return response()->json($country,201);
+        for($index=0;$index<count($request->stages);$index++)
+        {
+            SchoolStage::create([
+                'statge'=>$request->stages[$index],
+                'school_id'=>$id
+            ]);
+        }
+        
+        return response()->json(new SchoolResource($school),201);
     }
+
+
+    /**
+     * Add facilities to School
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addSchoolFacility(Request $request,$id)
+    {
+        $school=School::findOrFail($id);
+
+        $rules=[
+            "type"=>"required",
+            "number"=>"required"
+        ];
+
+        $validator= Validator::make($request->all(), $rules);
+        if($validator->fails())
+            return response()->json($validator->errors(),400);
+
+
+        SchoolFacility::create(array_merge($request->all(),["school_id"=>$id]));
+        return response()->json(new SchoolResource($school),201);
+    }
+
 
     /**
      * Display the specified school.
@@ -64,6 +128,7 @@ class SchoolController extends Controller
     {
         return response()->json(new SchoolResource(School::findOrFail($id)),200);
     }
+
 
     /**
      * Update the specified resource in storage.

@@ -18,9 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 })->middleware('verified');
 
-
+/*School Routes*/
 Route::apiResource('/schools','School\schoolController');
-
+Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
 
 Route::apiResource('user','User\UserController')->middleware('client');
 

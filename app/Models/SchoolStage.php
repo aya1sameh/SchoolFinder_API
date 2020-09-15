@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolStage extends Model
 {
+    protected $fillable=['stage','school_id'];
     /*Overriding primary key*/
     protected $primaryKey = ['school_id', 'stage'];
     public $incrementing = false;

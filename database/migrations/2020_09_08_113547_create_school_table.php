@@ -27,6 +27,8 @@ class CreateSchoolTable extends Migration
             $table->year('establishing_year');
             //admin
             //facilities,urls
+           // $table->json('communityPosts');
+           // $table->json('reviews');
         });
     }
 

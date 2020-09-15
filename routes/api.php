@@ -22,9 +22,10 @@ Route::get('register/activate/{token}', 'AuthController@registerActivate');
 Route::group(['middleware' => 'auth:api'], function(){
 
     Route::apiResource('user','User\UserController')->middleware('verified');
-    Route::apiResource('review','ReviewsController')->middleware('verified');
+    //Route::apiResource('review','ReviewsController')->middleware('verified');
     Route::apiResource('/schools','School\schoolController');//->middleware('verified');
-
+    Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController')->middleware('verified');
+    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController')->middleware('verified');
 
 
 //logout

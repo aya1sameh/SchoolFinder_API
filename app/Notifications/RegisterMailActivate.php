@@ -40,7 +40,7 @@ class RegisterMailActivate extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/api/register/activate/'.$notifiable->api_token);
+        $url = url('/api/register/activate/'.$notifiable->verify_token);
         return (new MailMessage)
             ->subject('Verify your account')
             ->line('Thanks for registeration! Please before you begin, you must verify your account.')

@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'api_token',
+        'name', 'email', 'password','verify_token','email_verified_at',
         'role','avatar','phone_no','address',
     ];
 
@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','verify_token',
     ];
 
     /**
@@ -40,10 +40,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'favorites' => 'array'
     ];
 
-  /*public function sendEmailVerificationNotification()
+    public function favoriteSchoolList()
     {
-        $this->notify(new VerifyEmailNotification());
-    }*/
+        return $this->hasOne('App\Models\FavoriteSchoolsList');
+    }
+
+    public function test()
+    {
+        $role = $this->role;
+        if($role == 'app_admin' || $role == 'admin')
+            return 'special relations and functions for app admins';
+        else if($role == 'school_admin')
+            return 'special relations and functions for school admins';
+        else
+            return 'special relations and functions for school finder clients';   
+    }
+
     //this user role is any but NOT app admin role
     public function question_posts(){
         //return $this->hasMany(Qpost::class);

@@ -10,6 +10,13 @@ use Validator;
 
 class UserController extends Controller
 {
+    public function test($id)
+    {
+        $user = User::find($id);
+        if($user == null) return response()->json('no response found',404);
+        return response()->json($user->test(),200);
+    }
+
      /**
      * Display a listing of the resource.
      *

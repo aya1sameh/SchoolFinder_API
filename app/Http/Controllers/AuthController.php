@@ -34,19 +34,20 @@ class AuthController extends Controller
         if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
                         
         $user = $request->user();
-        //creating our tokens.. 
+        //creating access tokens.. 
         $tokenResult = $user->createToken('school finder app');
         $token = $tokenResult->token;
         $token->expires_at = Carbon::now()->addDays(365);
         $token->save();
-
+        $user->access_token = $tokenResult->accessToken;
+        $user->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
             )->toDateTimeString() //will change the expiration date 
-            ],200);
+        ]);
     }
  
     //register
@@ -57,6 +58,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users', 
             'password' => 'required|string|min:8|confirmed', 
             'name' =>'required|string|unique:users',
+            'role' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 
@@ -67,14 +69,20 @@ class AuthController extends Controller
 
         //create the user in the database and send email verification message
         $user = User::create($input);
-        $user->notify(new RegisterMailActivate($user));
+        //if the user is app admin so no need for verification
+        if($user->role == 'app_admin' || $user->role == 'admin'){
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+        }
+        else 
+            $user->notify(new RegisterMailActivate($user));
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
 
     //verify the registeration
     public function registerActivate($token)
     {
-        $user = User::where('api_token', $token)->first();
+        $user = User::where('verify_token', $token)->first();
         if (!$user) {
             return response()->json([
                 'message' => 'This activation token is invalid..'
@@ -94,5 +102,12 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    //getId from the access token
+    public function getId(Request $request)
+    {
+        $user = User::where('access_token', $request->access_token)->first();
+        return $user->id;
     }
 }

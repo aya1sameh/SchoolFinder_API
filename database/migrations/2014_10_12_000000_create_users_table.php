@@ -21,12 +21,13 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            $table->string('api_token')->unique();
+            $table->string('verify_token')->unique();//for verification purpose
+            $table->longText('access_token')->nullable();
 
             $table->string('avatar')->nullable();
             $table->string('phone_no')->nullable();
             $table->string('address')->nullable();
-            $table->json('favorites');
+            $table->json('favorites')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

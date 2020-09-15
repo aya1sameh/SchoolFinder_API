@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /*School Routes*/
 Route::apiResource('/schools','School\schoolController');
 Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
+Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
+
 
 Route::apiResource('user','User\UserController')->middleware('client');
 

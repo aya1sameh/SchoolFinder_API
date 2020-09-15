@@ -14,12 +14,59 @@ use App\Models\SchoolStage;
 use App\Models\SchoolFacility;
 
 use App\Http\Resources\Models\School as SchoolResource;
-use App\Http\Resources\Models\SchoolFacility as ModelsSchoolFacility;
 use App\Http\Resources\Models\SchoolStage as SchoolStageResource;
 
 
 class SchoolController extends Controller
 {
+    private $schoolStoringRules=[
+        'name'=>'required|min:3|unique:schools',
+        'gender'=>'required',
+        'language'=>'required',
+        'address'=>'required',
+        'phone_number'=>'required|numeric|unique:schools',
+        'fees'=>'required|numeric',
+        'establishing_year'=>'required',
+        'certificates'=>'present|array',
+        'stages'=>'present|array',
+    ];
+
+    /**
+     * Store a newly created school Stage in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    private function storeSchoolStages(Request $request,$id)
+    {
+        for($index=0;$index<count($request->stages);$index++)
+        {
+            SchoolStage::create([
+                'stage'=>$request->stages[$index],
+                'school_id'=>$id
+            ]);
+        }
+    }
+
+    /**
+     * Store a newly created school certificate in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    private function storeSchoolCertificates(Request $request,$id)
+    {
+        for($index=0;$index<count($request->certificates);$index++)
+        {
+            SchoolCertificate::create([
+                'certificate'=>$request->certificates[$index],
+                'school_id'=>$id
+            ]);
+        }
+    }
+
     /**
      * Display a listing of schools (including schools that are not aproved yet) to the App admin.
      *
@@ -31,7 +78,6 @@ class SchoolController extends Controller
         return response()->json($schoolList,200);
     }
 
-
     /**
      * Display a listing of schools to the school finder user.
      *
@@ -41,7 +87,6 @@ class SchoolController extends Controller
     {
         //DB::table('schools')->where('is_approved',true)->
     }
-    
 
     /**
      * Store a newly created resource in storage.
@@ -52,46 +97,20 @@ class SchoolController extends Controller
     public function store(Request $request)
     {
         /*Checking for required data*/
-        $rules=[
-            'name'=>'required|min:3|unique:schools',
-            'gender'=>'required',
-            'language'=>'required',
-            'address'=>'required',
-            'phone_number'=>'required|numeric|unique:schools',
-            'fees'=>'required|numeric',
-            'establishing_year'=>'required',
-            'certificates'=>'present|array',
-            'stages'=>'present|array',
-        ];
-
-        $validator= Validator::make($request->all(), $rules);
+        $validator= Validator::make($request->all(), $this->schoolStoringRules);
         if($validator->fails())
             return response()->json($validator->errors(),400);
 
         /*Creating new school object*/
         $school= School::create($request->except('certificates','stages'));
 
-        $id=$school->id;
         /*Creating certificates,stages objects*/
-        for($index=0;$index<count($request->certificates);$index++)
-        {
-            SchoolCertificate::create([
-                'certificate'=>$request->certificates[$index],
-                'school_id'=>$id
-            ]);
-        }
-        
-        for($index=0;$index<count($request->stages);$index++)
-        {
-            SchoolStage::create([
-                'statge'=>$request->stages[$index],
-                'school_id'=>$id
-            ]);
-        }
+        $id=$school->id;
+        $this->storeSchoolCertificates($request,$id);
+        $this->storeSchoolStages($request,$id);
         
         return response()->json(new SchoolResource($school),201);
     }
-
 
     /**
      * Add facilities to School
@@ -117,7 +136,6 @@ class SchoolController extends Controller
         return response()->json(new SchoolResource($school),201);
     }
 
-
     /**
      * Display the specified school.
      *
@@ -129,9 +147,8 @@ class SchoolController extends Controller
         return response()->json(new SchoolResource(School::findOrFail($id)),200);
     }
 
-
     /**
-     * Update the specified resource in storage.
+     * Update the specified school in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -139,17 +156,52 @@ class SchoolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $school=School::findOrFail($id);
+
+        if($request->stages)
+            $this->storeSchoolStages($request,$id);
+
+        if($request->certificates)
+            $this->storeSchoolCertificates($request,$id);
+        
+        $school->update($request->all());
+        //except('certificates','stages')
+        return response()->json(new SchoolResource($school), 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified school from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $school=School::findOrFail($id);
+        $school->delete();
+        return response(null,204);
     }
+
+    /**
+     * Remove the specified school facility from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteSchoolFacility(Request $request,$id)
+    {
+        /*Making sure that school exists*/
+        $school=School::findOrFail($id);
+
+        $rules=["type"=>"required"];
+        $validator= Validator::make($request->all(), $rules);
+
+        if(SchoolFacility::where('school_id',$id)->where('type',$request->type)->delete())
+            return response(null,204);
+
+        else
+            return response()->json(["message"=>"Facility not found"],404);
+            
+    }
+
 }

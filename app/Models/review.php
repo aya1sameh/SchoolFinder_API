@@ -20,6 +20,6 @@ class Review extends Model
     }
     public function schools()
     {
-        return $this->belongsTo(Schools::class);
+        return $this->belongsTo(School::class);
     }
 }

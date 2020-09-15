@@ -129,9 +129,9 @@ class UserController extends Controller
         // Authentication required
         $user = User::find($user_id);
         $favorites_ids = $user->only('favorites');
-        //$favorites_ids = User::table('users')->select('favorites')->where('id',  $user_id);
-        $favorites = School::find($favorites_ids);
-        return response()->json($favorites,200);
+        $schools = School::all();
+        $favorites = $schools->find($favorites_ids);
+        return response()->json($schools,200);
                    
     }
 }

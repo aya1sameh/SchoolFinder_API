@@ -25,8 +25,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     //Route::apiResource('review','ReviewsController')->middleware('verified');
     Route::apiResource('/schools','School\schoolController');//->middleware('verified');
     Route::post('get_id', 'AuthController@getId')->middleware('verified');
-    //logout
-    Route::get('logout', 'AuthController@logout'); 
+
     Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController')->middleware('verified');
     Route::apiResource('/schools/{school_id}/Review', 'ReviewsController')->middleware('verified');
 

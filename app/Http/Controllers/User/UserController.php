@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\School;
 use Validator;
 
 class UserController extends Controller
@@ -113,5 +114,17 @@ class UserController extends Controller
         }
         $user->delete();
         return response()->json(null,204);
+    }
+
+    //////////////////////////////////////////////////
+    public function getFavorites(Request $request, $user_id)
+    {
+        // Authentication required
+        $user = User::find($user_id);
+        $favorites_ids = $user->only('favorites');
+        //$favorites_ids = User::table('users')->select('favorites')->where('id',  $user_id);
+        $favorites = School::find($favorites_ids);
+        return response()->json($favorites,200);
+                   
     }
 }

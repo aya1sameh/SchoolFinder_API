@@ -11,6 +11,12 @@ use App\Models\SchoolFacility;
 
 class School extends Model
 {
+
+    protected $casts = [
+        'communityPosts' => 'array',
+        'reviews' => 'array'
+    ];
+
     /**
      * Returns stages that school affords
      * @return \App\Models\SchoolStage

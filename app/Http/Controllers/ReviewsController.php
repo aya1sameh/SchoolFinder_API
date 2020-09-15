@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
-
+use Validator;
 class ReviewsController extends Controller
 {
     /**
@@ -54,7 +54,7 @@ class ReviewsController extends Controller
         }
         
        $review=Review::create($request->all());
-       return response()->json($post,201);
+       return response()->json($review,201);
     }
 
     /**

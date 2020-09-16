@@ -8,7 +8,11 @@ use App\Models\CommunityPost;
 use Validator;
 
 class CommunityPostsController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']); ////////////////////////////////////////////////////////////////////////////////////
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,12 +44,11 @@ class CommunityPostsController extends Controller
     {
         $restrictions=[
             
-            "id"=> 'required',
+            "id"=> 'required',//////////////////////////////////////////ask////////////////////////////////////////////////////
             "user_id"=> 'required',
             "school_id"=> 'required',
             'CommunityPost_Content' => 'required|min:2|max:400',
             "created_at"=> 'required',
-            "updated_at"=> 'required',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
@@ -99,6 +102,22 @@ class CommunityPostsController extends Controller
         if(is_null($post)){
           return response()->json(["message"=>"This Post is not found!"],404);
         }
+        
+        if ($request->user()->id !== $post->user_id){ ////////////////////////////////////////////////////////////////////////////////////
+           return response()->json(["message"=>"sorry you are not the Post owner to update it :D"],401);
+        }
+        $restrictions=[
+            
+            'CommunityPost_Content' => 'required|min:2|max:400',
+            "updated_at"=> 'required',
+        ];
+        $validator= Validator::make($request->all(),$restrictions);
+        if($validator->fails()){
+            echo "This post can't be stored it doesn't match our restrictions";
+            echo "required min of characters:2 and max:400";
+            echo "required updated at date and time";
+            return response()->json($validator->errors(),400);
+        }
         $post->update($request->all());
         return response()->json($post,200);
     }
@@ -114,6 +133,9 @@ class CommunityPostsController extends Controller
         $post=CommunityPost::find($id);
         if(is_null($post)){
           return response()->json(["message"=>"This Post is not found!"],404);
+        }
+        if (auth()->user()->id !== $post->user_id){////////////////////////////////////////////////////////////////////////////////////
+            return response()->json(["message"=>"sorry you are not the Post owner to delete it :D"],401);
         }
         $post->delete();
         return response()->json(null,204);

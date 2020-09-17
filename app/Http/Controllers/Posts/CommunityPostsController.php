@@ -44,11 +44,11 @@ class CommunityPostsController extends Controller
     {
         $restrictions=[
             
-            "id"=> 'required',//////////////////////////////////////////ask////////////////////////////////////////////////////
+            //"id"=> 'required',//////////////////////////////////////////ask////////////////////////////////////////////////////
             "user_id"=> 'required',
             "school_id"=> 'required',
             'CommunityPost_Content' => 'required|min:2|max:400',
-            "created_at"=> 'required',
+            //"created_at"=> 'required',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
@@ -96,9 +96,9 @@ class CommunityPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id ,$id2)
     {
-        $post=CommunityPost::find($id);
+        $post=CommunityPost::find($id2);
         if(is_null($post)){
           return response()->json(["message"=>"This Post is not found!"],404);
         }
@@ -109,7 +109,7 @@ class CommunityPostsController extends Controller
         $restrictions=[
             
             'CommunityPost_Content' => 'required|min:2|max:400',
-            "updated_at"=> 'required',
+            //"updated_at"=> 'required',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){

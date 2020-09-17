@@ -42,8 +42,9 @@ class AuthController extends Controller
         
         //$user->deleted_at = null;//for saying that this user not deleted..
         if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
-                        
+        
         $user = $request->user();
+        if($user->email_verified_at == null) return response()->json(['msg' => 'Unverified'], 401);
         $accessToken=$this->createToken($user);
         
         return response()->json([

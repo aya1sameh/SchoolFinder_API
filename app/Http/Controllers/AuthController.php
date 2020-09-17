@@ -40,11 +40,10 @@ class AuthController extends Controller
         //else if they sent their name instead 
         else $user=Auth::attempt(['name' => $name, 'password' => $request->password]);
         
-        //$user->deleted_at = null;//for saying that this user not deleted..
         if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
         
         $user = $request->user();
-        if($user->email_verified_at == null) return response()->json(['msg' => 'Unverified'], 401);
+        if($user->email_verified_at == null) return response()->json(['error' => 'Unverified'], 401);
         $accessToken=$this->createToken($user);
         
         return response()->json([
@@ -113,12 +112,12 @@ class AuthController extends Controller
     }
 
     //getId from the access token
-    public function getId(Request $request)
+    /*public function getId(Request $request)
     {
-        $user = User::where('access_token', $request->access_token)->first();
+        $user = $request->user();
         if(!$user) return response()->json([
             'message' => 'User not found',
         ]);
         return $user->id;
-    }
+    }*/
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SchoolCertificate extends Model
 {
+    protected $fillable=['certificate','school_id'];
     /*Overriding primary key*/
     protected $primaryKey = ['school_id', 'certificate'];
     public $incrementing = false;

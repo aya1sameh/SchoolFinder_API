@@ -10,6 +10,7 @@ class SchoolImage extends Model
     /*Overriding primary key*/
     protected $primaryKey = ['school_id', 'url'];
     public $incrementing = false;
+    protected $fillable=['url','school_id'];
 
     /**
      * Set the keys for a save update query.

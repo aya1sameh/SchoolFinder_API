@@ -26,12 +26,17 @@ Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFa
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 
 
+
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
 Route::group(['middleware' => 'auth:api'], function(){
 
     Route::apiResource('user','User\UserController'); 
 
+    /*favourite schools Routes*/
+    Route::post('user/favorites', 'User\UserController@getFavorites');
+    Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
+    Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
     
 
     Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');

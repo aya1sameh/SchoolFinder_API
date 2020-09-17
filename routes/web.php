@@ -21,6 +21,3 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
-Route::get('user/{id}/favorites', 'User\UserController@getFavorites');
-Route::get('user/{user_id}/favorites/{school_id}/add', 'User\UserController@AddFavorites');
-Route::get('user/{user_id}/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');

@@ -19,5 +19,12 @@ class CommunityPost extends Model
     {
         return $this->belongsTo(School::class);
     }
+    public function comments(){
+        return $this->hasMany('App\Models\CommentOnPost');
+    }
+    public function likes(){
+        return $this->hasMany('App\Models\LikeOnPost');
+    }
+   
     
 }

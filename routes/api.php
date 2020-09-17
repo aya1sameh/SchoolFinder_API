@@ -28,6 +28,7 @@ Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+Route::apiResource('/schools/{school_id}/Reviews', 'ReviewsController');
 
 Route::group(['middleware' => 'auth:api'], function(){
 
@@ -39,7 +40,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
     
 
-    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
+    
 
 
     //logout

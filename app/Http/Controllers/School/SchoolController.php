@@ -12,9 +12,10 @@ use App\Models\School;
 use App\Models\SchoolCertificate;
 use App\Models\SchoolStage;
 use App\Models\SchoolFacility;
+use App\Models\SchoolImage;
 
 use App\Http\Resources\Models\School as SchoolResource;
-use App\Http\Resources\Models\SchoolStage as SchoolStageResource;
+use  App\Http\Resources\Models\SchoolImage as SchoolImageResource;
 
 
 class SchoolController extends Controller
@@ -74,18 +75,9 @@ class SchoolController extends Controller
      */
     public function index()
     {
+        //TODO:: except is_approved law normal user!
         $schoolList= SchoolResource::collection(School::paginate(20));
         return response()->json($schoolList,200);
-    }
-
-    /**
-     * Display a listing of schools to the school finder user.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getApprovedSchool()
-    {
-        //DB::table('schools')->where('is_approved',true)->
     }
 
     /**
@@ -116,6 +108,7 @@ class SchoolController extends Controller
      * Add facilities to School
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param $id 
      * @return \Illuminate\Http\Response
      */
     public function addSchoolFacility(Request $request,$id)
@@ -134,6 +127,32 @@ class SchoolController extends Controller
 
         SchoolFacility::create(array_merge($request->all(),["school_id"=>$id]));
         return response()->json(new SchoolResource($school),201);
+    }
+
+    /**
+     * Upload school image
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param $id 
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadSchoolImage(Request $request,$id)
+    {
+        request()->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $school=School::findOrFail($id);
+        $numberOfImages=DB::table("school_images")->where('school_id',$school->id)->count();
+        $imageName=$school->name."/".strval($numberOfImages+1);
+        
+        $image=SchoolImage::create([
+            "school_id"=>$school->id,
+            "url"=>$imageName
+        ]);
+        
+        $request->image->move(public_path('/imgs/schools'),$imageName);
+        return response()->json(new SchoolImageResource($image),201);
     }
 
     /**
@@ -165,7 +184,7 @@ class SchoolController extends Controller
             $this->storeSchoolCertificates($request,$id);
         
         $school->update($request->all());
-        //except('certificates','stages')
+        //TODO:: except('is_') law school admin 
         return response()->json(new SchoolResource($school), 200);
     }
 

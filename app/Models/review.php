@@ -12,7 +12,13 @@ class Review extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'school_id', 'Review_description','rating',
+        'user_id', 
+        'school_id', 
+        'Review_description',
+        'rating',
+        "id",
+        'created_at',
+        'updated_at',
     ];
     public function users()
     {
@@ -20,6 +26,6 @@ class Review extends Model
     }
     public function schools()
     {
-        return $this->belongsTo(Schools::class);
+        return $this->belongsTo(School::class);
     }
 }

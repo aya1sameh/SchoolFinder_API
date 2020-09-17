@@ -8,7 +8,7 @@ class UserObserver
 {
     public function creating(User $user)
     {
-        $user->api_token = \bin2hex(openssl_random_pseudo_bytes(30));
+        $user->verify_token = \bin2hex(openssl_random_pseudo_bytes(30));
     }
     /**
      * Handle the user "created" event.

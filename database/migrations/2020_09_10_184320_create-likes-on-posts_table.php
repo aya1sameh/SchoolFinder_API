@@ -15,8 +15,10 @@ class CreateLikesOnPostsTable extends Migration
     
         {
             Schema::create ('likes',function(Blueprint $table) {
-                $table->id ('user ID');
-                $table->id('post ID');
+                $table->unsignedBigInteger ('user ID');
+                $table->unsignedBigInteger('post ID');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
+                $table->foreign('post ID')->references('id')->on('Community_posts')->onDelete('cascade'); ///relation with the community posts table
                 $table->timestamps();
                 $table ->boolean('liked')->default(false);
     

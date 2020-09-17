@@ -12,9 +12,22 @@ class CreateLikesOnPostsTable extends Migration
      * @return void
      */
     public function up()
-    {
-        //
-    }
+    
+        {
+            Schema::create ('likes',function(Blueprint $table) {
+                $table->id ('user ID');
+                $table->id('post ID');
+                $table->timestamps();
+                $table ->boolean('liked')->default(false);
+    
+    
+    
+    
+    
+    
+            });
+        }
+    
 
     /**
      * Reverse the migrations.

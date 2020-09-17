@@ -14,6 +14,16 @@ use App\Notifications\RegisterMailActivate;
 
 class AuthController extends Controller
 {
+    private function createToken($user){
+        //creating access tokens..
+        $tokenResult = $user->createToken('school finder app');
+        $token = $tokenResult->token;
+        $token->expires_at = Carbon::now()->addDays(365);
+        $token->save();
+        $user->access_token = $tokenResult->accessToken;
+        $user->save();
+        return $tokenResult->accessToken;
+    }
     //login
     public function login(Request $request)
     {
@@ -34,19 +44,11 @@ class AuthController extends Controller
         if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
                         
         $user = $request->user();
-        //creating access tokens.. 
-        $tokenResult = $user->createToken('school finder app');
-        $token = $tokenResult->token;
-        $token->expires_at = Carbon::now()->addDays(365);
-        $token->save();
-        $user->access_token = $tokenResult->accessToken;
-        $user->save();
+        $accessToken=$this->createToken($user);
+        
         return response()->json([
-            'access_token' => $tokenResult->accessToken,
+            'access_token' => $accessToken,
             'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse(
-                $tokenResult->token->expires_at
-            )->toDateTimeString() //will change the expiration date 
         ]);
     }
  
@@ -73,10 +75,17 @@ class AuthController extends Controller
         if($user->role == 'app_admin' || $user->role == 'admin'){
             $user->email_verified_at = Carbon::now();
             $user->save();
+            $accessToken=$this->createToken($user);
+            return response()->json([
+                'message' => 'Successfully created user!',
+                'access_token' => $accessToken,
+                'token_type' => 'Bearer',
+            ]);
         }
-        else 
+        else{
             $user->notify(new RegisterMailActivate($user));
-        return response()->json(['message' => 'Successfully created user!'], 201);
+            return response()->json(['message' => 'Successfully created user, just verify it!'], 201);
+        } 
     }
 
     //verify the registeration
@@ -85,14 +94,12 @@ class AuthController extends Controller
         $user = User::where('verify_token', $token)->first();
         if (!$user) {
             return response()->json([
-                'message' => 'This activation token is invalid..'
+                'message' => 'This verification token is invalid..'
             ], 404);
         }
         $user->email_verified_at = Carbon::now();
         $user->save();
-        return response()->json([
-            'message' => 'Your account is verified successfully..'
-        ], 200);
+        return view('thanks');
     }
 
     //logout
@@ -108,6 +115,9 @@ class AuthController extends Controller
     public function getId(Request $request)
     {
         $user = User::where('access_token', $request->access_token)->first();
+        if(!$user) return response()->json([
+            'message' => 'User not found',
+        ]);
         return $user->id;
     }
 }

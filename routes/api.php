@@ -19,17 +19,17 @@ Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+Route::apiResource('/schools','School\schoolController');
+
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
 Route::group(['middleware' => 'auth:api'], function(){
 
-    Route::apiResource('user','User\UserController')->middleware('verified'); 
-    Route::post('get_id', 'AuthController@getId')->middleware('verified');
+    Route::apiResource('user','User\UserController'); 
 
-    Route::apiResource('/schools','School\schoolController')->middleware('verified');
+    
 
-    //Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController')->middleware('verified');
-    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController')->middleware('verified');
+    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
 
     //logout

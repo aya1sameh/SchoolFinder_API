@@ -22,13 +22,12 @@ class CreateSchoolTable extends Migration
             $table->string('address');
             $table->bigInteger('phone_number');
             $table->bigInteger('fees');
-            $table->text('description');
-            $table->boolean('is_approved');
+            $table->text('description')->nullabe();
+            $table->boolean('is_approved')->default(0);
             $table->year('establishing_year');
-            //admin
-            //facilities,urls
-           // $table->json('communityPosts');
-           // $table->json('reviews');
+            //admin,urls
+           $table->json('communityPosts');
+           $table->json('reviews');
         });
     }
 

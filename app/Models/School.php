@@ -11,6 +11,7 @@ use App\Models\SchoolFacility;
 
 class School extends Model
 {
+    protected $fillable =['name', 'gender','language','address','phone_number','description','fees','establishing_year'];
 
     protected $casts = [
         'communityPosts' => 'array',

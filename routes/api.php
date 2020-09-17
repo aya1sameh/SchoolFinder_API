@@ -19,7 +19,12 @@ Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+/*School Routes*/
 Route::apiResource('/schools','School\schoolController');
+Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
+Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
+Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
+
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 

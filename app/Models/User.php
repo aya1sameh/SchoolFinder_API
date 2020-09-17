@@ -36,8 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'favorites' => 'array'
+        'favorites' => 'array',
+        'email_verified_at' => 'datetime',    
     ];
 
     public function favoriteSchoolList()

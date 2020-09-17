@@ -27,6 +27,7 @@ Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+Route::apiResource('/schools/{school_id}/Reviews', 'ReviewsController');
 
 Route::group(['middleware' => 'auth:api'], function(){
 
@@ -34,7 +35,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 
     
 
-    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
+    
 
 
     //logout

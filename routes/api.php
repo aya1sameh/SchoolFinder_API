@@ -26,20 +26,21 @@ Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFa
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 
 
+Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
 Route::group(['middleware' => 'auth:api'], function(){
 
-    Route::apiResource('user','User\UserController')->middleware('verified');
-    //Route::apiResource('review','ReviewsController')->middleware('verified');
-    Route::apiResource('/schools','School\schoolController');//->middleware('verified');
+    Route::apiResource('user','User\UserController')->middleware('verified'); 
     Route::post('get_id', 'AuthController@getId')->middleware('verified');
 
-    Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController')->middleware('verified');
+    Route::apiResource('/schools','School\schoolController')->middleware('verified');
+
+    //Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController')->middleware('verified');
     Route::apiResource('/schools/{school_id}/Review', 'ReviewsController')->middleware('verified');
 
 
-//logout
-Route::get('logout', 'AuthController@logout'); 
+    //logout
+    Route::get('logout', 'AuthController@logout'); 
 });
 
 //just for testing that we can send diff responses acc. to the user's role:

@@ -7,6 +7,10 @@ use App\Models\Review;
 use Validator;
 class ReviewsController extends Controller
 {
+   public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);////////////////////////////////////////////////////////////////////////////////////
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,13 +42,13 @@ class ReviewsController extends Controller
     {
         $restrictions=[
             
-            "id"=> 'required',
+            "id"=> 'required',  //////////////////////////////////////////ask////////////////////////////////////////////////////
             "user_id"=> 'required',
             "school_id"=> 'required',
             'Review_description' => 'required|min:2|max:400',
             'rating'=> 'required',
             'created_at'=> 'required',	
-            'updated_at'=> 'required',
+            
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
@@ -93,9 +97,23 @@ class ReviewsController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $review=Review::find($id);
+        
         if(is_null($review)){
           return response()->json(["message"=>"This review is not found!"],404);
+        }
+        if (auth()->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////////
+            return response()->json(["message"=>"sorry you are not the review owner to update it :D"],401);
+        }
+        $restrictions=[
+            'updated_at'=> 'required',
+        ];
+        $validator= Validator::make($request->all(),$restrictions);
+        if($validator->fails()){
+            echo "This Review can't be stored it doesn't match our restrictions";
+            echo "specify the update date and time";
+            return response()->json($validator->errors(),400);
         }
         $review->update($request->all());
         return response()->json($review,200);
@@ -112,6 +130,9 @@ class ReviewsController extends Controller
         $review=Review::find($id);
         if(is_null($review)){
           return response()->json(["message"=>"This review is not found!"],404);
+        }
+        if (auth()->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////////
+            return response()->json(["message"=>"sorry you are not the review owner to delete it :D"],401);
         }
         $review->delete();
         return response()->json(null,204);

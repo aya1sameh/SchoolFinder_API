@@ -123,15 +123,72 @@ class UserController extends Controller
         return response()->json(null,204);
     }
 
-    //////////////////////////////////////////////////
     public function getFavorites(Request $request, $user_id)
     {
         // Authentication required
         $user = User::find($user_id);
-        $favorites_ids = $user->only('favorites');
-        $schools = School::all();
-        $favorites = $schools->find($favorites_ids);
-        return response()->json($schools,200);
-                   
+        $favorites_ids = $user->favorites;
+        $favorites = School::find($favorites_ids);
+        return response()->json($favorites,200);              
     }
+
+    public function AddFavorites(Request $request, $user_id, $school_id)
+    {
+        // User Authentication required
+        $school = School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"Response not Found!!"],404);
+        }
+
+        $user = User::find($user_id);
+        $favorites = $user->favorites;
+
+        if (empty($favorites)){
+            $length = 0;
+        }
+        else{
+
+            if(in_array ( $school_id, $favorites , False)){
+                return response()->json(["message"=>"Dupication error"],403);
+            } 
+            $length = count($favorites);   
+        }
+       
+        $favorites[(int)$length] = (int)$school_id;
+        $user->favorites = $favorites;
+        $user->save();
+        return response()->json($favorites,200);              
+    }
+
+    public function RemoveFavorites(Request $request, $user_id, $school_id)
+    {
+        // User Authentication required
+        $school = School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"Response not Found!!"],404);
+        }
+
+        $user = User::find($user_id);
+        $favorites = $user->favorites;
+
+        if (empty($favorites)){
+            return response()->json(["message"=>"Response not Found!!"],404);
+        }
+        else{
+
+            if(in_array ( $school_id, $favorites , False)){
+                $index = array_search( $school_id,$favorites,true); 
+                unset($favorites[$index]);                    //Delete the item
+                $favorites = array_values($favorites);        //Re-indexing the array
+                $user->favorites = $favorites;
+                $user->save();
+                return response()->json($favorites,200); 
+            } 
+            else
+                return response()->json(["message"=>"Response not Found!!"],404);  
+        }
+                      
+    }
+    
+    
 }

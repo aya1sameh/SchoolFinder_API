@@ -5,8 +5,8 @@
 use App\Model;
 use Faker\Generator as Faker;
 
-$factory->define(Model::class, function (Faker $faker) {
+$factory->define(LikeOfPost::class, function (Faker $faker) {
     return [
-        //
+        'liked'=>$faker->boolean
     ];
 });

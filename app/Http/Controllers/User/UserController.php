@@ -131,20 +131,27 @@ class UserController extends Controller
     {
         // Authentication required
         $user = $request->user();
+        if (is_null($user)){
+            return response()->json(["message"=>"Unauthorized"],401);
+        }
         $favorites_ids = $user->favorites;
         $favorites = School::find($favorites_ids);
         return response()->json($favorites,200);              
     }
 
-    public function AddFavorites(Request $request, $user_id, $school_id)
+    public function AddFavorites(Request $request, $school_id)
     {
-        // User Authentication required
+        
         $school = School::find($school_id);
         if(is_null($school)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"Not Found"],404);
         }
 
-        $user = User::find($user_id);
+        $user = $request->user();
+        if (is_null($user)){
+            return response()->json(["message"=>"Unauthorized"],401);
+        }
+
         $favorites = $user->favorites;
 
         if (empty($favorites)){
@@ -164,15 +171,18 @@ class UserController extends Controller
         return response()->json($favorites,200);              
     }
 
-    public function RemoveFavorites(Request $request, $user_id, $school_id)
+    public function RemoveFavorites(Request $request, $school_id)
     {
-        // User Authentication required
+        
         $school = School::find($school_id);
         if(is_null($school)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
 
-        $user = User::find($user_id);
+        $user = $request->user();
+        if (is_null($user)){
+            return response()->json(["message"=>"Unauthorized"],401);
+        }
         $favorites = $user->favorites;
 
         if (empty($favorites)){
@@ -193,6 +203,4 @@ class UserController extends Controller
         }
                       
     }
-    
-    
 }

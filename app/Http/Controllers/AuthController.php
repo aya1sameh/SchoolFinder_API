@@ -69,7 +69,7 @@ class AuthController extends Controller
         $input = $request->all(); 
         $input['password'] = Hash::make($input['password']); 
 
-        //create the user in the database and send email verification message
+        //create the user in the database 
         $user = User::create($input);
         //if the user is app admin so no need for verification
         if($user->role == 'app_admin' || $user->role == 'admin'){
@@ -82,7 +82,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ]);
         }
-        else{
+        else{ //and send email verification message
             $user->notify(new RegisterMailActivate($user));
             return response()->json(['message' => 'Successfully created user, just verify it!'], 201);
         } 
@@ -110,14 +110,4 @@ class AuthController extends Controller
             'message' => 'Successfully logged out'
         ]);
     }
-
-    //getId from the access token
-    /*public function getId(Request $request)
-    {
-        $user = $request->user();
-        if(!$user) return response()->json([
-            'message' => 'User not found',
-        ]);
-        return $user->id;
-    }*/
 }

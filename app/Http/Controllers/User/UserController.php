@@ -10,13 +10,6 @@ use Validator;
 
 class UserController extends Controller
 {
-    public function test($id)
-    {
-        $user = User::find($id);
-        if($user == null) return response()->json('no response found',404);
-        return response()->json($user->test(),200);
-    }
-
      /**
      * Display a listing of the resource.
      *
@@ -79,6 +72,15 @@ class UserController extends Controller
         return response()->json($user,200);
     }
 
+    public function profile(Request $request)
+    {
+        $user = $request->user();
+        if(is_null($user)){
+            return response()->json(["message"=>"Response not Found!!"],404);
+        }
+        return response()->json($user,200);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -97,13 +99,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $user = User::find($id);
+        $user = $request->user();
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
         $user->update($request->all());
+        $user->save();
         return response()->json($user,200);
     }
 
@@ -113,20 +116,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::find($id);
+        $user = $request->user();
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
         $user->delete();
         return response()->json(null,204);
     }
+    
 
-    public function getFavorites(Request $request, $user_id)
+    public function getFavorites(Request $request)
     {
         // Authentication required
-        $user = User::find($user_id);
+        $user = $request->user();
         $favorites_ids = $user->favorites;
         $favorites = School::find($favorites_ids);
         return response()->json($favorites,200);              

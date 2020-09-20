@@ -21,7 +21,7 @@ class CreateReviewsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('school_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');///relation with the user table
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');///relation with the school table
+            //$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');///relation with the school table
         });
     }
 

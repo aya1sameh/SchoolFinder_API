@@ -26,8 +26,8 @@ class CreateSchoolTable extends Migration
             $table->boolean('is_approved')->default(0);
             $table->year('establishing_year');
             //admin,urls
-           $table->json('communityPosts');
-           $table->json('reviews');
+           $table->json('communityPosts')->nullable();
+           $table->json('reviews')->nullable();
         });
     }
 

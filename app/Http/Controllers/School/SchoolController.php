@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Validator;
 
 /*Used Models and Resources*/
@@ -32,6 +33,7 @@ class SchoolController extends Controller
         'stages'=>'present|array',
     ];
 
+    private $schoolImagesDirectory="/imgs/schools/";
     /**
      * Store a newly created school Stage in storage.
      *
@@ -146,14 +148,14 @@ class SchoolController extends Controller
         $school=School::findOrFail($id);
         $numberOfImages=DB::table("school_images")->where('school_id',$school->id)->count();
         $extension = $request->file('image')->getClientOriginalExtension();
-        $imageName=($school->name)."_".strval($numberOfImages+1).".".$extension;
+        $imageName=($school->name)."_".strval($numberOfImages+1).'_'.time().".".$extension;
         
         $image=SchoolImage::create([
             "school_id"=>$school->id,
             "url"=>$imageName
         ]);
         
-        $request->image->move(public_path('/imgs/schools'),$imageName);
+        $request->image->move(public_path($this->schoolImagesDirectory),$imageName);
         return response()->json(new SchoolImageResource($image),201);
     }
 
@@ -206,6 +208,7 @@ class SchoolController extends Controller
     /**
      * Remove the specified school facility from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -225,4 +228,23 @@ class SchoolController extends Controller
             
     }
 
+    /**
+     * Remove the specified Image from storage and removes it from the public directory
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteSchoolImage(Request $request,$id)
+    {
+        /* check if authenticated user is the school's admin*/
+        /*Making sure that school exists*/
+        $rules=["url"=>"required"];
+        $school=School::findOrFail($id);
+        $schoolImage=SchoolImage::where('url',$request->url)->firstOrFail();
+        
+        SchoolImage::where(['school_id'=>$id,'url'=>$request->url])->delete();
+        $imageName=public_path().$this->schoolImagesDirectory.($request->url);
+        File::delete($imageName);
+        return response(null,204);
+    }
 }

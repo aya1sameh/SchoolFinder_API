@@ -28,6 +28,9 @@ class CreateSchoolTable extends Migration
            $table->json('community_posts')->nullable();
            $table->json('reviews')->nullable();
            $table->json('external_urls')->nullable();
+           $table->unsignedBigInteger('admin_id')->nullable();
+
+           $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

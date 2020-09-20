@@ -138,13 +138,15 @@ class SchoolController extends Controller
      */
     public function uploadSchoolImage(Request $request,$id)
     {
+        
         request()->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
+            
         $school=School::findOrFail($id);
         $numberOfImages=DB::table("school_images")->where('school_id',$school->id)->count();
-        $imageName=$school->name."/".strval($numberOfImages+1);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $imageName=($school->name)."_".strval($numberOfImages+1).".".$extension;
         
         $image=SchoolImage::create([
             "school_id"=>$school->id,

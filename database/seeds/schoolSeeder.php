@@ -11,7 +11,8 @@ class schoolSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\School::class,5)->create();
+        $school_admin=factory(App\Models\User::class)->create(["role"=>"school_admin"]);
+        factory(App\Models\School::class,5)->create(["admin_id"=>$school_admin->id]);
         for($i=1;$i<6;$i++)
         {
             factory(App\Models\SchoolImage::class)->create(["school_id"=>$i]);

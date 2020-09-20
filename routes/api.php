@@ -25,8 +25,9 @@ Route::post('password/reset', 'ForgetPasswordController@reset');
 /*School Routes*/
 Route::apiResource('/schools','School\schoolController');
 Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
-Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
+Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
+Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');

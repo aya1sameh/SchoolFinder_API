@@ -5,8 +5,9 @@
 use App\Model;
 use Faker\Generator as Faker;
 
-$factory->define(Model::class, function (Faker $faker) {
+$factory->define(CommentOnPost::class, function (Faker $faker) {
     return [
-        //
+        'content' => $faker->content, 
+         
     ];
 });

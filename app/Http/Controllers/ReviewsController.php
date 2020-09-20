@@ -4,21 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Models\School;
 use Validator;
 class ReviewsController extends Controller
 {
    public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);////////////////////////////////////////////////////////////////////////////////////
+        //$this->middleware('auth')->except(['index','show']);
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $reviews = Review::paginate(10);
+    public function index($id)
+    {   $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
+        $reviews = Review::where("school_id",$id)->paginate(10);
         return response()->json($reviews,200);
     }
 
@@ -38,26 +42,27 @@ class ReviewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request,$id)
+    {   $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
         $restrictions=[
-            
-            "id"=> 'required',  //////////////////////////////////////////ask////////////////////////////////////////////////////
-            "user_id"=> 'required',
-            "school_id"=> 'required',
             'Review_description' => 'required|min:2|max:400',
-            'rating'=> 'required',
-            'created_at'=> 'required',	
-            
+            'rating'=> 'required|min:0|max:10',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
             echo "This Review can't be stored it doesn't match our restrictions";
             echo "Content required min of characters:2 and max:400";
+            echo "rating is required ";
             return response()->json($validator->errors(),400);
         }
         
        $review=Review::create($request->all());
+       $review->user_id= $request->user()->id;///////////////////////////////not tested///////////////////////////////////////////
+       $review->school_id= $id;
+       $review->save();
        return response()->json($review,201);
     }
 
@@ -67,11 +72,15 @@ class ReviewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $review = Review::find($id);
-        if(is_null($review)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+    public function show($id,$id2)
+    {   $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
+        $review = Review::find($id2);
+        if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
+
+            return  response()->json(["message"=>"Review not Found!!"],404);
         }
         return response()->json($review,200);
         
@@ -95,24 +104,28 @@ class ReviewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id,$id2)
+    {   $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
 
-        $review=Review::find($id);
+        $review=Review::find($id2);
         
-        if(is_null($review)){
+        if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
           return response()->json(["message"=>"This review is not found!"],404);
         }
-        if (auth()->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////////
+        if ($request->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////
             return response()->json(["message"=>"sorry you are not the review owner to update it :D"],401);
         }
         $restrictions=[
-            'updated_at'=> 'required',
+            'Review_description' => 'required|min:2|max:400',
+            'rating'=> 'required|min:0|max:10',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
             echo "This Review can't be stored it doesn't match our restrictions";
-            echo "specify the update date and time";
+            echo "specify the new rating and description";
             return response()->json($validator->errors(),400);
         }
         $review->update($request->all());
@@ -125,13 +138,16 @@ class ReviewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $review=Review::find($id);
-        if(is_null($review)){
+    public function destroy($request,$id,$id2)
+    {$school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
+        $review=Review::find($id2);
+        if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
           return response()->json(["message"=>"This review is not found!"],404);
         }
-        if (auth()->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////////
+        if ($request->user()->id !== $review->user_id){/////////////////////////////////////////////////////////////////////////////////////
             return response()->json(["message"=>"sorry you are not the review owner to delete it :D"],401);
         }
         $review->delete();

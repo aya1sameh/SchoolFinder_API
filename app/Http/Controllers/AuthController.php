@@ -40,11 +40,10 @@ class AuthController extends Controller
         //else if they sent their name instead 
         else $user=Auth::attempt(['name' => $name, 'password' => $request->password]);
         
-        //$user->deleted_at = null;//for saying that this user not deleted..
         if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
         
         $user = $request->user();
-        if($user->email_verified_at == null) return response()->json(['msg' => 'Unverified'], 401);
+        if($user->email_verified_at == null) return response()->json(['error' => 'Unverified'], 401);
         $accessToken=$this->createToken($user);
         
         return response()->json([
@@ -70,7 +69,7 @@ class AuthController extends Controller
         $input = $request->all(); 
         $input['password'] = Hash::make($input['password']); 
 
-        //create the user in the database and send email verification message
+        //create the user in the database 
         $user = User::create($input);
         //if the user is app admin so no need for verification
         if($user->role == 'app_admin' || $user->role == 'admin'){
@@ -83,7 +82,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ]);
         }
-        else{
+        else{ //and send email verification message
             $user->notify(new RegisterMailActivate($user));
             return response()->json(['message' => 'Successfully created user, just verify it!'], 201);
         } 
@@ -110,15 +109,5 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
-    }
-
-    //getId from the access token
-    public function getId(Request $request)
-    {
-        $user = User::where('access_token', $request->access_token)->first();
-        if(!$user) return response()->json([
-            'message' => 'User not found',
-        ]);
-        return $user->id;
     }
 }

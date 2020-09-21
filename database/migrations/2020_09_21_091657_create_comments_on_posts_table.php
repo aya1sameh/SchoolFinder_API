@@ -17,7 +17,7 @@ class CreateCommentOnPostsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
-           //$table->foreign('post_id')->references('id')->on('Community_post')->onDelete('cascade'); ///relation with the community posts table
+            $table->foreign('post_id')->references('id')->on('Community_post')->onDelete('cascade'); ///relation with the community posts table
             $table-> text ('content');
             $table->timestamps();
         });

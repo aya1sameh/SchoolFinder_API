@@ -13,7 +13,7 @@ class CreateCommentOnPostsTable extends Migration
      */
     public function up()
     {
-        Schema::create ('comments_on_posts',function(Blueprint $table) {
+        Schema::create ('comment_on_posts',function(Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table

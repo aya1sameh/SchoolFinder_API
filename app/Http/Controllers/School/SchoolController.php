@@ -32,8 +32,17 @@ class SchoolController extends Controller
         'certificates'=>'present|array',
         'stages'=>'present|array',
     ];
-
+    
     private $schoolImagesDirectory="/imgs/schools/";
+
+    /*
+    * class constructor that calls the suitable middleware to each route
+    */
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']); 
+    }
+
     /**
      * Store a newly created school Stage in storage.
      *
@@ -77,8 +86,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        //TODO:: except is_approved law normal user!
-        $schoolList= SchoolResource::collection(School::paginate(20));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->paginate(10));
         return response()->json($schoolList,200);
     }
 
@@ -96,6 +104,7 @@ class SchoolController extends Controller
             return response()->json($validator->errors(),400);
 
         /*Creating new school object*/
+        $user_role=$request->user->role;
         $school= School::create($request->except('certificates','stages'));
 
         /*Creating certificates,stages objects*/

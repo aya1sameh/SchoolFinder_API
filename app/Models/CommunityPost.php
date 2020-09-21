@@ -10,8 +10,11 @@ class CommunityPost extends Model
             'CommunityPost_Content',
             "user_id",
             "school_id",
-            'CommunityPostImages',
+            'CommunityPostImages[]',
 
+    ];
+    protected $casts = [
+        'CommunityPostImages[]' => 'array'
     ];
     public function users()
     {

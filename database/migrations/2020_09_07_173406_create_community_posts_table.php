@@ -17,7 +17,7 @@ class CreateCommunityPostsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('school_id')->nullable();
-            $table->string('CommunityPostImages')->nullable();
+            $table->json('CommunityPostImages[]')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade'); ///relation with the school table
             $table->text('CommunityPost_Content'); //will be updated later for the fancy stuff

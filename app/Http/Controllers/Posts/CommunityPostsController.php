@@ -13,7 +13,7 @@ class CommunityPostsController extends Controller
 {   private $PostImagesDirectory="\CommunityPostsImages";
     public function __construct()
     {
-        //$this->middleware('auth')->except(['index','show']); /////////////////////////////////uncommented when we finish testing////////////////////////////////////////////////
+        $this->middleware('auth')->except(['index','show']); 
     }
     /**
      * Display a listing of the resource.
@@ -48,10 +48,10 @@ class CommunityPostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,$id)
-    {  //$school=School::find($id);/////////////////////////////////uncommented when we finish testing////////////////////////////////////////////////
-        //if(is_null($school)){
-          //  return response()->json(["message"=>"This school is not found!"],404);
-        //}
+    {  $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
         
         $restrictions=[  
             'CommunityPost_Content' => 'required|min:2|max:400',
@@ -64,7 +64,7 @@ class CommunityPostsController extends Controller
             return response()->json($validator->errors(),400);
         }
         $post=CommunityPost::create($request->all());
-        //$post->user_id= $request->user()->id;/////////////////////////////////uncommented when we finish testing////////////////////////////////////////////////
+        $post->user_id= $request->user()->id;
         $post->school_id= $id;
         
         if($request->hasFile('CommunityPostImages'))
@@ -76,7 +76,7 @@ class CommunityPostsController extends Controller
                 $path=$Image->move(public_path('/CommunityPostsImages'),$ImageName);
                 $PhotoUrl=url('/CommunityPostsImages'.$ImageName);
                 $post->CommunityPostImages=array_merge($post->CommunityPostImages,[$ImageName]);
-                $post->CommunityPostImages=array_slice($post->CommunityPostImages,1);
+                $post->CommunityPostImages=array_filter($post->CommunityPostImages);
                 $i++;
             }
         }
@@ -125,18 +125,18 @@ class CommunityPostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request,$id,$id2)
-    {   //$school=School::find($id);/////////////////////////////////uncommented when we finish testing////////////////////////////////////////////////
-        //if(is_null($school)){
-          //  return response()->json(["message"=>"This school is not found!"],404);
-        //}
+    {   $school=School::find($id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
         $post=CommunityPost::find($id2);
         if(is_null($post) || !($post->school_id == $id && $post->id==$id2)){
           return response()->json(["message"=>"This Post is not found!"],404);
         }
         
-        /*if ($request->user()->id !== $post->user_id){ /////////////////////////////////uncommented when we finish testing////////////////////////////////////////////////
+        if ($request->user()->id !== $post->user_id){ 
            return response()->json(["message"=>"sorry you are not the Post owner to update it :D"],401);
-        }*/
+        }
         $restrictions=[
             'CommunityPost_Content' => 'sometimes|min:2|max:400',
             'CommunityPostImages[]'=> 'sometimes|image',
@@ -147,15 +147,17 @@ class CommunityPostsController extends Controller
             echo "required min of characters:2 and max:400";
             return response()->json($validator->errors(),400);
         }
+        $Images=$post->CommunityPostImages;
         if($post->CommunityPostImages){
-            $Images=$post->CommunityPostImages;
+            
             $imagepath=public_path().$this->PostImagesDirectory;
             for($i=1;$i<=count($Images);$i++){ 
                 $imagename='\CommunityPostImage_withID_'.$id2.'_'.$i.'.'.pathinfo($imagepath.$Images[$i-1], PATHINFO_EXTENSION);
                 File::delete($imagepath.$imagename);
             }
         }
-        if($request->hasFile('CommunityPostImages'))////////////////request returned with no files!!!!!!!///////////////////////////////
+        $post->CommunityPostImages=array();
+        if($request->hasFile('CommunityPostImages'))
         {$i=1;
             $Images=$request->file('CommunityPostImages');
             foreach($Images as $Image){
@@ -164,12 +166,12 @@ class CommunityPostsController extends Controller
                 $path=$Image->move(public_path('/CommunityPostsImages'),$ImageName);
                 $PhotoUrl=url('/CommunityPostsImages'.$ImageName);
                 $post->CommunityPostImages=array_merge($post->CommunityPostImages,[$ImageName]);
-                $post->CommunityPostImages=array_slice($post->CommunityPostImages,1);
+                $post->CommunityPostImages=array_filter($post->CommunityPostImages);
                 $i++;
             }
         }
-        $post->save();                        /////////////will see which one is better later///////////////////////////////////////
-        //$post->update($request->all());     ///////////////////
+        $post->CommunityPost_Content=$request->CommunityPost_Content;
+        $post->save();                            
         return response()->json($post,200);
     }
 

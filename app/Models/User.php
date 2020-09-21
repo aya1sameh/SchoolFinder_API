@@ -81,11 +81,4 @@ class User extends Authenticatable implements MustVerifyEmail
         //return $this->hasMany(Notification::class);
     }
 
-    //there are two types of user_id here:
-    //1.written by user->school finder client role
-    //2.send to user->school admin role
-    public function messages(){
-        //return $this->hasMany(Message::class);
-    }
-
 }

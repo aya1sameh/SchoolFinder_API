@@ -28,11 +28,24 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'string',
+            'email' => 'string',
             'password' => 'required|string',
         ]);
+        
+        if($request->name != null){
+            $name = $request->name;
+            $user=User::where('name',$name)->first();
+        }
+        else if($request->email != null){
+            $email = $request->email;
+            $name =$email;
+            $user=User::where('email',$email)->first();
+        }
+        else 
+            return response()->json(['error' => 'Either name or email must be written'], 400);
 
-        $name = $request->name;
+        if(!$user) return response()->json(['error' => 'Not Registered'], 400);
 
         //if user sent their email 
         if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
@@ -82,7 +95,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ]);
         }
-        else{ //and send email verification message
+        else{ //else send email verification message
             $user->notify(new RegisterMailActivate($user));
             return response()->json(['message' => 'Successfully created user, just verify it!'], 201);
         } 

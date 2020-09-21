@@ -5,6 +5,7 @@
 use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,19 @@ use Illuminate\Support\Str;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+    $user = new User();
+    $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+    $user->email = $faker->unique()->safeEmail;
+    $user->name =$faker->name;
+    $user->email_verified_at =now();
+    $user->save();
+    $tokenResult = $user->createToken('school finder app');
+    $token = $tokenResult->token;
+    $token->expires_at = Carbon::now()->addDays(365);
+    $token->save();
+    $user->access_token = $tokenResult->accessToken;
+    $user->remember_token = Str::random(10);
+    $user->save();
     return [
         'name' => $faker->name, 
         'email' => $faker->unique()->safeEmail,
@@ -25,6 +39,7 @@ $factory->define(User::class, function (Faker $faker) {
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
         'verify_token' => \bin2hex(openssl_random_pseudo_bytes(30)), 
+        'access_token' => $user->access_token,
         //'favorites' => json_encode(array('1','2'), JSON_NUMERIC_CHECK)
     ];
 });

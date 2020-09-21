@@ -14,11 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Auth system routes
+/*Auth System Routes: */
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
-
 Route::post('password/forget', 'ForgetPasswordController@forget');
 Route::post('password/reset', 'ForgetPasswordController@reset');
 
@@ -33,6 +32,7 @@ Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsC
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
 
+
 Route::group(['middleware' => 'auth:api'], function(){
 
     /*User's Profile Routes */
@@ -45,7 +45,6 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('user/favorites', 'User\UserController@getFavorites');
     Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
     Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
-    
 
     //logout
     Route::get('logout', 'AuthController@logout'); 

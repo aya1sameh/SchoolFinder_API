@@ -14,7 +14,7 @@ class ForgetPasswordController extends Controller
 
         Password::sendResetLink($credentials);
 
-        return response()->json(["msg" => 'Reset password link sent on your email id.']);
+        return response()->json(["error" => 'Reset password link sent on your email id.']);
     }
 
     //reset password
@@ -31,9 +31,9 @@ class ForgetPasswordController extends Controller
         });
 
         if ($reset_password_status == Password::INVALID_TOKEN) {
-            return response()->json(["msg" => "Invalid token provided"], 400);
+            return response()->json(["error" => "Invalid token provided"], 400);
         }
 
-        return response()->json(["msg" => "Password has been successfully changed"]);
+        return response()->json(["error" => "Password has been successfully changed"]);
     }
 }

@@ -103,9 +103,19 @@ class SchoolController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(),400);
 
-        /*Creating new school object*/
+        /*Creating new school object and filtering params based on role for safety*/
         $user_role=$request->user->role;
-        $school= School::create($request->except('certificates','stages'));
+        if($user_role=='school_finder_client')
+            $params=$request->except('certificates','stages','is_approved','admin_id');
+        else if($user_role=='school_admin')
+        {
+            $params=$request->except('certificates','stages','is_approved','admin_id');
+            array_merge($params,["admin_id"=>$request->user->id]);
+        }
+        else
+            $params=$request->except('certificates','stages');
+
+        $school= School::create($params);
 
         /*Creating certificates,stages objects*/
         $id=$school->id;

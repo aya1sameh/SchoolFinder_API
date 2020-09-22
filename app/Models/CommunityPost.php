@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
+
 class CommunityPost extends Model
-{
+{  use Notifiable;
     protected $fillable = [
             'CommunityPost_Content',
             "user_id",

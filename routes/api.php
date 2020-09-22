@@ -22,7 +22,7 @@ Route::post('password/forget', 'ForgetPasswordController@forget');
 Route::post('password/reset', 'ForgetPasswordController@reset');
 
 /*School Routes*/
-Route::apiResource('/schools','School\schoolController');
+Route::apiResource('/schools','School\schoolController')->parameters(['schools' => 'id',]);
 Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');

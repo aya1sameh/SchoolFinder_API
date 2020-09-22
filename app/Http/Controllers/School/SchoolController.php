@@ -40,7 +40,10 @@ class SchoolController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']); 
+        $this->middleware('auth:api')->except(['index','show']); 
+        $this->middleware('admin')->only(['destroy']);
+        //todo:: add school or app admin auth
+        $this->middleware('checkSchoolAdmin')->only(['addSchoolFacility','uploadSchoolImage','update','deleteSchoolImage','deleteSchoolFacility']);
     }
 
     /**
@@ -79,6 +82,7 @@ class SchoolController extends Controller
         }
     }
 
+    
     /**
      * Display a listing of schools (including schools that are not aproved yet) to the App admin.
      *
@@ -104,18 +108,19 @@ class SchoolController extends Controller
             return response()->json($validator->errors(),400);
 
         /*Creating new school object and filtering params based on role for safety*/
-        $user_role=$request->user->role;
-        if($user_role=='school_finder_client')
+        $user_role=$request->user()->role;
+        if($user_role=='school_finder_client' || $user_role=="school_admin")
             $params=$request->except('certificates','stages','is_approved','admin_id');
-        else if($user_role=='school_admin')
-        {
-            $params=$request->except('certificates','stages','is_approved','admin_id');
-            array_merge($params,["admin_id"=>$request->user->id]);
-        }
         else
             $params=$request->except('certificates','stages');
 
         $school= School::create($params);
+        /*Add admin id if user is admin*/
+        if($user_role=='school_admin')
+        {
+            $school->admin_id=$request->user()->id;
+            $school->save();
+        }
 
         /*Creating certificates,stages objects*/
         $id=$school->id;
@@ -159,7 +164,6 @@ class SchoolController extends Controller
      */
     public function uploadSchoolImage(Request $request,$id)
     {
-        
         request()->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -184,9 +188,15 @@ class SchoolController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        return response()->json(new SchoolResource(School::findOrFail($id)),200);
+        ///TODO:: check problem in request -> user
+        if($request->user() == NULL || $request->user()->role != "app_admin")
+            $school=School::where('is_approved',true)->findOrFail($id);
+        else
+            $school=School::findOrFail($id);
+            
+        return response()->json(new SchoolResource($school),200);
     }
 
     /**
@@ -206,8 +216,11 @@ class SchoolController extends Controller
         if($request->certificates)
             $this->storeSchoolCertificates($request,$id);
         
-        $school->update($request->all());
-        //TODO:: except('is_') law school admin 
+        if($request->user()->role=="school_admin")
+            $school->update($request->except(['admin_id','is_approved']));
+        else
+            $school->update($request->all());
+            
         return response()->json(new SchoolResource($school), 200);
     }
 
@@ -233,9 +246,6 @@ class SchoolController extends Controller
      */
     public function deleteSchoolFacility(Request $request,$id)
     {
-        /*Making sure that school exists*/
-        $school=School::findOrFail($id);
-
         $rules=["type"=>"required"];
         $validator= Validator::make($request->all(), $rules);
 
@@ -255,10 +265,8 @@ class SchoolController extends Controller
      */
     public function deleteSchoolImage(Request $request,$id)
     {
-        /* check if authenticated user is the school's admin*/
         /*Making sure that school exists*/
         $rules=["url"=>"required"];
-        $school=School::findOrFail($id);
         $schoolImage=SchoolImage::where('url',$request->url)->firstOrFail();
         
         SchoolImage::where(['school_id'=>$id,'url'=>$request->url])->delete();

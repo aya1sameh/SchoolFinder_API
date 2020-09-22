@@ -22,7 +22,7 @@ class ReviewsController extends Controller
         if(is_null($school)){
             return response()->json(["message"=>"This school is not found!"],404);
         }
-        $reviews = Review::where("school_id",$id)->paginate(10);
+        $reviews = Review::where("school_id",$id)->orderBy('updated_at','desc')->paginate(10);
         return response()->json($reviews,200);
     }
 

@@ -27,8 +27,11 @@ Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacilit
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
 Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
-
+/*CommunityPosts Routes*/
+Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
+Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+/*Review Routes*/
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
 

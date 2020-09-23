@@ -40,10 +40,18 @@ Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\Commu
 Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+
+/*comments on posts  Routes*/
+Route::get('/schools/{id}/CommunityPosts/{postid}/comments', 'Posts\LikesOfPostsController@index');//show comments on post
+Route::post('/schools/{id}/CommunityPosts/{postid}/Comments/{commentid}', 'Posts\CommentsOnPostsController@update');//update comment
+Route::post('/schools/{id}/CommunityPosts/{ppstid}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment
+
+/*Likes on posts Routes*/
+Route::get('/schools/{id}/CommunityPosts/{postid}/likes', 'Posts\LikesOfPostsController@index');//show likes on post
+
+
 /*Review Routes*/
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
-
-
 
 Route::group(['middleware' => 'auth:api'], function(){
 

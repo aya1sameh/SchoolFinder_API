@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\School;
+use App\Models\CommunityPost;
 
 class CommentsOnPostOwner extends Notification
 {
@@ -38,12 +40,13 @@ class CommentsOnPostOwner extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
-    {//$url = url('/api/schools/{school_id}/CommunityPosts/My_Posts'.$notifiable->verify_token);
+    public function toMail($notifiable)/// postowner
+    {  $Post=CommunityPost::where('user_id',$notifiable->id)->first();
+         $url = url('/api/schools/'.$Post->school_id.'/CommunityPosts'.'/'.$Post->id);
         return (new MailMessage)
                     ->subject('Comments on your post')
                     ->line('Please review your post, Someone commented on your post')
-                    ->action('Review post', url('/'))
+                    ->action('Review post', url($url))
                     ->line('Thank you for using our application!');
     }
 

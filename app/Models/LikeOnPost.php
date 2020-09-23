@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class LikeOnPost extends Model
 {
     protected $fillable=['user_id','post_id','liked'];
     public function users()

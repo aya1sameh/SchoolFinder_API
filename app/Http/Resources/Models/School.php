@@ -24,7 +24,7 @@ class School extends JsonResource
         "stages"=>  schoolStageResource::collection($this->stages),
         "certificates"=> schoolCertificateResource::collection($this->certificates),
         "gender"=>$this->gender,
-        "main language"=>$this->langauge,
+        "main language"=>$this->language,
         "addresss"=>$this->address,
         "phone number"=>$this->phone_number,
         "Annual fees"=>$this->fees,

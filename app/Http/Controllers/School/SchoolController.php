@@ -42,8 +42,7 @@ class SchoolController extends Controller
     {
         $this->middleware('auth:api')->except(['index','show']); 
         $this->middleware('admin')->only(['destroy']);
-        //todo:: add school or app admin auth
-        $this->middleware('checkSchoolAdmin')->only(['addSchoolFacility','uploadSchoolImage','update','deleteSchoolImage','deleteSchoolFacility']);
+        $this->middleware('limitToAppOrSchoolAdmin')->only(['addSchoolFacility','uploadSchoolImage','update','deleteSchoolImage','deleteSchoolFacility']);
     }
 
     /**

@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Posts;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Validator;
 use App\Models\CommentOnPost;
-
+use App\Models\User;
+use App\Models\CommunityPost;
+use App\Notifications\CommentsOnPostOwner;
+use App\Models\School;
 
 class CommentsOnPosts extends Controller
 {
@@ -47,7 +50,7 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store (Request $request,$pid)
+    public function store (Request $request,$schoolID,$pid)
     {
         $post=CommunityPost::find($pid);
         if(is_null($post)){
@@ -64,14 +67,14 @@ class CommentsOnPosts extends Controller
             return response()->json($validator->errors(),400);
         }
 
-        $comment=CommentOnPosts::create($request->all());
+        $comment=CommentOnPost::create($request->all());
         $comment->user_id= $request->user()->id;
         $comment->post_id= $pid;
         $comment-> save();
 
         $postOwner=User::where('id',$post->user_id)->first();
         if($postOwner){
-        $postOwner->notify(new NewCommentOnPost($postOwner));}
+        $postOwner->notify(new CommentsOnPostOwner($postOwner));}
        return response()->json($comment,201);
     }
 

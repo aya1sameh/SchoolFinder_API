@@ -16,7 +16,7 @@ class CommentsOnPosts extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']); 
+        $this->middleware('auth')->except(['index']); 
     }
     /**
      * Display a listing of comments on a apost .
@@ -85,19 +85,6 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show ($pid, $commentid)
-    {
-       
-        $post=CommunityPost::find($pid);
-        if(is_null($post)){
-            return response()->json(["message"=>"This post is not found!"],404);
-        }
-        $comment = CommentOnPost::find($commentid);
-        if(is_null($comment) || !($comment->post_id == $pid && $comment->id==$commentid)){
-            return response()->json(["message"=>"This comment is not found!"],404);
-        }
-        return response()->json($post, 200);
-    }
     
 
     
@@ -171,6 +158,8 @@ class CommentsOnPosts extends Controller
       if ($request->user()->id !== $comment->user_id){
         return response()->json(["message"=>"you cannot delete this comment!"],401);
     }
+    $comment->delete();
+    return response()->json(null,204);
 
    }
 

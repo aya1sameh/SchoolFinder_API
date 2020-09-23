@@ -8,7 +8,7 @@ class LikesOfPosts extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']); 
+        $this->middleware('auth')->except(['index']); 
     }
     /**
      * Display a listing of likes on a post.
@@ -50,7 +50,6 @@ class LikesOfPosts extends Controller
             return response()->json(["message"=>"This post is not found!"],404);
         }
        
-
         $like=LikeOnPost::create($request->all());
         $like->user_id= $request->user()->id;
         $like->post_id= $pid;
@@ -62,40 +61,8 @@ class LikesOfPosts extends Controller
        return response()->json($like,201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    public function show ($pid, $likeid)
-    {
-       
-        $post=CommunityPost::find($pid);
-        if(is_null($post)){
-            return response()->json(["message"=>"This post is not found!"],404);
-        }
-        $like = CommentOnPost::find($likeid);
-        if(is_null($like) || !($like->post_id == $pid && $like->id==$likeid)){
-            return response()->json(["message"=>"This like is not found!"],404);
-        }
-        return response()->json($post, 200);
-    }
+   
     
-
-    
-
-    public function edit()
-    {
-        //
-    }
-
-    public function update()
-   {
-       //
-   }
-
    public function destroy()
    {
        //

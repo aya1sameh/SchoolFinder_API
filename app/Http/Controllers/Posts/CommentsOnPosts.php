@@ -167,7 +167,8 @@ class CommentsOnPosts extends Controller
       }
       if ($request->user()->id !== $comment->user_id){
         return response()->json(["message"=>"you cannot delete this comment!"],401);
-    }
+    }$post->delete();
+    return response()->json(null,204);
 
    }
 

@@ -34,14 +34,15 @@ Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPosts
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
 /*comments on posts  Routes*/
-Route::apiResource('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPostsController');//resource route for comments on posts
-Route::post('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPostsController@update');
-Route::get('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPostsController@ShowPostsByUserID');
+Route::apiResource('/schools/{id}/CommunityPosts/{pid}/Comments', 'Posts\CommentsOnPostsController');//resource route for comments on posts
+Route::post('/schools/{id}/CommunityPosts/{pid}/comments', 'Posts\LikesOfPostsController@show');//show comments on post
+Route::post('/schools/{id}/CommunityPosts/{pid}/Comments/{commentid}', 'Posts\CommentsOnPostsController@update');//update comment
+Route::post('/schools/{id}/CommunityPosts/{pid}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment
 
 /*Likes on posts Routes*/
-Route::apiResource('/schools/{id}/CommunityPosts/{pid}/LikesOfPosts', 'Posts\LikesOfPostsController');//resource route for likes on posts
-Route::post('/schools/{id}/CommunityPosts/{pid}/LikesOfPosts', 'Posts\LikesOfPostsController@update');
-Route::get('/schools/{id}/CommunityPosts/{pid}/LikesOfPosts', 'Posts\LikesOfPostsController@ShowPostsByUserID');
+Route::apiResource('/schools/{id}/CommunityPosts/{pid}/likes', 'Posts\LikesOfPostsController');//resource route for likes on posts
+Route::post('/schools/{id}/CommunityPosts/{pid}/likes', 'Posts\LikesOfPostsController@show');//show likes on post
+
 
 
 

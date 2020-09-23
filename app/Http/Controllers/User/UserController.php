@@ -11,7 +11,7 @@ use Validator;
 class UserController extends Controller
 {
      /**
-     * Display a listing of the resource.
+     * Display a listing of Users, 10 per page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -22,43 +22,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //for validation 
-        $rules = [
-            'email' => 'required|string|email|unique:users', 
-            'password' => 'required|string|min:8|confirmed', 
-            'name' =>'required|string|unique:users',
-        ];
-        $validator = Validator::make($request->all(),$rules);
-        if ($validator->fails()) 
-            return response()->json(['error'=>$validator->errors()], 400); //bad request    
-        
-        $input = $request->all(); 
-        $input['password'] = Hash::make($input['password']); 
-
-        //create the user in the database and send email verification message
-        $user = User::create($input); 
-        return response()->json($user,201);
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified user by it's id.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -72,6 +36,13 @@ class UserController extends Controller
         return response()->json($user,200);
     }
 
+    /**
+     * Display the specified user by using the authentication access token.
+     *
+     * First this is a POST request which gets the current logged in user and return it.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function profile(Request $request)
     {
         $user = $request->user();
@@ -82,18 +53,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update the specified user info in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -111,7 +71,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

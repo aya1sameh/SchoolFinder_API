@@ -15,9 +15,10 @@ class CreateAdsTable extends Migration
     {
         Schema::create('Ads',function(Blueprint $table){
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->default(1);
             
-            $table->text('Ad_Content');
+            $table->text('ad_content');
+            $table->text('ad_image_url')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
             

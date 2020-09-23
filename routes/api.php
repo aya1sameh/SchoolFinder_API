@@ -22,7 +22,7 @@ Route::post('password/forget', 'ForgetPasswordController@forget');
 Route::post('password/reset', 'ForgetPasswordController@reset');
 
 /*School Routes*/
-Route::apiResource('/schools','School\schoolController');
+
 Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
@@ -31,6 +31,11 @@ Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage'
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
+Route::get('ads', 'AdsController@index');
+Route::get('ads/{id}', 'AdsController@show');
+Route::post('ads/store', 'AdsController@store')->middleware('admin');
+Route::post('ads/update', 'AdsController@update')->middleware('admin');
+Route::delete('ads/delete', 'AdsController@delete')->middleware('admin');
 
 
 Route::group(['middleware' => 'auth:api'], function(){

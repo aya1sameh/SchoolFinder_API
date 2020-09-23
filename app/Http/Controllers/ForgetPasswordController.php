@@ -8,16 +8,34 @@ use Illuminate\Support\Facades\Hash;
 
 class ForgetPasswordController extends Controller
 {
-    //forget password
+    /**
+     * Forget Password Request 
+     * @group  authentication system
+     * 
+     * This will send a reset link to the email of the user
+     * 
+     * @response 200{
+     *      "message" => 'Reset password link sent on your email id.'
+     * } 
+     */
     public function forget() {
         $credentials = request()->validate(['email' => 'required|email']);
 
         Password::sendResetLink($credentials);
 
-        return response()->json(["error" => 'Reset password link sent on your email id.']);
+        return response()->json(["message" => 'Reset password link sent on your email id.']);
     }
 
-    //reset password
+    /**
+     * Reset Password Request 
+     * @group  authentication system
+     * 
+     * This will open a new View asking you to put the new password. 
+     * 
+     * @response 200{
+     *      "message" => "Password has been successfully changed"
+     * } 
+     */
     public function reset() {
         $credentials = request()->validate([
             'email' => 'required|email',
@@ -34,6 +52,6 @@ class ForgetPasswordController extends Controller
             return response()->json(["error" => "Invalid token provided"], 400);
         }
 
-        return response()->json(["error" => "Password has been successfully changed"]);
+        return response()->json(["message" => "Password has been successfully changed"]);
     }
 }

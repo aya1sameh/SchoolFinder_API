@@ -24,7 +24,30 @@ class AuthController extends Controller
         $user->save();
         return $tokenResult->accessToken;
     }
-    //login
+
+    /**
+     * Login Request
+     * @group  authentication system
+     * 
+     * used to login and create token of this specific user
+     *  
+     *
+     * @bodyParam name 
+     * @bodyParam email required either the email or the name
+     * @bodyParam password required
+     * @response 200{
+     *  
+     *      "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZTg1M2U3MjNmMjBlNDg3MDBlNDhkYTU2ZmU2MDQ3MGU3ZGFmNjM2YTRmNmM3NTAyYWY3NGM3YTQzYzQyZWM2NmY0NDEzYTY2MTczMTdlZWIiLCJpYXQiOjE1OTk1MDAyMzgsIm5iZiI6MTU5OTUwMDIzOCwiZXhwIjoxNjMxMDM2MjM4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.Fo0udtMETBRLa4hYX99uErc7eOxTkPAFvaUffpogHnBo2xAMAwRyq-u15L2Hx510kQS2RqlHhOdzuSvIbtPIYJ6OyjlbP9XQxBSbVEKo3Pcbr9twTrAmwPifpEgc3zT9q_NRrnm9UabzfMy3-5tCwvGdNAv3yZet4CjVqTF-7lmFIt2MjSH1Si2WxlGa8Y3DMzvr0t4PuA8_ju8MK5Ql8ylNF10DQyi2YbbULXVHNJXKYIqDRElsAhzN185GTxYHvudvH_VIPOHMCkUeR4i5FAPHkhB_PGSrF9nde6CfbAQ7GIkiC5q9-wB4_Dt5sYjAX1y0VqUiL-y0V99XKS88_1AWkue2W1YfsxI76hcmTIGUR_57IxWVJPNlGXPzpUGdsHlKBmyH7mIHmo8wVMIq3woEy2ilfCLqyVAMIca-94nqY7iqmjhlrE_rBgvfpRz19n2AOWgI9Q33SrNYR4MM_g9XONXpYsjbpAz5BzahWbLRALTqGQNgKy7GNJbMld6Q0jKrZqek0T7Tb6sP1jSgWQaLz5VBhUJvZRDW2zO6-acBg3yQvRTqyMVeFigZaG4Rx9CnH-xd40WeeEjhA--uyCj0XD2zfhdPxNLhYvFa3tCYCJJwuffogpkAcd0pwuUsPS1Rvw75z5AqObFWiYqmwWDbwyrpF_xsVOUWIrqHxX0",
+     *      "token_type": "bearer",
+     * }
+     * @response 400{
+     *      "error" : "Not Registered"
+     * }
+     * @response 401{
+     *      "error" : "Unauthorized"
+     * }
+     * 
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -65,7 +88,32 @@ class AuthController extends Controller
         ]);
     }
  
-    //register
+    /**
+     * Register Request
+     * @group  authentication system
+     * 
+     * used to register a user and if admin will create the access token else will send email verification
+     *  
+     *
+     * @bodyParam name required 
+     * @bodyParam email required Unique email for each user
+     * @bodyParam password required Minimun 8 char
+     * @bodyParam password_confirmation required Must be a the same as the password 
+     * @bodyParam role {app_admin or school_admin or school_finder}
+     * @response 200{
+     *      "message": "Successfully created user, just verify it!"
+     * }
+     * if app_admin
+     * @response 200{ 
+     *      "message": "Successfully created user!",
+     *      "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYzZiMDk1YWVlMmI4ZWViNjBlMWIxYjFmZDkzMTBlNTJlZDgxZjZlMGY5ZGVlOTc0ZWVjMzYyOWZhNDFjMjQyY2YzYTFlNjIyYTQwNzkwMjQiLCJpYXQiOjE2MDA3ODAyODQsIm5iZiI6MTYwMDc4MDI4NCwiZXhwIjoxNjMyMzE2Mjg0LCJzdWIiOiIyMDYiLCJzY29wZXMiOltdfQ.njxPCFpUOJQYLS8DHnyFtZV-HdfagNM9BNTKReD2M0vCy6RJ2v-j1cL1EFSe0V-Rc4Jf_OteNngTyfNijdXVgetZ2uhL5pIvrZE2MX14BUe3f9UBlhq5inkt5vVLoKj1M6IKjubO0djBS1h0j_m0TjCqaJcIxv04QJx_PQKefabb1Ta6dStbiPuu7jE9SiecA3eyfzhCJdxsQv-XaB9w2RJ05sqBaZ-Mou5whklOXXQTakmnxOx98xaiTqCHXrrq9VzI0vMRv63kOHOCCslO0gig6bx4ztlLImF15Fw_w69Zn7eh0MWsotziDsKqjOuR1mOVsBopc74ejPzzDQeUV2hbmUABEuEBQWSCqlDwxfEHJ59K-dOoMERYTEqjZF4--DIgb6ML2n3MiVnMIA1iV4VV8eUyaPfndXoBdvzA5C83e0jpVas8k8oRC03NObcSK_PBdAegBNFkMcb3GWwhnjNQidB8QsmrZBeVzEMneYd_p_4psxOQEcMVChUAYunmg_-f_sJicZmLQ9_gez3hSG5VHPp_1waocTxGwiohVNtSeYWUkwDDl5nbf61AtIILg_ZJnEa00e7Ys15TnGunqYHOG9aEkhUtERxevwVN4U-okBs2ok5jYSvi2_JpjNkMgSM9kInkLgqxsQy0npgbWXGJUjkPCOniPGMKTfWOhJE",
+     *      "token_type": "Bearer"
+     * }
+     * @response 401{
+     *      "error" : 'A Specific Error will be displayed here acc. to what is missing'
+     * }
+     * 
+     */
     public function register(Request $request) 
     { 
         //for validation 
@@ -101,7 +149,12 @@ class AuthController extends Controller
         } 
     }
 
-    //verify the registeration
+    /**
+     * Verify the Account by sending an email
+     * @group  authentication system
+     * 
+     * A "Thanks" View will be shown after the verification complete.
+     */
     public function registerActivate($token)
     {
         $user = User::where('verify_token', $token)->first();
@@ -115,7 +168,14 @@ class AuthController extends Controller
         return view('thanks');
     }
 
-    //logout
+     /**
+     * Logout Request (Revoke the token) 
+     * @group  authentication system
+     * 
+     * @response 200{
+     *      "message":"Successfully logged out"
+     * } 
+     */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();

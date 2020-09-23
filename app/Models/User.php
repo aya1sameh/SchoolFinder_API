@@ -62,8 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     //this user role is app admin role
-    public function announcment_posts(){
-        //return $this->hasMany(Apost::class);
+    public function ads(){
+        return $this->hasMany('App\Models\Ads');
     }
 
     public function comments(){

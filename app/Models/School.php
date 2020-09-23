@@ -9,6 +9,7 @@ use App\Models\SchoolStage;
 use App\Models\SchoolImage;
 use App\Models\SchoolFacility;
 use App\Models\User;
+use App\Models\Review;
 
 class School extends Model
 {
@@ -79,8 +80,9 @@ class School extends Model
     //function that retun reviews of school
     public function reviews()
     {
-        
+        return $this->hasMany(Review::class);
     }
+
     //function that calculates overall rating of school
     public function calculateOverAllRating()
     {

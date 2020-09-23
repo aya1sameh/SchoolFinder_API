@@ -109,9 +109,9 @@ class SchoolController extends Controller
         /*Creating new school object and filtering params based on role for safety*/
         $user_role=$request->user()->role;
         if($user_role=='school_finder_client' || $user_role=="school_admin")
-            $params=$request->except('certificates','stages','is_approved','admin_id');
+            $params=$request->except('certificates','stages','is_approved','admin_id','rated_by','rating');
         else
-            $params=$request->except('certificates','stages');
+            $params=$request->except('certificates','stages','rated_by','rating');
 
         $school= School::create($params);
         /*Add admin id if user is admin*/

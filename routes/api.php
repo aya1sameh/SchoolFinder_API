@@ -34,12 +34,27 @@ Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacilit
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
 Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> cf06ac857ddb892b5afcf74c3ec9045ff1f0b83b
 /*CommunityPosts Routes*/
 Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
 Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+<<<<<<< HEAD
+
+/*comments on posts  Routes*/
+Route::get('/schools/{id}/CommunityPosts/{postid}/comments', 'Posts\LikesOfPostsController@index');//show comments on post
+Route::post('/schools/{id}/CommunityPosts/{postid}/Comments/{commentid}', 'Posts\CommentsOnPostsController@update');//update comment
+Route::post('/schools/{id}/CommunityPosts/{ppstid}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment
+
+/*Likes on posts Routes*/
+Route::get('/schools/{id}/CommunityPosts/{postid}/likes', 'Posts\LikesOfPostsController@index');//show likes on post
+=======
+>>>>>>> cf06ac857ddb892b5afcf74c3ec9045ff1f0b83b
 
 /*comments on posts  Routes*/
 Route::get('/schools/{id}/CommunityPosts/{postid}/comments', 'Posts\LikesOfPostsController@index');//show comments on post
@@ -49,6 +64,8 @@ Route::post('/schools/{id}/CommunityPosts/{ppstid}/comments/{commentid}/delete',
 /*Likes on posts Routes*/
 Route::get('/schools/{id}/CommunityPosts/{postid}/likes', 'Posts\LikesOfPostsController@index');//show likes on post
 
+/*Review Routes*/
+Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
 /*Review Routes*/
 Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');

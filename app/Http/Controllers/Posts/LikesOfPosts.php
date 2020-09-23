@@ -34,7 +34,7 @@ class LikesOfPosts extends Controller
     {
         //
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -82,7 +82,7 @@ class LikesOfPosts extends Controller
         }
         return response()->json($post, 200);
     }
-    }
+    
 
     
 

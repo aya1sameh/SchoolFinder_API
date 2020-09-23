@@ -95,7 +95,7 @@ class CommentsOnPosts extends Controller
         }
         return response()->json($post, 200);
     }
-    }
+    
 
     
     /**

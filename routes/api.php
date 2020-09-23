@@ -22,7 +22,7 @@ Route::post('password/forget', 'ForgetPasswordController@forget');
 Route::post('password/reset', 'ForgetPasswordController@reset');
 
 /*App admin Routes*/
-Route::group(['middleware' => 'auth:api'], function(){
+Route::group(['middleware' => ['auth:api','admin'] ], function(){
     Route::get('suggestions/','appAdminController@getNewSchoolSuggestions');
     Route::put('suggestions/{id}','appAdminController@approveSuggestion');
 });

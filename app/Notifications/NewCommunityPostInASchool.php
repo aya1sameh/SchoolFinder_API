@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-
+use App\Models\School;
 
 class NewCommunityPostInASchool extends Notification
 {
@@ -40,11 +40,13 @@ class NewCommunityPostInASchool extends Notification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    {//$url = url('/api/schools/{school_id}/CommunityPosts'.$notifiable->verify_token);
+    {   
+        $School=School::where('admin_id',$notifiable->id)->first();
+        $url = url('/api/schools/'.$School->id.'/CommunityPosts');
         return (new MailMessage)
                     ->subject('A new Post in your school page')
                     ->line('Please review the school Community Posts page, Someone created a new post')
-                    ->action('View post', url('/'))
+                    ->action('View post', url($url))
                     ->line('Thank you for using our application!');
     }
 

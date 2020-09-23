@@ -50,7 +50,6 @@ class LikesOfPosts extends Controller
             return response()->json(["message"=>"This post is not found!"],404);
         }
        
-
         $like=LikeOnPost::create($request->all());
         $like->user_id= $request->user()->id;
         $like->post_id= $pid;
@@ -64,19 +63,6 @@ class LikesOfPosts extends Controller
 
    
     
-
-    
-
-    public function edit()
-    {
-        //
-    }
-
-    public function update()
-   {
-       //
-   }
-
    public function destroy()
    {
        //

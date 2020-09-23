@@ -82,19 +82,6 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show ($pid, $commentid)
-    {
-       
-        $post=CommunityPost::find($pid);
-        if(is_null($post)){
-            return response()->json(["message"=>"This post is not found!"],404);
-        }
-        $comment = CommentOnPost::find($commentid);
-        if(is_null($comment) || !($comment->post_id == $pid && $comment->id==$commentid)){
-            return response()->json(["message"=>"This comment is not found!"],404);
-        }
-        return response()->json($post, 200);
-    }
     
 
     

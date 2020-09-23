@@ -62,26 +62,7 @@ class LikesOfPosts extends Controller
        return response()->json($like,201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    public function show ($pid, $likeid)
-    {
-       
-        $post=CommunityPost::find($pid);
-        if(is_null($post)){
-            return response()->json(["message"=>"This post is not found!"],404);
-        }
-        $like = CommentOnPost::find($likeid);
-        if(is_null($like) || !($like->post_id == $pid && $like->id==$likeid)){
-            return response()->json(["message"=>"This like is not found!"],404);
-        }
-        return response()->json($post, 200);
-    }
+   
     
 
     

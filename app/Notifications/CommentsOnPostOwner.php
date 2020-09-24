@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegisterMailActivate extends Notification
+class CommentsOnPostOwner extends Notification
 {
     use Queueable;
 
@@ -33,20 +33,18 @@ class RegisterMailActivate extends Notification
     }
 
     /**
-     * Get the mail representation of the Verification Notification.
+     * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    {
-        $url = url('/api/register/activate/'.$notifiable->remember_token);
-        //check for internet
+    {//$url = url('/api/schools/{school_id}/CommunityPosts/My_Posts'.$notifiable->verify_token);
         return (new MailMessage)
-            ->subject('Verify your account')
-            ->line('Thanks for registeration! Please before you begin, you must verify your account.')
-            ->action('Verify Account', url($url))
-            ->line('Thank you for using our application!');
+                    ->subject('Comments on your post')
+                    ->line('Please review your post, Someone commented on your post')
+                    ->action('Review post', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**

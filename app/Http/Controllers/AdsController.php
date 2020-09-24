@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Ads;
 use Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\File;
+use Illuminate\Support\Facades\File;
 
 class AdsController extends Controller
 {
+    private $adsImagesDirectory="\ad_image";
+
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']); 
@@ -122,6 +124,12 @@ class AdsController extends Controller
     {
         $ad = Ads::find($id);
         if(!$ad) return response()->json(null,204);
+        if($ad->ad_image_url !=null){
+            $ad_image=$ad->ad_image_url;
+            $imagepath=public_path().$this->adsImagesDirectory;
+            $imagename='\ad_image'.$id.'.'.pathinfo($imagepath.$ad_image, PATHINFO_EXTENSION);
+            File::delete($imagepath.$imagename);
+        }
         $ad->delete();
         return response()->json(null,204);
     }

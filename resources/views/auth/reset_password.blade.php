@@ -64,7 +64,7 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <form class="form-container" action="api/password/reset" method="POST">
+    <form class="form-container" action="api/password/reset" method="POST" >
         <h2>Forgot Password?</h2>
 
         <input name="email" placeholder="Enter email" value="{{request()->get('email')}}">

@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\RegisterMailActivate;
+use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 
 class AuthController extends Controller
 {
+    /**Create Token Function 
+     * 
+     * Helps in creating the access token for each user.
+     * 
+     */
     private function createToken($user){
         //creating access tokens..
         $tokenResult = $user->createToken('school finder app');
@@ -157,7 +163,7 @@ class AuthController extends Controller
      */
     public function registerActivate($token)
     {
-        $user = User::where('verify_token', $token)->first();
+        $user = User::where('remember_token', $token)->first();
         if (!$user) {
             return response()->json([
                 'message' => 'This verification token is invalid..'

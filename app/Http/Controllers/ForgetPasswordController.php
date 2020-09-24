@@ -20,7 +20,8 @@ class ForgetPasswordController extends Controller
      */
     public function forget() {
         $credentials = request()->validate(['email' => 'required|email']);
-
+        $request=request();
+        $request->headers->set('APP_KEY', '#School#Finder#Secret#');
         Password::sendResetLink($credentials);
 
         return response()->json(["message" => 'Reset password link sent on your email id.']);

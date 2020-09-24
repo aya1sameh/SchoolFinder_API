@@ -7,7 +7,7 @@ use Closure;
 class AdminMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request to check if the user is an app admin or not.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

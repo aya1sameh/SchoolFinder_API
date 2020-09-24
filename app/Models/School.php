@@ -8,6 +8,7 @@ use App\Models\SchoolCertificate;
 use App\Models\SchoolStage;
 use App\Models\SchoolImage;
 use App\Models\SchoolFacility;
+use App\Models\User;
 
 class School extends Model
 {
@@ -54,7 +55,27 @@ class School extends Model
         return $this->hasMany(SchoolFacility::class);
     }
 
+    /**
+     * Returns the admin of the school
+     * @return \App\Models\SchoolFacility
+     */
+    public function admin()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    /**
+     * Returns the admin of the school
+     * @return \App\Models\SchoolFacility
+     */
+    public function checkIfUserisAdmin($id)
+    {
+        if($this->admin==NULL || $this->admin->id != $id)
+                return false;
+
+        return true;
+    }
+    
     //function that retun reviews of school
     public function reviews()
     {
@@ -66,21 +87,15 @@ class School extends Model
         //
     }
 
-    //Function that returns number of users who like the school
-    public function numberOfLikes()
-    {
-        //
-    }
-
-
-    //Function that returns number of users who viewed the scool
-    public function numberOfViews()
-    {
-        //
-    }
-
+    
     //function that returns number of users who rated school
     public function numberOfRatings()
+    {
+        //
+    }
+
+    //Function that returns number of users who like the school
+    public function numberOfLikes()
     {
         //
     }

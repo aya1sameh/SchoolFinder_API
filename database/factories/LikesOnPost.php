@@ -2,11 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Model;
+use App\Models\LikeOnPost;
 use Faker\Generator as Faker;
 
-$factory->define(LikeOfPost::class, function (Faker $faker) {
+$factory->define(LikeOnPost::class, function (Faker $faker) {
     return [
-        'liked'=>$faker->boolean
+        'liked'=> $faker->liked,
+        'user_id'=> $faker->user_id,
+        'post_id'=> $faker ->post_id
     ];
 });

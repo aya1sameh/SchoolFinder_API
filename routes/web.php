@@ -34,4 +34,4 @@ Route::get('user/{user_id}/favorites/{school_id}/remove', 'User\UserController@R
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
 Route::apiResource('/schools/{school_id}/Reviews', 'ReviewsController');
-
+Route::apiResource('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPosts');

@@ -19,6 +19,8 @@ $factory->define(School::class, function (Faker $faker) {
         'is_approved'=>$faker->boolean,
         'establishing_year'=>$faker->year,
         'admin_id'=>factory(\App\Models\User::class),
+        'rating'=>$faker->randomElement([1,2,3,4,5,6,7,8,9,10]),
+        'rated_by'=>$faker->randomNumber,
     ];
     
 });

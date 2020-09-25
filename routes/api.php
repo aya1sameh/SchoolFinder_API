@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/schools/filter', 'School\SchoolController@Filter');
+Route::post('/schools/search', 'School\SchoolController@searchSchool');
+
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
 Route::post('password/reset', 'ForgetPasswordController@reset');

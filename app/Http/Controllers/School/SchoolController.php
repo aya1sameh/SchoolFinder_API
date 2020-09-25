@@ -262,6 +262,7 @@ class SchoolController extends Controller
         $language = $request->Language;
         $address = $request->Address;
         $certificate = $request->Certificate;
+        $stage = $request->Stage;
         $FilteredIDS = NULL;
 
         if(!is_null($maxfees)) {
@@ -324,6 +325,22 @@ class SchoolController extends Controller
             }   
         }
         
+        if(!is_null($stage)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('school_stages')
+                            ->where('stage', $stage )
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }else{
+                $Filtered = DB::table('school_stages')
+                            ->where('stage', $stage )
+                            ->whereIn('school_id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }   
+        }
         return response($Filtered,200); 
     }
 

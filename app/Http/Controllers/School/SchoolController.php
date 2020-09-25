@@ -256,13 +256,14 @@ class SchoolController extends Controller
             
     }
 
-<<<<<<< HEAD
     public function Filter(Request $request)
     {
         $maxfees = $request->MaxFees;
         $language = $request->Language;
         $address = $request->Address;
+        $certificate = $request->Certificate;
         $FilteredIDS = NULL;
+
         if(!is_null($maxfees)) {
             if(is_null($FilteredIDS)){
                 $Filtered = DB::table('schools')
@@ -274,8 +275,7 @@ class SchoolController extends Controller
                             ->where('fees', '<', (int)$maxfees)
                             ->whereIn('id', $FilteredIDS)
                             ->get();
-                $temp = array_column(json_decode($Filtered,true),'id');
-                $FilteredIDS = array_merge($FilteredIDS,$temp);
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }    
         }
         if(!is_null($language)){
@@ -288,9 +288,8 @@ class SchoolController extends Controller
             $Filtered = DB::table('schools')
                             ->where('language', (string)$language)
                             ->whereIn('id', $FilteredIDS)
-                            ->get();
-                $temp = array_column(json_decode($Filtered,true),'id');
-                $FilteredIDS = array_merge($FilteredIDS,$temp);
+                            ->get();    
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }   
         } 
         if(!is_null($address)){
@@ -304,15 +303,30 @@ class SchoolController extends Controller
                             ->where('address', 'like', '%' . $address . '%')
                             ->whereIn('id', $FilteredIDS)
                             ->get();
-                $temp = array_column(json_decode($Filtered,true),'id');
-                $FilteredIDS = array_merge($FilteredIDS,$temp);
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }   
         } 
+       
+        if(!is_null($certificate)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('school_certificates')
+                            ->where('certificate', $certificate )
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }else{
+                $Filtered = DB::table('school_certificates')
+                            ->where('certificate', $certificate )
+                            ->whereIn('school_id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }   
+        }
         
         return response($Filtered,200); 
     }
 
-=======
     /**
      * Remove the specified Image from storage and removes it from the public directory
      * @param  \Illuminate\Http\Request  $request
@@ -330,5 +344,4 @@ class SchoolController extends Controller
         File::delete($imageName);
         return response(null,204);
     }
->>>>>>> 87f73d9f46b5efa4c7565c7de994efa1b0dfe4dd
 }

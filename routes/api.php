@@ -25,6 +25,7 @@ Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacilit
 Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
 Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
 
+Route::post('/schools/filter', 'School\SchoolController@Filter');
 
 
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');

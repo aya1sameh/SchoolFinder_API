@@ -223,4 +223,59 @@ class SchoolController extends Controller
             
     }
 
+    public function Filter(Request $request)
+    {
+        $maxfees = $request->MaxFees;
+        $language = $request->Language;
+        $address = $request->Address;
+        $FilteredIDS = NULL;
+        if(!is_null($maxfees)) {
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('fees', '<', (int)$maxfees)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+                $Filtered = DB::table('schools')
+                            ->where('fees', '<', (int)$maxfees)
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();
+                $temp = array_column(json_decode($Filtered,true),'id');
+                $FilteredIDS = array_merge($FilteredIDS,$temp);
+            }    
+        }
+        if(!is_null($language)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('language', (string)$language)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+            $Filtered = DB::table('schools')
+                            ->where('language', (string)$language)
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();
+                $temp = array_column(json_decode($Filtered,true),'id');
+                $FilteredIDS = array_merge($FilteredIDS,$temp);
+            }   
+        } 
+        if(!is_null($address)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('address', 'like', '%' . $address . '%')
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+            $Filtered = DB::table('schools')
+                            ->where('address', 'like', '%' . $address . '%')
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();
+                $temp = array_column(json_decode($Filtered,true),'id');
+                $FilteredIDS = array_merge($FilteredIDS,$temp);
+            }   
+        } 
+        
+        return response($Filtered,200); 
+    }
+
 }

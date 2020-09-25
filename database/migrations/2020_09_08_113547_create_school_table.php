@@ -18,16 +18,16 @@ class CreateSchoolTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->enum('gender',['Mix','Girls Only','Boys Only']);
-            $table->string('language');
+            $table->enum('language',['Arabic','French','English','German']);
             $table->string('address');
             $table->bigInteger('phone_number');
             $table->bigInteger('fees');
-            $table->text('description')->nullabe();
+            $table->text('description')->nullable();
             $table->boolean('is_approved')->default(0);
             $table->year('establishing_year');
             //admin,urls
-           $table->json('communityPosts')->nullabe();
-           $table->json('reviews')->nullabe();
+           $table->json('communityPosts')->nullable();
+           $table->json('reviews')->nullable();
         });
     }
 

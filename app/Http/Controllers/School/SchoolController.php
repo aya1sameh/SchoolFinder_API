@@ -341,9 +341,21 @@ class SchoolController extends Controller
                 $Filtered = School::find($FilteredIDS);
             }   
         }
-        return response($Filtered,200); 
+        return Response()->json([
+            'Schools' => $Filtered
+        ], 200);
     }
 
+    public function searchSchool(Request $request)
+    {
+        $name = $request->get('name');
+        $school_info = School::where('name', 'like', "%{$name}%")
+                         ->get();
+
+        return Response()->json([
+            'search_results' => $school_info
+        ], 200);
+    }
     /**
      * Remove the specified Image from storage and removes it from the public directory
      * @param  \Illuminate\Http\Request  $request

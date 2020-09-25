@@ -24,7 +24,7 @@ class School extends JsonResource
         "stages"=>  schoolStageResource::collection($this->stages),
         "certificates"=> schoolCertificateResource::collection($this->certificates),
         "gender"=>$this->gender,
-        "main language"=>$this->langauge,
+        "main language"=>$this->language,
         "addresss"=>$this->address,
         "phone number"=>$this->phone_number,
         "Annual fees"=>$this->fees,
@@ -32,6 +32,9 @@ class School extends JsonResource
         "estiblashing year"=>$this->establishing_year,
         "gallery"=>schoolImageResource::collection($this->images),
         "facilities"=>schoolFacilityResource::collection($this->facilities),
+        "external_urls"=>$this->when($this->external_url != NULL,$this->external_url),
+        "rating"=>$this->rating,
+        "rated by"=>$this->rated_by,
         ];
     }
 }

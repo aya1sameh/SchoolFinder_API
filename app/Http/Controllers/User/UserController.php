@@ -10,15 +10,8 @@ use Validator;
 
 class UserController extends Controller
 {
-    public function test($id)
-    {
-        $user = User::find($id);
-        if($user == null) return response()->json('no response found',404);
-        return response()->json($user->test(),200);
-    }
-
      /**
-     * Display a listing of the resource.
+     * Display a listing of Users, 10 per page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -29,43 +22,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //for validation 
-        $rules = [
-            'email' => 'required|string|email|unique:users', 
-            'password' => 'required|string|min:8|confirmed', 
-            'name' =>'required|string|unique:users',
-        ];
-        $validator = Validator::make($request->all(),$rules);
-        if ($validator->fails()) 
-            return response()->json(['error'=>$validator->errors()], 400); //bad request    
-        
-        $input = $request->all(); 
-        $input['password'] = Hash::make($input['password']); 
-
-        //create the user in the database and send email verification message
-        $user = User::create($input); 
-        return response()->json($user,201);
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified user by it's id.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -80,53 +37,63 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified user by using the authentication access token.
      *
-     * @param  int  $id
+     * First this is a POST request which gets the current logged in user and return it.
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function profile(Request $request)
     {
-        //
+        $user = $request->user();
+        if(is_null($user)){
+            return response()->json(["message"=>"Response not Found!!"],404);
+        }
+        return response()->json($user,200);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user info in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $user = User::find($id);
+        $user = $request->user();
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
         $user->update($request->all());
+        $user->save();
         return response()->json($user,200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::find($id);
+        $user = $request->user();
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
         $user->delete();
         return response()->json(null,204);
     }
+    
 
     public function getFavorites(Request $request)
     {
-        
+        // Authentication required
         $user = $request->user();
+        if (is_null($user)){
+            return response()->json(["message"=>"Unauthorized"],401);
+        }
         $favorites_ids = $user->favorites;
         $favorites = School::find($favorites_ids);
         return response()->json($favorites,200);              
@@ -173,6 +140,9 @@ class UserController extends Controller
         }
 
         $user = $request->user();
+        if (is_null($user)){
+            return response()->json(["message"=>"Unauthorized"],401);
+        }
         $favorites = $user->favorites;
 
         if (empty($favorites)){
@@ -193,8 +163,11 @@ class UserController extends Controller
         }
                       
     }
+<<<<<<< HEAD
 
    
     
     
+=======
+>>>>>>> 87f73d9f46b5efa4c7565c7de994efa1b0dfe4dd
 }

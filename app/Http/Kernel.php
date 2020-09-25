@@ -65,8 +65,11 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'client' => CheckClientCredentials::class,
+        'app_key' => \App\Http\Middleware\AuthKey::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'school_admin' => \App\Http\Middleware\SchoolAdminMiddleware::class,
         'school_finder' => \App\Http\Middleware\SchoolFinderMiddleware::class,
+        'checkSchoolAdmin'=>\App\Http\Middleware\checkSchoolAdmin::class,
+        'limitToAppOrSchoolAdmin'=>\App\Http\Middleware\limitToAppOrSchoolAdmin::class,
     ];
 }

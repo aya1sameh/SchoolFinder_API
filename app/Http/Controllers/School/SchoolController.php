@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Validator;
 
 /*Used Models and Resources*/
@@ -31,6 +32,18 @@ class SchoolController extends Controller
         'certificates'=>'present|array',
         'stages'=>'present|array',
     ];
+    
+    private $schoolImagesDirectory="/imgs/schools/";
+
+    /*
+    * class constructor that calls the suitable middleware to each route
+    */
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index','show']); 
+        $this->middleware('admin')->only(['destroy']);
+        $this->middleware('limitToAppOrSchoolAdmin')->only(['addSchoolFacility','uploadSchoolImage','update','deleteSchoolImage','deleteSchoolFacility']);
+    }
 
     /**
      * Store a newly created school Stage in storage.
@@ -68,6 +81,7 @@ class SchoolController extends Controller
         }
     }
 
+    
     /**
      * Display a listing of schools (including schools that are not aproved yet) to the App admin.
      *
@@ -75,8 +89,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        //TODO:: except is_approved law normal user!
-        $schoolList= SchoolResource::collection(School::paginate(20));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->paginate(10));
         return response()->json($schoolList,200);
     }
 
@@ -93,8 +106,20 @@ class SchoolController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(),400);
 
-        /*Creating new school object*/
-        $school= School::create($request->except('certificates','stages'));
+        /*Creating new school object and filtering params based on role for safety*/
+        $user_role=$request->user()->role;
+        if($user_role=='school_finder_client' || $user_role=="school_admin")
+            $params=$request->except('certificates','stages','is_approved','admin_id','rated_by','rating');
+        else
+            $params=$request->except('certificates','stages','rated_by','rating');
+
+        $school= School::create($params);
+        /*Add admin id if user is admin*/
+        if($user_role=='school_admin')
+        {
+            $school->admin_id=$request->user()->id;
+            $school->save();
+        }
 
         /*Creating certificates,stages objects*/
         $id=$school->id;
@@ -141,17 +166,18 @@ class SchoolController extends Controller
         request()->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
+            
         $school=School::findOrFail($id);
         $numberOfImages=DB::table("school_images")->where('school_id',$school->id)->count();
-        $imageName=$school->name."/".strval($numberOfImages+1);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $imageName=($school->name)."_".strval($numberOfImages+1).'_'.time().".".$extension;
         
         $image=SchoolImage::create([
             "school_id"=>$school->id,
             "url"=>$imageName
         ]);
         
-        $request->image->move(public_path('/imgs/schools'),$imageName);
+        $request->image->move(public_path($this->schoolImagesDirectory),$imageName);
         return response()->json(new SchoolImageResource($image),201);
     }
 
@@ -161,9 +187,15 @@ class SchoolController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        return response()->json(new SchoolResource(School::findOrFail($id)),200);
+        ///TODO:: check problem in request -> user
+        if($request->user() == NULL || $request->user()->role != "app_admin")
+            $school=School::where('is_approved',true)->findOrFail($id);
+        else
+            $school=School::findOrFail($id);
+            
+        return response()->json(new SchoolResource($school),200);
     }
 
     /**
@@ -183,8 +215,11 @@ class SchoolController extends Controller
         if($request->certificates)
             $this->storeSchoolCertificates($request,$id);
         
-        $school->update($request->all());
-        //TODO:: except('is_') law school admin 
+        if($request->user()->role=="school_admin")
+            $school->update($request->except(['admin_id','is_approved']));
+        else
+            $school->update($request->all());
+            
         return response()->json(new SchoolResource($school), 200);
     }
 
@@ -204,14 +239,12 @@ class SchoolController extends Controller
     /**
      * Remove the specified school facility from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function deleteSchoolFacility(Request $request,$id)
     {
-        /*Making sure that school exists*/
-        $school=School::findOrFail($id);
-
         $rules=["type"=>"required"];
         $validator= Validator::make($request->all(), $rules);
 
@@ -223,6 +256,7 @@ class SchoolController extends Controller
             
     }
 
+<<<<<<< HEAD
     public function Filter(Request $request)
     {
         $maxfees = $request->MaxFees;
@@ -278,4 +312,23 @@ class SchoolController extends Controller
         return response($Filtered,200); 
     }
 
+=======
+    /**
+     * Remove the specified Image from storage and removes it from the public directory
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteSchoolImage(Request $request,$id)
+    {
+        /*Making sure that school exists*/
+        $rules=["url"=>"required"];
+        $schoolImage=SchoolImage::where('url',$request->url)->firstOrFail();
+        
+        SchoolImage::where(['school_id'=>$id,'url'=>$request->url])->delete();
+        $imageName=public_path().$this->schoolImagesDirectory.($request->url);
+        File::delete($imageName);
+        return response(null,204);
+    }
+>>>>>>> 87f73d9f46b5efa4c7565c7de994efa1b0dfe4dd
 }

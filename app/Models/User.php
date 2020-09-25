@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','verify_token','email_verified_at',
+        'name', 'email', 'password','email_verified_at',//'verify_token',
         'role','avatar','phone_no','address',
     ];
 
@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','verify_token',
+        'password', 'remember_token',//'verify_token',
     ];
 
     /**
@@ -62,8 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     //this user role is app admin role
-    public function announcment_posts(){
-        //return $this->hasMany(Apost::class);
+    public function ads(){
+        return $this->hasMany('App\Models\Ads');
     }
 
     public function comments(){
@@ -79,13 +79,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function notifications(){
         //return $this->hasMany(Notification::class);
-    }
-
-    //there are two types of user_id here:
-    //1.written by user->school finder client role
-    //2.send to user->school admin role
-    public function messages(){
-        //return $this->hasMany(Message::class);
     }
 
 }

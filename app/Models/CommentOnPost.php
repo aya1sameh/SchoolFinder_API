@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class CommentOnPost extends Model
 {
-    protected $fillable=['user ID','post ID','content'];
+    protected $fillable=['user_id','post_id','content'];
     public function users()
     {
         return $this->belongsTo('App\Models\User');

@@ -14,39 +14,71 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Auth system routes
-Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
-/*School Routes*/
-Route::apiResource('/schools','School\schoolController');
-Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
-Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
-Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
+Route::post('password/reset', 'ForgetPasswordController@reset');
 
 Route::post('/schools/filter', 'School\SchoolController@Filter');
 
+Route::group(['middleware' => 'app_key'], function(){
 
-Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
-Route::apiResource('/schools/{school_id}/Reviews', 'ReviewsController');
+    /*Auth System Routes: */
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+    Route::post('password/forget', 'ForgetPasswordController@forget');
 
-Route::group(['middleware' => 'auth:api'], function(){
+    /*School Routes*/
+    Route::apiResource('/schools','School\schoolController')->parameters(['schools' => 'id',]);
+    Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
+    Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
+    Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
+    Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
 
-    Route::apiResource('user','User\UserController'); 
+    /*CommunityPosts Routes*/
+    Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
+    Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
+    Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
-    /*favourite schools Routes*/
-    Route::post('user/favorites', 'User\UserController@getFavorites');
-    Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
-    Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
-    
+    /*Review Routes*/
+    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
 
-    
+    /*comments on posts  Routes*/
+    Route::get('/schools/{id}/CommunityPosts/{postid}/comments', 'Posts\LikesOfPostsController@index');//show comments on post
+    Route::post('/schools/{id}/CommunityPosts/{postid}/Comments/{commentid}', 'Posts\CommentsOnPostsController@update');//update comment
+    Route::post('/schools/{id}/CommunityPosts/{ppstid}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment
+
+    /*Likes on posts Routes*/
+    Route::get('/schools/{id}/CommunityPosts/{postid}/likes', 'Posts\LikesOfPostsController@index');//show likes on post
+
+    /*Ads Routes*/
+    Route::get('ads', 'AdsController@index');
+    Route::get('ads/{id}', 'AdsController@show');
+    Route::post('ads/store', 'AdsController@store')->middleware('admin');
+    Route::post('ads/update/{id}', 'AdsController@update')->middleware('admin');
+    Route::delete('ads/delete/{id}', 'AdsController@destroy')->middleware('admin');
 
 
-    //logout
-    Route::get('logout', 'AuthController@logout'); 
+    Route::group(['middleware' => 'auth:api'], function(){
+
+        /*User's Profile Routes */
+        Route::get('user','User\UserController@index');//getting all the users
+        Route::post('user/profile','User\UserController@profile');//getting the user's profile 
+        Route::post('user/update','User\UserController@update');//updating the user's profile
+        Route::delete('user/delete','User\UserController@destroy');//deleting the user
+
+        /*favourite schools Routes*/
+        Route::post('user/favorites', 'User\UserController@getFavorites');
+        Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
+        Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
+
+        //logout
+        Route::get('logout', 'AuthController@logout'); 
+    });
+
+    /*App admin Routes*/
+    Route::group(['middleware' => ['auth:api','admin'] ], function(){
+        Route::get('suggestions/','appAdminController@getNewSchoolSuggestions');
+        Route::put('suggestions/{id}','appAdminController@approveSuggestion');
+    });
+
 });
-
-//just for testing that we can send diff responses acc. to the user's role:
-Route::get('test/{id}','User\UserController@test');

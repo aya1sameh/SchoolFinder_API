@@ -7,7 +7,7 @@ use Closure;
 class SchoolFinderMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request to check if the user is a school finder client or not.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

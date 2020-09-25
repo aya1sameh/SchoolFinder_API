@@ -25,9 +25,14 @@ class CreateSchoolTable extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_approved')->default(0);
             $table->year('establishing_year');
-            //admin,urls
-           $table->json('communityPosts')->nullable();
-           $table->json('reviews')->nullable();
+            $table->smallInteger('rating')->default(1);
+            $table->unsignedBigInteger('rated_by')->default((0));
+            $table->json('community_posts')->nullable();
+            $table->json('reviews')->nullable();
+            $table->json('external_urls')->nullable();
+            $table->unsignedBigInteger('admin_id')->nullable();
+
+           $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

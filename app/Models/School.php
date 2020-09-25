@@ -8,10 +8,12 @@ use App\Models\SchoolCertificate;
 use App\Models\SchoolStage;
 use App\Models\SchoolImage;
 use App\Models\SchoolFacility;
+use App\Models\User;
+use App\Models\Review;
 
 class School extends Model
 {
-    protected $fillable =['name', 'gender','language','address','phone_number','description','fees','establishing_year'];
+    protected $fillable =['name', 'gender','language','address','phone_number','description','fees','establishing_year','is_approved'];
 
     protected $casts = [
         'communityPosts' => 'array',
@@ -54,16 +56,73 @@ class School extends Model
         return $this->hasMany(SchoolFacility::class);
     }
 
+    /**
+     * Returns the admin of the school
+     * @return \App\Models\SchoolFacility
+     */
+    public function admin()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    //function that retun reviews of school
+    /**
+     * Returns the admin of the school
+     * @return \App\Models\SchoolFacility
+     */
+    public function checkIfUserisAdmin($id)
+    {
+        if($this->admin==NULL || $this->admin->id != $id)
+                return false;
+
+        return true;
+    }
+    
+    /**
+     * Returns the reviews of the school
+     * @return \App\Models\Review
+     */
     public function reviews()
     {
-        
+        /*TODO::not working*/
+        return $this->hasMany(Review::class);
     }
-    //function that calculates overall rating of school
+
+    /**
+     * Adjusts the overall rating of the school when a new rating is added
+     * @return null
+     */
     public function calculateOverAllRating()
     {
-        //
+        $reviews=Review::where('school_id',$this->id)->get();
+        $sum=0;
+        $number=0;
+        foreach($reviews as $review)
+        {
+            $sum+=$review->rating;
+            $number++;
+        }
+        
+        $avgRating=$sum/$number;
+        $this->rating=$avgRating;
+        $this->save();
+    }
+
+    
+    /**
+     * Returns the facilities that school have
+     * @param $operation: a string which is either '+' or '-'
+     * @return null
+     */
+    public function changeRatedBy($operation)
+    {
+        $ratedBy=$this->rated_by;
+        if($operation=='+')
+            $ratedBy++;
+        else if($operation=='-')
+            $ratedBy--;
+
+        $this->rated_by=$ratedBy;
+        $this->save();
     }
 
     //Function that returns number of users who like the school
@@ -71,19 +130,5 @@ class School extends Model
     {
         //
     }
-
-
-    //Function that returns number of users who viewed the scool
-    public function numberOfViews()
-    {
-        //
-    }
-
-    //function that returns number of users who rated school
-    public function numberOfRatings()
-    {
-        //
-    }
-
     
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLikesOnPostsTable extends Migration
+class CreateLikeOnPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,12 @@ class CreateLikesOnPostsTable extends Migration
     public function up()
     
         {
-            Schema::create ('likes',function(Blueprint $table) {
-                $table->unsignedBigInteger ('user ID');
-                $table->unsignedBigInteger('post ID');
+            Schema::create ('like_on_posts',function(Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger ('user_id');
+                $table->unsignedBigInteger('post_id');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); ///relation with the user table
-                $table->foreign('post ID')->references('id')->on('Community_posts')->onDelete('cascade'); ///relation with the community posts table
+                $table->foreign('post_id')->references('id')->on('Community_posts')->onDelete('cascade'); ///relation with the community posts table
                 $table->timestamps();
                 $table ->boolean('liked')->default(false);
     
@@ -29,7 +30,6 @@ class CreateLikesOnPostsTable extends Migration
     
             });
         }
-    
 
     /**
      * Reverse the migrations.
@@ -38,6 +38,6 @@ class CreateLikesOnPostsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('like_on_posts');
     }
 }

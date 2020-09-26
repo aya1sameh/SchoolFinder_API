@@ -13,9 +13,18 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/schools/filter', 'School\SchoolController@Filter');
+Route::post('/schools/search', 'School\SchoolController@searchSchool');
 
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+<<<<<<< HEAD
+=======
+Route::post('password/reset', 'ForgetPasswordController@reset');
+
+
+
+>>>>>>> db82c09ef15811aefa7cb19821ec0ea2c7dedb3d
 Route::group(['middleware' => 'app_key'], function(){
 
     /*Auth System Routes: */

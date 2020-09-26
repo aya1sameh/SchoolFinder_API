@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         factory(\App\Models\User::class,10)->create();
         $this->call(schoolSeeder::class);
+        $this->call(PostSeeder::class);
+        $this->call(ReviewSeeder::class);
     }
 }

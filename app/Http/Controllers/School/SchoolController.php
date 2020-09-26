@@ -257,6 +257,106 @@ class SchoolController extends Controller
             
     }
 
+    public function Filter(Request $request)
+    {
+        $maxfees = $request->MaxFees;
+        $language = $request->Language;
+        $address = $request->Address;
+        $certificate = $request->Certificate;
+        $stage = $request->Stage;
+        $FilteredIDS = NULL;
+
+        if(!is_null($maxfees)) {
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('fees', '<', (int)$maxfees)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+                $Filtered = DB::table('schools')
+                            ->where('fees', '<', (int)$maxfees)
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }    
+        }
+        if(!is_null($language)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('language', (string)$language)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+            $Filtered = DB::table('schools')
+                            ->where('language', (string)$language)
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();    
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }   
+        } 
+        if(!is_null($address)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('schools')
+                            ->where('address', 'like', '%' . $address . '%')
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }else{
+            $Filtered = DB::table('schools')
+                            ->where('address', 'like', '%' . $address . '%')
+                            ->whereIn('id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'id');
+            }   
+        } 
+       
+        if(!is_null($certificate)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('school_certificates')
+                            ->where('certificate', $certificate )
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }else{
+                $Filtered = DB::table('school_certificates')
+                            ->where('certificate', $certificate )
+                            ->whereIn('school_id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }   
+        }
+        
+        if(!is_null($stage)){
+            if(is_null($FilteredIDS)){
+                $Filtered = DB::table('school_stages')
+                            ->where('stage', $stage )
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }else{
+                $Filtered = DB::table('school_stages')
+                            ->where('stage', $stage )
+                            ->whereIn('school_id', $FilteredIDS)
+                            ->get();
+                $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
+                $Filtered = School::find($FilteredIDS);
+            }   
+        }
+        return Response()->json([
+            'Schools' => $Filtered
+        ], 200);
+    }
+
+    public function searchSchool(Request $request)
+    {
+        $name = $request->get('name');
+        $school_info = School::where('name', 'like', "%{$name}%")
+                         ->get();
+
+        return Response()->json([
+            'search_results' => $school_info
+        ], 200);
+    }
     /**
      * Remove the specified Image from storage and removes it from the public directory
      * @param  \Illuminate\Http\Request  $request

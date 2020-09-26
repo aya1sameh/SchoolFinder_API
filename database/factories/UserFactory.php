@@ -30,7 +30,7 @@ $factory->define(User::class, function (Faker $faker) {
     $token = $tokenResult->token;
     $token->expires_at = Carbon::now()->addDays(365);
     $token->save();
-    $user->access_token = $tokenResult->accessToken;
+    //$user->access_token = $tokenResult->accessToken;
     $user->remember_token = \bin2hex(openssl_random_pseudo_bytes(30));
     $user->save();
     return [
@@ -40,7 +40,7 @@ $factory->define(User::class, function (Faker $faker) {
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         //'remember_token' => Str::random(10),
         'remember_token' => \bin2hex(openssl_random_pseudo_bytes(30)), 
-        'access_token' => $user->access_token,
+        //'access_token' => $user->access_token,
         'role' => $faker->randomElement(['app_admin','school_admin','school_finder_client']),
         //'favorites' => json_encode(array('1','2'), JSON_NUMERIC_CHECK)
     ];

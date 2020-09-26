@@ -190,6 +190,7 @@ class SchoolController extends Controller
     public function show(Request $request,$id)
     {
         ///TODO:: check problem in request -> user
+        //return $request->header('token');
         if($request->user() == NULL || $request->user()->role != "app_admin")
             $school=School::where('is_approved',true)->findOrFail($id);
         else

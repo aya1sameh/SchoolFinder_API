@@ -39,7 +39,7 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
     /*Review Routes*/
-    Route::apiResource('/schools/{school_id}/Review', 'reviews\ReviewsController');
+    Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
 
     Route::get ('Reviews/{review_id}/reviewLikes/', 'reviews\LikesOfReviewsController@numOfLikes');//view num of likes.
     Route::post ('Reviews/{review_id}/reviewLikes/{user_id}', 'reviews\LikesOfReviewsController@addLikes');//add like.

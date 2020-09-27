@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel Starter</title>
+    <title>School Finder</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -64,14 +64,14 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <form class="form-container" action="api/password/reset" method="POST" >
+    <form class="form-container" action="api/password/reset" method="POST">
         <h2>Forgot Password?</h2>
 
         <input name="email" placeholder="Enter email" value="{{request()->get('email')}}">
         <input name="password" placeholder="Enter new password">
         <input name="password_confirmation" placeholder="Confirm new password">
         <input hidden name="token" placeholder="token" value="{{request()->get('token')}}">
-
+        <input hidden name="APP_KEY" placeholder="APP_KEY" value="c2Nob29sX2ZpbmRlcl9hcHBfa2V5ZmJkamhqeGNoa2N2anhqY2p2Ymh4amM6dmFzZGhoYXNkaGphZHNrZHNmYW1jbmhkc3VoZHVoY3Nq">
         <button type="submit">Submit</button>
     </form>
 </div>

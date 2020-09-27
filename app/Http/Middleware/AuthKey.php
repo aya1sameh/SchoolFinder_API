@@ -20,8 +20,15 @@ class AuthKey
         $key = $app_id.':'.$app_secret;
         $key_base64 = base64_encode($key);
         $final_key = base64_encode('school_finder_app_key').$key_base64;
-        //echo $final_key;
-        if($request->header('APP_KEY') != $final_key){
+
+        if($request->header('APP_KEY') != $final_key ){
+            $input = $request->all();
+            if($input != null ){
+                $app_key = $input['APP_KEY']??null;
+                if($app_key == $final_key){
+                    return $next($request);
+                }
+            }
             return response()->json(['error'=>'App Key is not correct'],401);
         }
         return $next($request);

@@ -28,9 +28,8 @@ Route::get('/login', function () {
     return view('notlogin');
 })->name('login');
 
-Route::get('user/{id}/favorites', 'User\UserController@getFavorites');
-Route::get('user/{user_id}/favorites/{school_id}/add', 'User\UserController@AddFavorites');
-Route::get('user/{user_id}/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
+
+
 Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
 Route::apiResource('/schools/{school_id}/Reviews', 'ReviewsController');

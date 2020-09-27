@@ -13,18 +13,25 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/schools/filter', 'School\SchoolController@Filter');
+Route::post('/schools/search', 'School\SchoolController@searchSchool');
 
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
+<<<<<<< HEAD
+=======
 Route::post('password/reset', 'ForgetPasswordController@reset');
 
 
+
+>>>>>>> db82c09ef15811aefa7cb19821ec0ea2c7dedb3d
 Route::group(['middleware' => 'app_key'], function(){
 
     /*Auth System Routes: */
     Route::post('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
     Route::post('password/forget', 'ForgetPasswordController@forget');
+    Route::post('password/reset', 'ForgetPasswordController@reset');
 
     /*School Routes*/
     Route::apiResource('/schools','School\schoolController')->parameters(['schools' => 'id',]);
@@ -56,12 +63,10 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::post('ads/update/{id}', 'AdsController@update')->middleware('admin');
     Route::delete('ads/delete/{id}', 'AdsController@destroy')->middleware('admin');
 
-
     Route::group(['middleware' => 'auth:api'], function(){
-
         /*User's Profile Routes */
         Route::get('user','User\UserController@index');//getting all the users
-        Route::post('user/profile','User\UserController@profile');//getting the user's profile 
+        Route::get('user/profile','User\UserController@profile');//getting the user's profile 
         Route::post('user/update','User\UserController@update');//updating the user's profile
         Route::delete('user/delete','User\UserController@destroy');//deleting the user
 

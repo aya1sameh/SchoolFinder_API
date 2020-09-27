@@ -39,7 +39,7 @@ class UserController extends Controller
     /**
      * Display the specified user by using the authentication access token.
      *
-     * First this is a POST request which gets the current logged in user and return it.
+     * First this is a GET request which gets the current logged in user and return it.
      *
      * @return \Illuminate\Http\Response
      */
@@ -163,4 +163,11 @@ class UserController extends Controller
         }
                       
     }
+<<<<<<< HEAD
+
+   
+    
+    
+=======
+>>>>>>> 87f73d9f46b5efa4c7565c7de994efa1b0dfe4dd
 }

@@ -14,7 +14,7 @@ class AppAdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getNewSchoolSuggestions()
-    {   
+    {  
         $schoolList= SchoolResource::collection(School::where("is_approved",false)->paginate(10));
         return response()->json($schoolList,200);
     }

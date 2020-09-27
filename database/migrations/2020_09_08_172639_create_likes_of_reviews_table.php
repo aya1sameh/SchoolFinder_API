@@ -20,7 +20,7 @@ class CreateLikesOfReviewsTable extends Migration
 
             $table->primary(array('user_id', 'review_id'));
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('review_id')->references('id')->on('Reviews');
+            $table->foreign('review_id')->references('id')->on('reviews');
         });
     }
 

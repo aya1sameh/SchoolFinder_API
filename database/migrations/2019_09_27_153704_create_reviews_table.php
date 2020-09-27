@@ -13,9 +13,9 @@ class CreateReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('Reviews', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->text('Review_description');
+            $table->text('review_description');
             $table->tinyInteger('rating');	
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
@@ -32,6 +32,6 @@ class CreateReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Reviews');
+        Schema::dropIfExists('reviews');
     }
 }

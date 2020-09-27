@@ -89,7 +89,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        $schoolList= SchoolResource::collection(School::where("is_approved",true)->paginate(10));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderBy('rating', 'desc')->paginate(10));
         return response()->json($schoolList,200);
     }
 

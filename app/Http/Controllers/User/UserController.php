@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\School;
 use Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+    private $userImagesDirectory="\user_images";
+    
      /**
      * Display a listing of Users, 10 per page.
      *
@@ -65,7 +69,43 @@ class UserController extends Controller
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
         }
-        $user->update($request->all());
+        $input = $request->all();
+        $removeAvatar = $input['remove_avatar']??false;
+        if($removeAvatar){
+            $id = $user->id;
+            //delete the avatar..
+            if($user->avatar !=null){
+                $user_image=$user->avatar;
+                $imagepath=public_path().$this->userImagesDirectory;
+                $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
+                File::delete($imagepath.$imagename);
+                $user->avatar=null;
+                $user->save();
+            }
+        }
+        //$user->save();
+        if($request->hasFile('avatar'))
+        {
+            $id = $user->id;
+            //delete the avatar first..
+            if($user->avatar !=null){
+                $user_image=$user->avatar;
+                $imagepath=public_path().$this->userImagesDirectory;
+                $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
+                File::delete($imagepath.$imagename);
+            }
+            $user->update($input);
+            //then update with the new avatar..
+            $Image=$request->file('avatar');
+            $ImageName='user_images'.$id.'.'.$Image->getClientOriginalExtension();
+            $path=$request->file('avatar')->move(public_path('/user_images'),$ImageName);
+            $PhotoUrl=url('/user_images'.$ImageName);
+            $user->avatar= $ImageName;
+            
+        }
+        else{
+            $user->update($input);
+        }
         $user->save();
         return response()->json($user,200);
     }
@@ -81,6 +121,13 @@ class UserController extends Controller
         $user = $request->user();
         if(is_null($user)){
             return response()->json(["message"=>"Response not Found!!"],404);
+        }
+        $id = $user->id;
+        if($user->avatar !=null){
+            $user_image=$user->avatar;
+            $imagepath=public_path().$this->userImagesDirectory;
+            $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
+            File::delete($imagepath.$imagename);
         }
         $user->delete();
         return response()->json(null,204);
@@ -163,11 +210,8 @@ class UserController extends Controller
         }
                       
     }
-<<<<<<< HEAD
 
    
     
     
-=======
->>>>>>> 87f73d9f46b5efa4c7565c7de994efa1b0dfe4dd
 }

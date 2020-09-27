@@ -24,11 +24,9 @@ class AuthKey
         if($request->header('APP_KEY') != $final_key ){
             $input = $request->all();
             if($input != null ){
-                if($input['APP_KEY'] != null){
-                    $app_key = $input['APP_KEY'];
-                    if($app_key == $final_key){
-                        return $next($request);
-                    }
+                $app_key = $input['APP_KEY']??null;
+                if($app_key == $final_key){
+                    return $next($request);
                 }
             }
             return response()->json(['error'=>'App Key is not correct'],401);

@@ -22,6 +22,7 @@ class DislikesOfReviews extends Controller
 
          $dislikes = DislikesOfReview::where("review_id",$id)->count();
            return response()->json($dislikes,200);
+        }
     }
 
     
@@ -43,7 +44,7 @@ class DislikesOfReviews extends Controller
        $dislikes->save();
        return response()->json($dislikes,201);
 
-        
+        }
     }
 
 
@@ -65,3 +66,4 @@ class DislikesOfReviews extends Controller
 
     }
 }
+    }

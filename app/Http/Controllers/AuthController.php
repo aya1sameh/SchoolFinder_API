@@ -128,6 +128,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed', 
             'name' =>'required|string|unique:users',
             'role' =>'string',
+            'avatar' =>'image',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 
@@ -138,6 +139,17 @@ class AuthController extends Controller
 
         //create the user in the database 
         $user = User::create($input);
+
+        if($request->hasFile('avatar'))
+        {
+            $Image=$request->file('avatar');
+            $ImageName='user_images'.$user->id.'.'.$Image->getClientOriginalExtension();
+            $path=$request->file('avatar')->move(public_path('/user_images'),$ImageName);
+            $PhotoUrl=url('/user_images'.$ImageName);
+            $user->avatar= $ImageName;
+        }
+        $user->save();
+
         //if the user is app admin so no need for verification
         if($user->role == 'app_admin' || $user->role == 'admin'){
             $user->email_verified_at = Carbon::now();

@@ -23,6 +23,7 @@ class LikesOfReviews extends Controller
          $likes = LikesOfReview::where("review_id",$id)->count();
            return response()->json($likes,200);
     }
+}
 
   
 
@@ -44,7 +45,7 @@ class LikesOfReviews extends Controller
        $likes->save();
        return response()->json($likes,201);
 
-        
+        }
     }
 
 
@@ -65,4 +66,5 @@ class LikesOfReviews extends Controller
         return response()->json(null,204);
 
     }
+}
 }

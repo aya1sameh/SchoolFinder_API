@@ -99,8 +99,15 @@ class AdsController extends Controller
         }
 
         if(!$ad) $ad = Ads::create($request->all());
-        else $ad->update($request->all());
-
+        else {
+            if($ad->ad_image_url !=null){
+                $ad_image=$ad->ad_image_url;
+                $imagepath=public_path().$this->adsImagesDirectory;
+                $imagename='\ad_image'.$id.'.'.pathinfo($imagepath.$ad_image, PATHINFO_EXTENSION);
+                File::delete($imagepath.$imagename);
+            }
+            $ad->update($request->all());
+        }
         $ad->user_id = $user->id;
         if($request->hasFile('ad_image_url'))
         {

@@ -16,7 +16,7 @@ class CommunityPostsController extends Controller
 {   private $PostImagesDirectory="\CommunityPostsImages";
     public function __construct()
     {
-       // $this->middleware('auth')->except(['index','show']); /////////uncomment when finish testing ////////////////////////////////////
+        $this->middleware('auth')->except(['index','show']); 
     }
     /**
      * Display a listing of the resource.
@@ -52,9 +52,9 @@ class CommunityPostsController extends Controller
      */
     public function store(Request $request,$id)
     {  $school=School::find($id);
-        //if(is_null($school)){ ///////////////////////////////////////uncomment when finish testing ////////////////////////////////////
-          //  return response()->json(["message"=>"This school is not found!"],404);
-        //}
+        if(is_null($school)){ 
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
         
         $restrictions=[  
             'CommunityPost_Content' => 'required|min:2|max:400',
@@ -67,7 +67,7 @@ class CommunityPostsController extends Controller
             return response()->json($validator->errors(),400);
         }
         $post=CommunityPost::create($request->all());
-        //$post->user_id= $request->user()->id; ////////////////////////uncomment when finish testing ////////////////////////////////////
+        $post->user_id= $request->user()->id; 
         $post->school_id= $id;
         
         if($request->hasFile('CommunityPostImages'))

@@ -60,9 +60,11 @@ class ReviewsController extends Controller
         }
         
        $review=Review::create($request->all());
-       $review->user_id= $request->user()->id;///////////////////////////////not tested///////////////////////////////////////////
+       $review->user_id= $request->user()->id;
        $review->school_id= $id;
        $review->save();
+       $school->calculateOverAllRating();
+       $school->changeRatedBy('+');
        return response()->json($review,201);
     }
 
@@ -138,7 +140,7 @@ class ReviewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($request,$id,$id2)
+    public function destroy(Request $request,$id,$id2)
     {$school=School::find($id);
         if(is_null($school)){
             return response()->json(["message"=>"This school is not found!"],404);
@@ -151,6 +153,8 @@ class ReviewsController extends Controller
             return response()->json(["message"=>"sorry you are not the review owner to delete it :D"],401);
         }
         $review->delete();
+        $school->calculateOverAllRating();
+        $school->changeRatedBy('-');
         return response()->json(null,204);
     }
 }

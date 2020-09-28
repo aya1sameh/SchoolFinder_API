@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\User;
+use App\Models\School;
 
 class CommunityPost extends Model
 {  use Notifiable;

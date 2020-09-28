@@ -14,11 +14,10 @@ class CreateDislikesOfReviewsTable extends Migration
     public function up()
     {
         Schema::create('dislikes_of_reviews', function (Blueprint $table) {
+            $table ->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('review_id');
             $table->timestamps();
-
-            $table->primary(array('user_id', 'review_id'));
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('review_id')->references('id')->on('reviews');
         });

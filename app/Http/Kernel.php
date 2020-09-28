@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+            'throttle:60,1', //request limit of an IP is 60 every 1 min
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'client' => CheckClientCredentials::class,
+        'app_key' => \App\Http\Middleware\AuthKey::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'school_admin' => \App\Http\Middleware\SchoolAdminMiddleware::class,
         'school_finder' => \App\Http\Middleware\SchoolFinderMiddleware::class,

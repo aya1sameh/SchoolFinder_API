@@ -11,20 +11,49 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\RegisterMailActivate;
+use Laravel\Passport\Http\Middleware\CheckClientCredentials;
 
 class AuthController extends Controller
 {
+    /**Create Token Function 
+     * 
+     * Helps in creating the access token for each user.
+     * 
+     */
     private function createToken($user){
         //creating access tokens..
         $tokenResult = $user->createToken('school finder app');
         $token = $tokenResult->token;
         $token->expires_at = Carbon::now()->addDays(365);
         $token->save();
-        $user->access_token = $tokenResult->accessToken;
-        $user->save();
+        //$user->access_token = $tokenResult->accessToken;
+        //$user->save();
         return $tokenResult->accessToken;
     }
-    //login
+
+    /**
+     * Login Request
+     * @group  authentication system
+     * 
+     * used to login and create token of this specific user
+     *  
+     *
+     * @bodyParam name 
+     * @bodyParam email required either the email or the name
+     * @bodyParam password required
+     * @response 200{
+     *  
+     *      "access_token": "YOUR TOKEN HERE",
+     *      "token_type": "bearer",
+     * }
+     * @response 400{
+     *      "error" : "Not Registered"
+     * }
+     * @response 401{
+     *      "error" : "Unauthorized"
+     * }
+     * 
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -65,7 +94,32 @@ class AuthController extends Controller
         ]);
     }
  
-    //register
+    /**
+     * Register Request
+     * @group  authentication system
+     * 
+     * used to register a user and if admin will create the access token else will send email verification
+     *  
+     *
+     * @bodyParam name required 
+     * @bodyParam email required Unique email for each user
+     * @bodyParam password required Minimun 8 char
+     * @bodyParam password_confirmation required Must be a the same as the password 
+     * @bodyParam role {app_admin or school_admin or school_finder}
+     * @response 200{
+     *      "message": "Successfully created user, just verify it!"
+     * }
+     * if app_admin
+     * @response 200{ 
+     *      "message": "Successfully created user!",
+     *      "access_token": "YOUR TOKEN HERE",
+     *      "token_type": "Bearer"
+     * }
+     * @response 401{
+     *      "error" : 'A Specific Error will be displayed here acc. to what is missing'
+     * }
+     * 
+     */
     public function register(Request $request) 
     { 
         //for validation 
@@ -74,6 +128,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed', 
             'name' =>'required|string|unique:users',
             'role' =>'string',
+            'avatar' =>'image',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 
@@ -84,6 +139,17 @@ class AuthController extends Controller
 
         //create the user in the database 
         $user = User::create($input);
+
+        if($request->hasFile('avatar'))
+        {
+            $Image=$request->file('avatar');
+            $ImageName='user_images'.$user->id.'.'.$Image->getClientOriginalExtension();
+            $path=$request->file('avatar')->move(public_path('/user_images'),$ImageName);
+            $PhotoUrl=url('/user_images'.$ImageName);
+            $user->avatar= $ImageName;
+        }
+        $user->save();
+
         //if the user is app admin so no need for verification
         if($user->role == 'app_admin' || $user->role == 'admin'){
             $user->email_verified_at = Carbon::now();
@@ -101,10 +167,15 @@ class AuthController extends Controller
         } 
     }
 
-    //verify the registeration
+    /**
+     * Verify the Account by sending an email
+     * @group  authentication system
+     * 
+     * A "Thanks" View will be shown after the verification complete.
+     */
     public function registerActivate($token)
     {
-        $user = User::where('verify_token', $token)->first();
+        $user = User::where('remember_token', $token)->first();
         if (!$user) {
             return response()->json([
                 'message' => 'This verification token is invalid..'
@@ -115,7 +186,14 @@ class AuthController extends Controller
         return view('thanks');
     }
 
-    //logout
+     /**
+     * Logout Request (Revoke the token) 
+     * @group  authentication system
+     * 
+     * @response 200{
+     *      "message":"Successfully logged out"
+     * } 
+     */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();

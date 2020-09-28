@@ -14,6 +14,7 @@ use App\Models\SchoolCertificate;
 use App\Models\SchoolStage;
 use App\Models\SchoolFacility;
 use App\Models\SchoolImage;
+use App\Models\User;
 
 use App\Http\Resources\Models\School as SchoolResource;
 use  App\Http\Resources\Models\SchoolImage as SchoolImageResource;
@@ -189,11 +190,20 @@ class SchoolController extends Controller
      */
     public function show(Request $request,$id)
     {
-        ///TODO:: check problem in request -> user
-        if($request->user() == NULL || $request->user()->role != "app_admin")
-            $school=School::where('is_approved',true)->findOrFail($id);
-        else
+        /*checking if access token is sent to request*/
+        $isAdmin=false;
+        $access_token=$request->header('access_token');
+        if($access_token)
+        {
+            $user=User::where('access_token',$access_token)->first();
+            if($user->role == "app_admin")
+                $isAdmin=true;
+                
+        }
+        if($isAdmin)
             $school=School::findOrFail($id);
+        else
+            $school=School::where('is_approved',true)->findOrFail($id);
             
         return response()->json(new SchoolResource($school),200);
     }

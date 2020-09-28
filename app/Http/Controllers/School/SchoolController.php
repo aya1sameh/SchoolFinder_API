@@ -90,7 +90,8 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderBy('rating', 'desc')->paginate(10));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderBy('rating', 'desc')
+                    ->orderBy('rated_by','desc')->paginate(10));
         return response()->json($schoolList,200);
     }
 
@@ -112,7 +113,11 @@ class SchoolController extends Controller
         if($user_role=='school_finder_client' || $user_role=="school_admin")
             $params=$request->except('certificates','stages','is_approved','admin_id','rated_by','rating');
         else
+        {
             $params=$request->except('certificates','stages','rated_by','rating');
+            $params=array_merge($params,["is_approved"=>1]);
+        }
+            
 
         $school= School::create($params);
         /*Add admin id if user is admin*/
@@ -126,7 +131,8 @@ class SchoolController extends Controller
         $id=$school->id;
         $this->storeSchoolCertificates($request,$id);
         $this->storeSchoolStages($request,$id);
-        
+        $school=School::find($id);  /*to update school info before returning it*/
+
         return response()->json(new SchoolResource($school),201);
     }
 

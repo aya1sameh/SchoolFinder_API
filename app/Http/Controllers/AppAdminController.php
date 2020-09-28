@@ -28,6 +28,10 @@ class AppAdminController extends Controller
     public function approveSuggestion($id)
     {
         $school=School::findOrFail($id);
+        $is_approved=$school->is_approved;
+        if($is_approved==1)
+            return response()->json(["message"=>"No suggestion found"],404);
+
         $school->update(['is_approved'=>true]);
         return response()->json(new SchoolResource($school), 200);
     }

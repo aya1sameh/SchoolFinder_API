@@ -49,6 +49,10 @@ class ReviewsController extends Controller
         if(is_null($school)){
             return response()->json(["message"=>"This school is not found!"],404);
         }
+        $AlreadyHaveAreview=Review::where("school_id",$id)->where("user_id",$request->user()->id)->first();
+        if($AlreadyHaveAreview){
+            return response()->json(["message"=>"You Already have a review you can update it instead of posting a new one"],449);
+        }
         $restrictions=[
             'review_description' => 'required|min:2|max:400',
             'rating'=> 'required|min:1|max:10',
@@ -119,7 +123,7 @@ class ReviewsController extends Controller
         if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
           return response()->json(["message"=>"This review is not found!"],404);
         }
-        if ($request->user()->id !== $review->user_id){/////////////////////////////////////////////////////////////////////////////////////
+        if ($request->user()->id !== $review->user_id){
             return response()->json(["message"=>"sorry you are not the review owner to update it :D"],401);
         }
         $restrictions=[
@@ -151,7 +155,7 @@ class ReviewsController extends Controller
         if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
           return response()->json(["message"=>"This review is not found!"],404);
         }
-        if ($request->user()->id !== $review->user_id){/////////////////////////////////////////////////////////////////////////////////////
+        if ($request->user()->id !== $review->user_id){
             return response()->json(["message"=>"sorry you are not the review owner to delete it :D"],401);
         }
         $review->delete();

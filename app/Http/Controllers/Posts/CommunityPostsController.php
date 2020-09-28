@@ -16,7 +16,7 @@ class CommunityPostsController extends Controller
 {   private $PostImagesDirectory="\CommunityPostsImages";
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']); 
+        $this->middleware('auth:api')->except(['index','show']); 
     }
     /**
      * Display a listing of the resource.

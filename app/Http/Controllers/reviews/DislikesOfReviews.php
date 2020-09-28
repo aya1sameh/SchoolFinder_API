@@ -22,7 +22,7 @@ class DislikesOfReviews extends Controller
         $review=review::find($id);
         if(is_null($review)){
             return response()->json(["message"=>"This review is not found!"],404);
-
+        }
          $dislikes = DislikesOfReview::where("review_id",$id)->count();
            return response()->json($dislikes,200);
     }
@@ -39,7 +39,7 @@ class DislikesOfReviews extends Controller
     $review=review::find($id);
         if(is_null($review)){
             return response()->json(["message"=>"This review is not found!"],404);
-            
+        }
             $likes=LikesOfReview::find($user_id);
             $dislikes=DislikesOfReview::find($user_id);
 
@@ -63,12 +63,11 @@ class DislikesOfReviews extends Controller
      * @return \Illuminate\Http\Response
      */
 public function removeDislikes(Request $request,$id,$user_id,$id2)
-    {
-
+ {
     $review=review::find($id);
     if(is_null($review)){
             return response()->json(["message"=>"This review is not found!"],404);
-            
+    }      
             $likes=LikesOfReview::find($user_id);
 
                if(DislikesOfReview::where('user_id', $user_id )->exists() && is_null($likes))
@@ -77,7 +76,6 @@ public function removeDislikes(Request $request,$id,$user_id,$id2)
             $dislikes->delete();
         return response()->json(null,204);
         }
-
-            }
+ }
 
 }

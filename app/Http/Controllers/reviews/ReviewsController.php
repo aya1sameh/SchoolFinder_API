@@ -50,14 +50,14 @@ class ReviewsController extends Controller
             return response()->json(["message"=>"This school is not found!"],404);
         }
         $restrictions=[
-            'Review_description' => 'required|min:2|max:400',
-            'rating'=> 'required|min:0|max:10',
+            'review_description' => 'required|min:2|max:400',
+            'rating'=> 'required|min:1|max:10',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){
             echo "This Review can't be stored it doesn't match our restrictions";
             echo "Content required min of characters:2 and max:400";
-            echo "rating is required ";
+            echo "rating is required min:1 and max:10";
             return response()->json($validator->errors(),400);
         }
         
@@ -119,12 +119,12 @@ class ReviewsController extends Controller
         if(is_null($review) || !($review->school_id == $id && $review->id==$id2)){
           return response()->json(["message"=>"This review is not found!"],404);
         }
-        if ($request->user()->id !== $review->user_id){////////////////////////////////////////////////////////////////////////////////
+        if ($request->user()->id !== $review->user_id){/////////////////////////////////////////////////////////////////////////////////////
             return response()->json(["message"=>"sorry you are not the review owner to update it :D"],401);
         }
         $restrictions=[
-            'Review_description' => 'required|min:2|max:400',
-            'rating'=> 'required|min:0|max:10',
+            'review_description' => 'required|min:2|max:400',
+            'rating'=> 'required|min:1|max:10',
         ];
         $validator= Validator::make($request->all(),$restrictions);
         if($validator->fails()){

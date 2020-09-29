@@ -20,26 +20,26 @@ use Carbon\Carbon;
 
 $factory->define(User::class, function (Faker $faker) {
     $user = new User();
-    $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+    /*$user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
     $user->email = $faker->unique()->safeEmail;
     $user->name =$faker->name;
     $user->email_verified_at =now();
     $user->role =  $faker->randomElement(['app_admin','school_admin','school_finder_client']);
-    $user->save();
+    $user->save();*/
     $tokenResult = $user->createToken('school finder app');
     $token = $tokenResult->token;
     $token->expires_at = Carbon::now()->addDays(365);
     $token->save();
-    $user->access_token = $tokenResult->accessToken;
+    /*$user->access_token = $tokenResult->accessToken;
     $user->remember_token = \bin2hex(openssl_random_pseudo_bytes(30));
-    $user->save();
+    $user->save();*/
     return [
         'name' => $faker->name, 
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => \bin2hex(openssl_random_pseudo_bytes(30)), 
-        'access_token' => $user->access_token,
+        'access_token' => $tokenResult->accessToken,
         'role' => $faker->randomElement(['app_admin','school_admin','school_finder_client']),
         //'favorites' => json_encode(array('1','2'), JSON_NUMERIC_CHECK)
     ];

@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use PHPUnit\Framework\TestCase;
 
-class PostSeeder extends Seeder
+class CommunityPostSeeder extends Seeder
 {
     /**
      * Run the database seeds.

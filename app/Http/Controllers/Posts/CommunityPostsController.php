@@ -78,6 +78,7 @@ class CommunityPostsController extends Controller
                 $ImageName='CommunityPostImage_withID_'.$post->id.'_'.$i.'.'.$Image->getClientOriginalExtension();
                 $path=$Image->move(public_path('/CommunityPostsImages'),$ImageName);
                 $PhotoUrl=url('/CommunityPostsImages'.$ImageName);
+                echo $PhotoUrl;
                 $post->CommunityPostImages=array_merge($post->CommunityPostImages,[$ImageName]);
                 $post->CommunityPostImages=array_filter($post->CommunityPostImages);
                 $i++;

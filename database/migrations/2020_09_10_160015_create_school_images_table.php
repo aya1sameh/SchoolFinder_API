@@ -17,9 +17,10 @@ class CreateSchoolImagesTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('school_id');
             $table->string('url');
-
+           
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
-            $table->primary(['school_id','url']);
+           $table->primary('school_id','url');
+         
         });
     }
 

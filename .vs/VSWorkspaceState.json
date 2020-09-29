@@ -1,10 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\app",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
+    "\\app\\Http\\Controllers\\School",
+    "\\app\\Models",
+    "\\config",
     "\\database",
     "\\database\\factories",
-    "\\database\\migrations"
+    "\\database\\seeds"
   ],
-  "SelectedNode": "\\database\\migrations\\2014_10_12_000000_create_users_table.php",
+  "SelectedNode": "\\database\\factories\\ReviewFactory.php",
   "PreviewInSolutionExplorer": false
 }

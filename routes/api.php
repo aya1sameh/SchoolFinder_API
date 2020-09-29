@@ -41,7 +41,7 @@ Route::group(['middleware' => 'app_key'], function(){
     /*Review Routes*/
     Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
 
-    Route::get ('Reviews/{review_id}/reviewLikes/', 'reviews\LikesOfReviewsController@numOfLikes');//view num of likes.
+    Route::get ('Reviews/{review_id}/reviewLikes', 'reviews\LikesOfReviewsController@numOfLikes');//view num of likes.
     Route::post ('Reviews/{review_id}/reviewLikes/{user_id}', 'reviews\LikesOfReviewsController@addLikes');//add like.
     Route::delete('Reviews/{review_id}/reviewLikes/{user_id}/like/{like_id}', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
 

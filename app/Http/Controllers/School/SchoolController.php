@@ -90,6 +90,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
+        //TODO:: orderby: rating*ratedby
         $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderBy('rating', 'desc')
                     ->orderBy('rated_by','desc')->paginate(10));
         return response()->json($schoolList,200);

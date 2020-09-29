@@ -7,9 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(CommentOnPost::class, function (Faker $faker) {
     return [
-        'content' => $faker->content, 
-        'user_id'=> $faker->user_id,
-        'post_id'=> $faker->post_id
+        'content' => $faker->paragraph, 
+        'user_id'=>factory(\App\Models\User::class),
+        'post_id'=>factory(\App\Models\Post::class),
 
     ];
 });

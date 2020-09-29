@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use PHPUnit\Framework\TestCase;
 
-class PostSeeder extends Seeder
+class LikesOnPostsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +11,6 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\CommunityPost::class, 5)->create();
+         factory(App\Models\LikeOnPost::class, 50)->create();
     }
 }

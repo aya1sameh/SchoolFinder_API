@@ -7,8 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(LikeOnPost::class, function (Faker $faker) {
     return [
-        'liked'=> $faker->liked,
-        'user_id'=> $faker->user_id,
-        'post_id'=> $faker ->post_id
-    ];
+         'user_id'=>factory(\App\Models\User::class),
+        'post_id'=>factory(\App\Models\Post::class),
 });

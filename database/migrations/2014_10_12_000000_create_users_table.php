@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
 
             //$table->string('verify_token')->unique();//for verification purpose
-            //$table->longText('access_token')->nullable();
+            $table->longText('access_token')->nullable();
 
             $table->string('avatar')->nullable();
             $table->string('phone_no')->nullable();

@@ -51,16 +51,17 @@ class AdsController extends Controller
         $ad = Ads::create($request->all());
         $ad->user_id = $user->id;
         $ad->save();
+        $PhotoUrl = null;
         if($request->hasFile('ad_image_url'))
         {
             $Image=$request->file('ad_image_url');
             $ImageName='ad_image'.$ad->id.'.'.$Image->getClientOriginalExtension();
             $path=$request->file('ad_image_url')->move(public_path('/ad_image'),$ImageName);
-            $PhotoUrl=url('/ad_image'.$ImageName);
+            $PhotoUrl=url('/ad_image'.'/'.$ImageName);
             $ad->ad_image_url= $ImageName;
         }
         $ad->save();
-        return response()->json($ad,201);
+        return response()->json($ad,201)->file($PhotoUrl);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use App\Models\User;
 use Validator;
 
 /*Used Models and Resources*/
@@ -149,7 +150,7 @@ class SchoolController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(),400);
 
-
+            
         SchoolFacility::create(array_merge($request->all(),["school_id"=>$id]));
         return response()->json(new SchoolResource($school),201);
     }
@@ -189,9 +190,10 @@ class SchoolController extends Controller
      */
     public function show(Request $request,$id)
     {
-        ///TODO:: check problem in request -> user
-        //return $request->header('token');
-        if($request->user() == NULL || $request->user()->role != "app_admin")
+        $access_token = $request->header('access_token')??null;
+        $user = User::where('access_token',$access_token)->first();
+        //return $user;
+        if($user == null || $user->role != "app_admin")
             $school=School::where('is_approved',true)->findOrFail($id);
         else
             $school=School::findOrFail($id);

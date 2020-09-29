@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use App\Models\User;
 use Validator;
 
 /*Used Models and Resources*/
@@ -14,7 +15,6 @@ use App\Models\SchoolCertificate;
 use App\Models\SchoolStage;
 use App\Models\SchoolFacility;
 use App\Models\SchoolImage;
-use App\Models\User;
 
 use App\Http\Resources\Models\School as SchoolResource;
 use  App\Http\Resources\Models\SchoolImage as SchoolImageResource;
@@ -156,7 +156,7 @@ class SchoolController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(),400);
 
-
+            
         SchoolFacility::create(array_merge($request->all(),["school_id"=>$id]));
         return response()->json(new SchoolResource($school),201);
     }
@@ -196,15 +196,15 @@ class SchoolController extends Controller
      */
     public function show(Request $request,$id)
     {
+       
         /*checking if access token is sent to request*/
         $isAdmin=false;
-        $access_token=$request->header('access_token');
+        $access_token=$request->header('access_token')??null;
         if($access_token)
         {
             $user=User::where('access_token',$access_token)->first();
             if($user->role == "app_admin")
-                $isAdmin=true;
-                
+                $isAdmin=true;     
         }
         if($isAdmin)
             $school=School::findOrFail($id);

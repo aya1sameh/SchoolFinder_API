@@ -10,7 +10,7 @@ $factory->define(School::class, function (Faker $faker) {
     return [
         'name'=>$faker->name,
         'gender'=>$faker->randomElement(['Mix','Girls Only','Boys Only']),
-        'language'=>$faker->randomElement(['Arabic','English','French','German']),
+        'language'=>$faker->randomElement(['Arabic','French','English','German']),
         'address' => $faker->address,
         //'phone_number'=> $faker->phoneNumber,
         'phone_number'=> $faker->randomNumber,

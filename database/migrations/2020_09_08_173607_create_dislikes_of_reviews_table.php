@@ -19,7 +19,7 @@ class CreateDislikesOfReviewsTable extends Migration
             $table->unsignedBigInteger('review_id');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('review_id')->references('id')->on('Reviews');
+            $table->foreign('review_id')->references('id')->on('reviews');
         });
     }
 

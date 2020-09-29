@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\reveiws;
+namespace App\Http\Controllers\reviews;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Review;
@@ -20,9 +20,8 @@ class LikesOfReviews extends Controller
     public function numOfLikes($id)
     {
         $review=review::find($id);
-        if(is_null($review)){
+        if(is_null($review))
             return response()->json(["message"=>"This review is not found!"],404);
-            }
 
          $likes = LikesOfReview::where("review_id",$id)->count();
            return response()->json($likes,200);
@@ -41,8 +40,7 @@ class LikesOfReviews extends Controller
     $review=review::find($id);
         if(is_null($review)){
             return response()->json(["message"=>"This review is not found!"],404);
-            }
-            
+        }
             $likes=LikesOfReview::find($user_id);
             $dislikes=DislikesOfReview::find($user_id);
 
@@ -55,7 +53,7 @@ class LikesOfReviews extends Controller
        return response()->json($likes,201);
        }
 	
-}
+    }
 
     /**
      *remove like.
@@ -68,7 +66,7 @@ class LikesOfReviews extends Controller
 
     $review=review::find($id);
     if(is_null($review)){
-            return response()->json(["message"=>"This review is not found!"],404);}
+            return response()->json(["message"=>"This review is not found!"],404);
 
             $dislikes=DislikesOfReview::find($user_id);
 

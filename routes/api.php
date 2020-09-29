@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+/*Search and filter */
+Route::post('/schools/filter', 'School\SchoolController@Filter');
+Route::post('/schools/search', 'School\SchoolController@searchSchool');
 
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
@@ -31,9 +34,7 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
     Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
 
-    /*Search and filter */
-    Route::post('/schools/filter', 'School\SchoolController@Filter');
-    Route::post('/schools/search', 'School\SchoolController@searchSchool');
+    
 
     /*CommunityPosts Routes*/
     Route::post('/schools/{school_id}/community_posts/{post_id}', 'Posts\CommunityPostsController@update');

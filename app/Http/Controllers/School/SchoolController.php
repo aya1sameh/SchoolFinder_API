@@ -286,13 +286,15 @@ class SchoolController extends Controller
             if(is_null($FilteredIDS)){
                 $Filtered = DB::table('schools')
                             ->where('fees', '<', (int)$maxfees)
-                            ->get();
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }else{
                 $Filtered = DB::table('schools')
                             ->where('fees', '<', (int)$maxfees)
                             ->whereIn('id', $FilteredIDS)
-                            ->get();
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }    
         }
@@ -300,13 +302,15 @@ class SchoolController extends Controller
             if(is_null($FilteredIDS)){
                 $Filtered = DB::table('schools')
                             ->where('language', (string)$language)
-                            ->get();
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }else{
             $Filtered = DB::table('schools')
                             ->where('language', (string)$language)
                             ->whereIn('id', $FilteredIDS)
-                            ->get();    
+                            ->orderBy('rating','desc')
+                            ->paginate(10);    
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }   
         } 
@@ -314,13 +318,15 @@ class SchoolController extends Controller
             if(is_null($FilteredIDS)){
                 $Filtered = DB::table('schools')
                             ->where('address', 'like', '%' . $address . '%')
-                            ->get();
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }else{
             $Filtered = DB::table('schools')
                             ->where('address', 'like', '%' . $address . '%')
                             ->whereIn('id', $FilteredIDS)
-                            ->get();
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
                 $FilteredIDS = array_column(json_decode($Filtered,true),'id');
             }   
         } 
@@ -331,14 +337,21 @@ class SchoolController extends Controller
                             ->where('certificate', $certificate )
                             ->get();
                 $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
-                $Filtered = School::find($FilteredIDS);
+                $Filtered = DB::table('schools')
+                            ->where('id', $FilteredIDS)
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
             }else{
                 $Filtered = DB::table('school_certificates')
                             ->where('certificate', $certificate )
                             ->whereIn('school_id', $FilteredIDS)
                             ->get();
                 $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
-                $Filtered = School::find($FilteredIDS);
+                $Filtered = DB::table('schools')
+                            ->where('id', $FilteredIDS)
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
+
             }   
         }
         
@@ -348,14 +361,20 @@ class SchoolController extends Controller
                             ->where('stage', $stage )
                             ->get();
                 $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
-                $Filtered = School::find($FilteredIDS);
+                $Filtered = DB::table('schools')
+                            ->where('id', $FilteredIDS)
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
             }else{
                 $Filtered = DB::table('school_stages')
                             ->where('stage', $stage )
                             ->whereIn('school_id', $FilteredIDS)
                             ->get();
                 $FilteredIDS = array_column(json_decode($Filtered,true),'school_id');
-                $Filtered = School::find($FilteredIDS);
+                $Filtered = DB::table('schools')
+                            ->where('id', $FilteredIDS)
+                            ->orderBy('rating','desc')
+                            ->paginate(10);
             }   
         }
         return Response()->json([
@@ -367,7 +386,8 @@ class SchoolController extends Controller
     {
         $name = $request->get('name');
         $school_info = School::where('name', 'like', "%{$name}%")
-                         ->get();
+                        ->orderBy('rating','desc')
+                        ->paginate(10);
 
         return Response()->json([
             'search_results' => $school_info

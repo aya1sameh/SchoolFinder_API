@@ -382,17 +382,7 @@ class SchoolController extends Controller
         ], 200);
     }
 
-    public function searchSchool(Request $request)
-    {
-        $name = $request->get('name');
-        $school_info = School::where('name', 'like', "%{$name}%")
-                        ->orderBy('rating','desc')
-                        ->paginate(10);
-
-        return Response()->json([
-            'search_results' => $school_info
-        ], 200);
-    }
+    
     /**
      * Remove the specified Image from storage and removes it from the public directory
      * @param  \Illuminate\Http\Request  $request

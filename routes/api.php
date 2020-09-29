@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 /*Search and filter */
 Route::post('/schools/filter', 'School\SchoolController@Filter');
-Route::post('/schools/search', 'School\SchoolController@searchSchool');
+Route::post('/schools/search', 'Search\SearchController@searchSchool');
 
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
@@ -34,6 +34,9 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
     Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
 
+    /*Search and filter */
+    Route::post('/schools/filter', 'Search\SearchController@Filter');
+    Route::post('/schools/search', 'Search\SearchController@searchSchool');
     
 
     /*CommunityPosts Routes*/

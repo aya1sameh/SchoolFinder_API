@@ -13,7 +13,7 @@ use App\Models\User;
 
 
 class CommunityPostsController extends Controller
-{   private $PostImagesDirectory="\CommunityPostsImages";
+{   private $PostImagesDirectory="\imgs\CommunityPostsImages";
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']); 
@@ -76,10 +76,9 @@ class CommunityPostsController extends Controller
             foreach($Images as $Image){
                 
                 $ImageName='CommunityPostImage_withID_'.$post->id.'_'.$i.'.'.$Image->getClientOriginalExtension();
-                $path=$Image->move(public_path('/CommunityPostsImages'),$ImageName);
-                $PhotoUrl=url('/CommunityPostsImages'.$ImageName);
-                echo $PhotoUrl;
-                $post->CommunityPostImages=array_merge($post->CommunityPostImages,[$ImageName]);
+                $path=$Image->move(public_path('/imgs/CommunityPostsImages'),$ImageName);
+                $PhotoUrl=url('/imgs/CommunityPostsImages'.$ImageName);
+                $post->CommunityPostImages=array_merge($post->CommunityPostImages,['/imgs/CommunityPostsImages/'.$ImageName]);
                 $post->CommunityPostImages=array_filter($post->CommunityPostImages);
                 $i++;
             }
@@ -159,7 +158,7 @@ class CommunityPostsController extends Controller
             
             $imagepath=public_path().$this->PostImagesDirectory;
             for($i=1;$i<=count($Images);$i++){ 
-                $imagename='\CommunityPostImage_withID_'.$id2.'_'.$i.'.'.pathinfo($imagepath.$Images[$i-1], PATHINFO_EXTENSION);
+                $imagename='\CommunityPostImage_withID_'.$id2.'_'.$i.'.'.pathinfo(public_path().$Images[$i-1], PATHINFO_EXTENSION);
                 File::delete($imagepath.$imagename);
             }
         }
@@ -170,9 +169,9 @@ class CommunityPostsController extends Controller
             foreach($Images as $Image){
                 
                 $ImageName='CommunityPostImage_withID_'.$post->id.'_'.$i.'.'.$Image->getClientOriginalExtension();
-                $path=$Image->move(public_path('/CommunityPostsImages'),$ImageName);
-                $PhotoUrl=url('/CommunityPostsImages'.$ImageName);
-                $post->CommunityPostImages=array_merge($post->CommunityPostImages,[$ImageName]);
+                $path=$Image->move(public_path('/imgs/CommunityPostsImages'),$ImageName);
+                $PhotoUrl=url('/imgs/CommunityPostsImages'.$ImageName);
+                $post->CommunityPostImages=array_merge($post->CommunityPostImages,['/imgs/CommunityPostsImages/'.$ImageName]);
                 $post->CommunityPostImages=array_filter($post->CommunityPostImages);
                 $i++;
             }
@@ -212,7 +211,7 @@ class CommunityPostsController extends Controller
         
 
         for($i=1;$i<=count($Images);$i++){ 
-        $imagename='\CommunityPostImage_withID_'.$id2.'_'.$i.'.'.pathinfo($imagepath.$Images[$i-1], PATHINFO_EXTENSION);
+        $imagename='\CommunityPostImage_withID_'.$id2.'_'.$i.'.'.pathinfo(public_path().$Images[$i-1], PATHINFO_EXTENSION);
         File::delete($imagepath.$imagename);
         }
         $post->delete();

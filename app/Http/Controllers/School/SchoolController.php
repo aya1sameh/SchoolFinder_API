@@ -178,7 +178,8 @@ class SchoolController extends Controller
         $school=School::findOrFail($id);
         $numberOfImages=DB::table("school_images")->where('school_id',$school->id)->count();
         $extension = $request->file('image')->getClientOriginalExtension();
-        $imageName=($school->name)."_".strval($numberOfImages+1).'_'.time().".".$extension;
+        $name=str_replace(' ','_',$school->name);
+        $imageName=$this->schoolImagesDirectory.$name."_".strval($numberOfImages+1).'_'.time().".".$extension;
         
         $image=SchoolImage::create([
             "school_id"=>$school->id,
@@ -386,7 +387,7 @@ class SchoolController extends Controller
         $schoolImage=SchoolImage::where('url',$request->url)->firstOrFail();
         
         SchoolImage::where(['school_id'=>$id,'url'=>$request->url])->delete();
-        $imageName=public_path().$this->schoolImagesDirectory.($request->url);
+        $imageName=public_path().($request->url);
         File::delete($imageName);
         return response(null,204);
     }

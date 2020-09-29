@@ -70,12 +70,8 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::delete('community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@removeLike');//remove like.
 
     /*Ads Routes*/
-    //TODO::API resource
-    Route::get('ads', 'AdsController@index');
-    Route::get('ads/{id}', 'AdsController@show');
-    Route::post('ads', 'AdsController@store')->middleware('admin');
-    Route::post('ads/{id}', 'AdsController@update')->middleware('admin');
-    Route::delete('ads/{id}', 'AdsController@destroy')->middleware('admin');
+    Route::post('/ads/{id}', 'AdsController@update');
+    Route::apiResource('/ads', 'AdsController');
 
     Route::group(['middleware' => 'auth:api'], function(){
         /*User's Profile Routes */

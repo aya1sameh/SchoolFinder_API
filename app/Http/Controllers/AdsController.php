@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\File;
 
 class AdsController extends Controller
 {
-    private $adsImagesDirectory="\ad_image";
+    private $adsImagesDirectory="/imgs/ads";
 
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']); 
+        $this->middleware('admin')->except(['index','show']); 
     }
     /**
      * Display a listing of Ads, 5 per page in descending order 
@@ -51,17 +52,16 @@ class AdsController extends Controller
         $ad = Ads::create($request->all());
         $ad->user_id = $user->id;
         $ad->save();
-        $PhotoUrl = null;
         if($request->hasFile('ad_image_url'))
         {
-            $Image=$request->file('ad_image_url');
-            $ImageName='ad_image'.$ad->id.'.'.$Image->getClientOriginalExtension();
-            $path=$request->file('ad_image_url')->move(public_path('/ad_image'),$ImageName);
-            $PhotoUrl=url('/ad_image'.'/'.$ImageName);
-            $ad->ad_image_url= $ImageName;
+            $image=$request->file('ad_image_url');
+            $imageName='ad_image'.$ad->id.'.'.$image->getClientOriginalExtension();
+            $path=$request->file('ad_image_url')->move(public_path($this->adsImagesDirectory),$imageName);
+            $photo_url=$this->adsImagesDirectory.'/'.$imageName;
+            $ad->ad_image_url= $photo_url;
+            $ad->save();
         }
-        $ad->save();
-        return response()->json($ad,201)->file($PhotoUrl);
+        return response()->json($ad,201);
     }
 
     /**
@@ -101,22 +101,24 @@ class AdsController extends Controller
 
         if(!$ad) $ad = Ads::create($request->all());
         else {
+            
             if($ad->ad_image_url !=null){
                 $ad_image=$ad->ad_image_url;
-                $imagepath=public_path().$this->adsImagesDirectory;
-                $imagename='\ad_image'.$id.'.'.pathinfo($imagepath.$ad_image, PATHINFO_EXTENSION);
-                File::delete($imagepath.$imagename);
+                $image=public_path().$ad_image;
+                File::delete($image);
+                $ad->ad_image_url = null;
+                $ad->save();
             }
             $ad->update($request->all());
         }
         $ad->user_id = $user->id;
         if($request->hasFile('ad_image_url'))
         {
-            $Image=$request->file('ad_image_url');
-            $ImageName='ad_image'.$ad->id.'.'.$Image->getClientOriginalExtension();
-            $path=$request->file('ad_image_url')->move(public_path('/ad_image'),$ImageName);
-            $PhotoUrl=url('/ad_image'.$ImageName);
-            $ad->ad_image_url= $ImageName;
+            $image=$request->file('ad_image_url');
+            $imageName='ad_image'.$ad->id.'.'.$image->getClientOriginalExtension();
+            $path=$request->file('ad_image_url')->move(public_path($this->adsImagesDirectory),$imageName);
+            $photo_url=$this->adsImagesDirectory.'/'.$imageName;
+            $ad->ad_image_url= $photo_url; 
         }
         $ad->save();
         return response()->json($ad,200);
@@ -134,9 +136,8 @@ class AdsController extends Controller
         if(!$ad) return response()->json(null,204);
         if($ad->ad_image_url !=null){
             $ad_image=$ad->ad_image_url;
-            $imagepath=public_path().$this->adsImagesDirectory;
-            $imagename='\ad_image'.$id.'.'.pathinfo($imagepath.$ad_image, PATHINFO_EXTENSION);
-            File::delete($imagepath.$imagename);
+            $imagepath=public_path().$ad_image;
+            File::delete($imagepath);
         }
         $ad->delete();
         return response()->json(null,204);

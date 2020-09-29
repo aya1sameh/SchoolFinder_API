@@ -36,46 +36,48 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::post('/schools/search', 'School\SchoolController@searchSchool');
 
     /*CommunityPosts Routes*/
-    Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
-    Route::get('/schools/{school_id}/CommunityPosts/My_Posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
-    Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
+    Route::post('/schools/{school_id}/community_posts/{post_id}', 'Posts\CommunityPostsController@update');
+    Route::get('/schools/{school_id}/community_posts/my_posts', 'Posts\CommunityPostsController@ShowPostsByUserID');
+    Route::apiResource('/schools/{school_id}/community_posts', 'Posts\CommunityPostsController');
 
     /*Review Routes*/
-    Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
+    Route::apiResource('/schools/{school_id}/reviews', 'reviews\ReviewsController');
 
-    Route::get ('Reviews/{review_id}/reviewLikes', 'reviews\LikesOfReviewsController@numOfLikes');//view num of likes.
-    Route::post ('Reviews/{review_id}/reviewLikes/{user_id}', 'reviews\LikesOfReviewsController@addLikes');//add like.
-    Route::delete('Reviews/{review_id}/reviewLikes/{user_id}/like/{like_id}', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
+    //TODO::remove user id from endpoint and use token instead
+    //add numberofLikes& dislikes to review object
+    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like
+    Route::post ('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@addLikes');//add like.
+    Route::delete('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
 
-     Route::get ('Reviews/{review_id}/reviewDislikes', 'reviews\DislikesOfReviewsController@numOfDislikes');//view num of dislikes.
-    Route::post ('Reviews/{review_id}/reviewDislikes/{user_id}', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
-    Route::delete('Reviews/{review_id}/reviewLikes/{user_id}/dislike/{dislike_id}', 'reviews\LikesOfReviewsController@removeDislikes');// remove dislike.
+    Route::post ('/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
+    Route::delete('/reviews/{review_id}/dislikes', 'reviews\LikesOfReviewsController@removeDislikes');// remove dislike.
      
 
     /*comments on posts  Routes*/
-    Route::get('/CommunityPosts/{post_id}/comments', 'Posts\LikesOfPostsController@index');//show comments on post.
-    Route::put('/CommunityPosts/{post_id}/Comments/{commentid}/update', 'Posts\CommentsOnPostsController@update');//update comment.
-    Route::post('/CommunityPosts/{post_id}/Comments/store', 'Posts\CommentsOnPostsController@store');//store new comment.
-    Route::delete('/CommunityPosts/{post_id}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment.
+    //NOTE::YOU CANNOT DELETE OR UPDATE A COMMENT UNLESS IT"S YOURS
+    //TODO::API resource
+    Route::get('/community_posts/{post_id}/comments', 'Posts\LikesOfPostsController@index');//show comments on post.
+    Route::put('/community_posts/{post_id}/comments/{comment_id}', 'Posts\CommentsOnPostsController@update');//update comment.
+    Route::post('/community_posts/{post_id}/comments', 'Posts\CommentsOnPostsController@store');//store new comment.
+    Route::delete('/community_posts/{post_id}/comments/{comment_id}', 'Posts\LikesOfPostsController@destroy');//delete comment.
 
     /*Likes on posts Routes*/
-    Route::get('CommunityPosts/{post_id}/likes', 'Posts\LikesOf PostsController@numOfLikes');//show num of likes on post
-     Route::post ('CommunityPosts/{post_id}/addlike/{user_id}',  'Posts\LikesOfPostsController@addLike');//add  like.
-    Route::delete('CommunityPosts/{post_id}/removeLike/{like_id}', 'Posts\LikesOfPostsController@removeLike');//remove like.
+    //TODO:: show users instead of number of likes + Number of likes is an attribute in the post
+    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like
+    Route::get('community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@numOfLikes');//show num of likes on post
+    Route::post('community_posts/{post_id}/likes',  'Posts\LikesOfPostsController@addLike');//add  like.
+    Route::delete('community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@removeLike');//remove like.
 
     /*Ads Routes*/
-    Route::get('ads', 'AdsController@index');
-    Route::get('ads/{id}', 'AdsController@show');
-    Route::post('ads/store', 'AdsController@store')->middleware('admin');
-    Route::post('ads/update/{id}', 'AdsController@update')->middleware('admin');
-    Route::delete('ads/delete/{id}', 'AdsController@destroy')->middleware('admin');
+    Route::post('/ads/{id}', 'AdsController@update');
+    Route::apiResource('/ads', 'AdsController');
 
     Route::group(['middleware' => 'auth:api'], function(){
         /*User's Profile Routes */
         Route::get('user','User\UserController@index');//getting all the users
         Route::get('user/profile','User\UserController@profile');//getting the user's profile 
-        Route::post('user/update','User\UserController@update');//updating the user's profile
-        Route::delete('user/delete','User\UserController@destroy');//deleting the user
+        Route::post('user','User\UserController@update');//updating the user's profile
+        Route::delete('user','User\UserController@destroy');//deleting the user
 
         /*favourite schools Routes*/
         Route::post('user/favorites', 'User\UserController@getFavorites');
@@ -86,7 +88,7 @@ Route::group(['middleware' => 'app_key'], function(){
         Route::get('logout', 'AuthController@logout'); 
     });
 
-    /*App admin Routes*/
+    /*Suggestions Routes*/
     Route::group(['middleware' => ['auth:api','admin'] ], function(){
         Route::get('suggestions/','SuggestionsController@getNewSchoolSuggestions');
         Route::put('suggestions/{id}','SuggestionsController@approveSuggestion');

@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(SchoolImage::class, function (Faker $faker) {
     return [
         'school_id'=>factory(\App\Models\School::class),
-        //'url'=> $faker.bothify(text='public/imgs/schools/?????/#'),
-        'url'=>'public/imgs/schools/default'
+        'url'=>'/imgs/schools/default'
     ];
 });

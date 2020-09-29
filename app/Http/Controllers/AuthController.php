@@ -144,9 +144,9 @@ class AuthController extends Controller
         {
             $Image=$request->file('avatar');
             $ImageName='user_images'.$user->id.'.'.$Image->getClientOriginalExtension();
-            $path=$request->file('avatar')->move(public_path('/user_images'),$ImageName);
-            $PhotoUrl=url('/user_images'.$ImageName);
-            $user->avatar= $ImageName;
+            $path=$request->file('avatar')->move(public_path('/imgs/users_avatars'),$ImageName);
+            $PhotoUrl='/imgs/users_avatars/'.$ImageName;
+            $user->avatar= $PhotoUrl;
         }
         $user->save();
 

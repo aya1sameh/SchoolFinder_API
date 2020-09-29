@@ -90,7 +90,8 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        $schoolList= SchoolResource::collection(School::where("is_approved",true)->paginate(10));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderBy('rating', 'desc')
+                    ->orderBy('rated_by','desc')->paginate(10));
         return response()->json($schoolList,200);
     }
 
@@ -112,7 +113,11 @@ class SchoolController extends Controller
         if($user_role=='school_finder_client' || $user_role=="school_admin")
             $params=$request->except('certificates','stages','is_approved','admin_id','rated_by','rating');
         else
+        {
             $params=$request->except('certificates','stages','rated_by','rating');
+            $params=array_merge($params,["is_approved"=>1]);
+        }
+            
 
         $school= School::create($params);
         /*Add admin id if user is admin*/
@@ -126,7 +131,8 @@ class SchoolController extends Controller
         $id=$school->id;
         $this->storeSchoolCertificates($request,$id);
         $this->storeSchoolStages($request,$id);
-        
+        $school=School::find($id);  /*to update school info before returning it*/
+
         return response()->json(new SchoolResource($school),201);
     }
 
@@ -190,13 +196,20 @@ class SchoolController extends Controller
      */
     public function show(Request $request,$id)
     {
-        $access_token = $request->header('access_token')??null;
-        $user = User::where('access_token',$access_token)->first();
-        //return $user;
-        if($user == null || $user->role != "app_admin")
-            $school=School::where('is_approved',true)->findOrFail($id);
-        else
+       
+        /*checking if access token is sent to request*/
+        $isAdmin=false;
+        $access_token=$request->header('access_token')??null;
+        if($access_token)
+        {
+            $user=User::where('access_token',$access_token)->first();
+            if($user->role == "app_admin")
+                $isAdmin=true;     
+        }
+        if($isAdmin)
             $school=School::findOrFail($id);
+        else
+            $school=School::where('is_approved',true)->findOrFail($id);
             
         return response()->json(new SchoolResource($school),200);
     }

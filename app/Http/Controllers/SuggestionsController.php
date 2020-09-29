@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\School;
 use App\Http\Resources\Models\School as schoolResource;
 
-class AppAdminController extends Controller
+class SuggestionsController extends Controller
 {
     /**
      * Return a list of paginated schools suggestions
@@ -14,7 +14,7 @@ class AppAdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getNewSchoolSuggestions()
-    {   
+    {  
         $schoolList= SchoolResource::collection(School::where("is_approved",false)->paginate(10));
         return response()->json($schoolList,200);
     }
@@ -28,6 +28,10 @@ class AppAdminController extends Controller
     public function approveSuggestion($id)
     {
         $school=School::findOrFail($id);
+        $is_approved=$school->is_approved;
+        if($is_approved==1)
+            return response()->json(["message"=>"No suggestion found"],404);
+
         $school->update(['is_approved'=>true]);
         return response()->json(new SchoolResource($school), 200);
     }

@@ -39,15 +39,27 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
 
     /*Review Routes*/
-    Route::apiResource('/schools/{school_id}/Review', 'ReviewsController');
+    Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
+
+    Route::get ('Reviews/{review_id}/reviewLikes/', 'reviews\LikesOfReviewsController@numOfLikes');//view num of likes.
+    Route::post ('Reviews/{review_id}/reviewLikes/{user_id}', 'reviews\LikesOfReviewsController@addLikes');//add like.
+    Route::delete('Reviews/{review_id}/reviewLikes/{user_id}/like/{like_id}', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
+
+     Route::get ('Reviews/{review_id}/reviewDislikes', 'reviews\DislikesOfReviewsController@numOfDislikes');//view num of dislikes.
+    Route::post ('Reviews/{review_id}/reviewDislikes/{user_id}', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
+    Route::delete('Reviews/{review_id}/reviewLikes/{user_id}/dislike/{dislike_id}', 'reviews\LikesOfReviewsController@removeDislikes');// remove dislike.
+     
 
     /*comments on posts  Routes*/
-    Route::get('/schools/{id}/CommunityPosts/{postid}/comments', 'Posts\LikesOfPostsController@index');//show comments on post
-    Route::post('/schools/{id}/CommunityPosts/{postid}/Comments/{commentid}', 'Posts\CommentsOnPostsController@update');//update comment
-    Route::post('/schools/{id}/CommunityPosts/{ppstid}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment
+    Route::get('/CommunityPosts/{post_id}/comments', 'Posts\LikesOfPostsController@index');//show comments on post.
+    Route::put('/CommunityPosts/{post_id}/Comments/{commentid}/update', 'Posts\CommentsOnPostsController@update');//update comment.
+    Route::post('/CommunityPosts/{post_id}/Comments/store', 'Posts\CommentsOnPostsController@store');//store new comment.
+    Route::delete('/CommunityPosts/{post_id}/comments/{commentid}/delete', 'Posts\LikesOfPostsController@destroy');//delete comment.
 
     /*Likes on posts Routes*/
-    Route::get('/schools/{id}/CommunityPosts/{postid}/likes', 'Posts\LikesOfPostsController@index');//show likes on post
+    Route::get('CommunityPosts/{post_id}/likes', 'Posts\LikesOf PostsController@numOfLikes');//show num of likes on post
+     Route::post ('CommunityPosts/{post_id}/addlike/{user_id}',  'Posts\LikesOfPostsController@addLike');//add  like.
+    Route::delete('CommunityPosts/{post_id}/removeLike/{like_id}', 'Posts\LikesOfPostsController@removeLike');//remove like.
 
     /*Ads Routes*/
     Route::get('ads', 'AdsController@index');
@@ -74,8 +86,8 @@ Route::group(['middleware' => 'app_key'], function(){
 
     /*App admin Routes*/
     Route::group(['middleware' => ['auth:api','admin'] ], function(){
-        Route::get('suggestions/','appAdminController@getNewSchoolSuggestions');
-        Route::put('suggestions/{id}','appAdminController@approveSuggestion');
+        Route::get('suggestions/','SuggestionsController@getNewSchoolSuggestions');
+        Route::put('suggestions/{id}','SuggestionsController@approveSuggestion');
     });
 
 });

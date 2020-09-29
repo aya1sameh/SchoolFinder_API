@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\School;
 class Review extends Model
 {
-    /**
+     /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -15,7 +15,7 @@ class Review extends Model
     protected $fillable = [
         'user_id', 
         'school_id', 
-        'Review_description',
+        'review_description',
         'rating',
         "id",
         'created_at',

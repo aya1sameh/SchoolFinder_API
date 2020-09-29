@@ -76,16 +76,6 @@ class School extends Model
 
         return true;
     }
-    
-    /**
-     * Returns the reviews of the school
-     * @return \App\Models\Review
-     */
-    public function reviews()
-    {
-        /*TODO::not working*/
-        return $this->hasMany(Review::class);
-    }
 
     /**
      * Adjusts the overall rating of the school when a new rating is added
@@ -94,6 +84,12 @@ class School extends Model
     public function calculateOverAllRating()
     {
         $reviews=Review::where('school_id',$this->id)->get();
+        if($reviews==NULL)
+        {
+            $this->rating=1;
+            return;
+        }
+
         $sum=0;
         $number=0;
         foreach($reviews as $review)
@@ -123,12 +119,6 @@ class School extends Model
 
         $this->rated_by=$ratedBy;
         $this->save();
-    }
-
-    //Function that returns number of users who like the school
-    public function numberOfLikes()
-    {
-        //
     }
     
 }

@@ -11,6 +11,6 @@ class CommunityPostSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\CommunityPost::class, 5)->create();
+        factory(App\Models\CommunityPost::class, 50)->create();
     }
 }

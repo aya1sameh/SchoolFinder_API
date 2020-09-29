@@ -2,14 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Review;
+use App\Models\CommunityPost;
 use Faker\Generator as Faker;
 
-$factory->define(Review::class, function (Faker $faker) {
+$factory->define(CommunityPost::class, function (Faker $faker) {
     return [
-        'Review_description'=>$faker->paragraph,
-        'rating'=>$faker->randomElement([1,2,3,4,5,6,7,8,9,10]),
         'user_id'=>$faker->numberBetween(1,20),
         'school_id'=>$faker->numberBetween(1,10),
+        'CommunityPost_Content'=>$faker->paragraph,
     ];
 });

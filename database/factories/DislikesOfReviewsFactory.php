@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(DislikesOfReview::class, function (Faker $faker) {
     return [
-         'user_id'=>factory(\App\Models\User::class),
-        'review_id'=>factory(\App\Models\Review::class),
+        'user_id'=>$faker->numberBetween(1,20),
+        'review_id'=>$faker->numberBetween(1,50),
    
     ];
 });

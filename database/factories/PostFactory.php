@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(CommunityPost::class, function (Faker $faker) {
     return [
-        'user_id'=>factory(\App\Models\User::class),
-        'school_id'=>factory(\App\Models\School::class),
+        'user_id'=>$faker->numberBetween(1,20),
+        'school_id'=>$faker->numberBetween(1,10),
         'CommunityPost_Content'=>$faker->paragraph,
     ];
 });

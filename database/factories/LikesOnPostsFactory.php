@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(LikeOnPost::class, function (Faker $faker) {
     return [
-         'user_id'=>factory(\App\Models\User::class),
-        'post_id'=>factory(\App\Models\Post::class),
+         'user_id'=>$faker->numberBetween(1,20),
+        'post_id'=>$faker->numberBetween(1,50),
     ];
 });

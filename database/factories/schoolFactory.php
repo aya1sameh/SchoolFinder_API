@@ -13,7 +13,7 @@ $factory->define(School::class, function (Faker $faker) {
         'language'=>$faker->randomElement(['Arabic','French','English','German']),
         'address' => $faker->address,
         //'phone_number'=> $faker->phoneNumber,
-        'phone_number'=> $faker->randomNumber,
+        'phone_number'=> $faker->phoneNumber,
         'fees'=>$faker->randomNumber,
         'description'=>$faker->paragraph,
         'is_approved'=>$faker->boolean,

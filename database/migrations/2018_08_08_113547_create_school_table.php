@@ -20,7 +20,7 @@ class CreateSchoolTable extends Migration
             $table->enum('gender',['Mix','Girls Only','Boys Only']);
             $table->enum('language',['Arabic','French','English','German']);
             $table->string('address');
-            $table->bigInteger('phone_number');
+            $table->string('phone_number');
             $table->bigInteger('fees');
             $table->text('description')->nullable();
             $table->boolean('is_approved')->default(0);
@@ -30,7 +30,7 @@ class CreateSchoolTable extends Migration
             $table->json('community_posts')->nullable();
             $table->json('reviews')->nullable();
             $table->json('external_urls')->nullable();
-            $table->unsignedBigInteger('admin_id')->nullable();
+            $table->unsignedBigInteger('admin_id')->nullable()->unique();
 
            $table->foreign('admin_id')->references('id')->on('users')->onDelete('set null');
         });

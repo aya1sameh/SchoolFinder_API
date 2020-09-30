@@ -57,8 +57,7 @@ Route::group(['middleware' => 'app_key'], function(){
     
 
     /*Likes on posts Routes*/
-    //TODO:: show users instead of number of likes + Number of likes is an attribute in the post->done
-    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like->done
+   
     Route::get('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@ShowLikes');//show likes.
     Route::post('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@addOrRemoveLike');//show num of likes on post
   

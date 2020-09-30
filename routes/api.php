@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+//For mail verification
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
 Route::group(['middleware' => 'app_key'], function(){
@@ -46,10 +46,10 @@ Route::group(['middleware' => 'app_key'], function(){
     //TODO::remove user id from endpoint and use token instead
     //add numberofLikes& dislikes to review object
     //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like
-    Route::post ('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@addLikes');//add like.
+    Route::post('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@addLikes');//add like.
     Route::delete('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
 
-    Route::post ('/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
+    Route::post('/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
     Route::delete('/reviews/{review_id}/dislikes', 'reviews\LikesOfReviewsController@removeDislikes');// remove dislike.
      
 
@@ -80,7 +80,7 @@ Route::group(['middleware' => 'app_key'], function(){
         Route::delete('user','User\UserController@destroy');//deleting the user
 
         /*favourite schools Routes*/
-        Route::post('user/favorites', 'User\UserController@getFavorites');
+        Route::get('user/favorites', 'User\UserController@getFavorites');
         Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
         Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
 

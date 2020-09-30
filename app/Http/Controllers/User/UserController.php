@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    private $userImagesDirectory="\user_images";
+    private $userImagesDirectory="/imgs/users_avatars";
     
      /**
      * Display a listing of Users, 10 per page.
@@ -77,7 +77,7 @@ class UserController extends Controller
             if($user->avatar !=null){
                 $user_image=$user->avatar;
                 $imagepath=public_path().$this->userImagesDirectory;
-                $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
+                $imagename='/user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
                 File::delete($imagepath.$imagename);
                 $user->avatar=null;
                 $user->save();
@@ -90,18 +90,17 @@ class UserController extends Controller
             //delete the avatar first..
             if($user->avatar !=null){
                 $user_image=$user->avatar;
-                $imagepath=public_path().$this->userImagesDirectory;
-                $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
-                File::delete($imagepath.$imagename);
+                $imagepath=public_path().$user_image;
+                File::delete($imagepath);
             }
             $user->update($input);
             //then update with the new avatar..
             $Image=$request->file('avatar');
-            $ImageName='user_images'.$id.'.'.$Image->getClientOriginalExtension();
-            $path=$request->file('avatar')->move(public_path('/user_images'),$ImageName);
-            $PhotoUrl=url('/user_images'.$ImageName);
-            $user->avatar= $ImageName;
-            
+            $ImageName='user_images'.$user->id.'.'.$Image->getClientOriginalExtension();
+            $path=$request->file('avatar')->move(public_path('/imgs/users_avatars'),$ImageName);
+            $PhotoUrl='/imgs/users_avatars/'.$ImageName;
+            $user->avatar= $PhotoUrl;
+            $user->save();
         }
         else{
             $user->update($input);
@@ -125,9 +124,8 @@ class UserController extends Controller
         $id = $user->id;
         if($user->avatar !=null){
             $user_image=$user->avatar;
-            $imagepath=public_path().$this->userImagesDirectory;
-            $imagename='\user_images'.$id.'.'.pathinfo($imagepath.$user_image, PATHINFO_EXTENSION);
-            File::delete($imagepath.$imagename);
+            $imagepath=public_path().$user_image;
+            File::delete($imagepath);
         }
         $user->delete();
         return response()->json(null,204);

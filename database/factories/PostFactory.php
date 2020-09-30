@@ -10,5 +10,6 @@ $factory->define(CommunityPost::class, function (Faker $faker) {
         'user_id'=>$faker->numberBetween(1,20),
         'school_id'=>$faker->numberBetween(1,10),
         'CommunityPost_Content'=>$faker->paragraph,
+        'num_of_likes'=>$faker->randomNumber,
     ];
 });

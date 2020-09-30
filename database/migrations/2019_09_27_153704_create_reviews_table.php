@@ -20,6 +20,8 @@ class CreateReviewsTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('school_id')->nullable();
+            $table->unsignedBigInteger('num_of_likes')->default(0);
+            $table->unsignedBigInteger('num_of_dislikes')->default(0);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');///relation with the user table
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');///relation with the school table
         });

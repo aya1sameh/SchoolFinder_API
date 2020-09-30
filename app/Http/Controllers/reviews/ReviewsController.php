@@ -163,4 +163,10 @@ class ReviewsController extends Controller
         $school->changeRatedBy('-');
         return response()->json(null,204);
     }
+
+
+
+
+     
+
 }

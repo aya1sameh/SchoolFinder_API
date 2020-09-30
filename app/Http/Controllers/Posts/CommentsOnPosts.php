@@ -24,8 +24,13 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index($pid)
+    public function index($school_id,$pid)
     {
+
+     $school=School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
        
         $post=CommunityPost::find($pid);
         if(is_null($post)){
@@ -43,8 +48,12 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store (Request $request,$pid)
+    public function store (Request $request,$school_id,$pid)
     {
+     $school=School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
         $post=CommunityPost::find($pid);
         if(is_null($post)){
             return response()->json(["message"=>"This post is not found!"],404);
@@ -84,8 +93,12 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-   public function update(Request $request,$pid,$commentid)
+   public function update(Request $request,$school_id,$pid,$commentid)
    {
+    $school=School::find$school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
     $post=CommunityPost::find($pid);
     if(is_null($post)){
         return response()->json(["message"=>"This post is not found!"],404);
@@ -95,7 +108,7 @@ class CommentsOnPosts extends Controller
         return response()->json(["message"=>"This comment is not found!"],404);
     }
     if ($request->user()->id !== $comment->user_id){ 
-        return response()->json(["message"=>"You cannot update thi comment"],401);
+        return response()->json(["message"=>"You cannot update the comment"],401);
      }
 
      $restrictions=[
@@ -120,8 +133,12 @@ class CommentsOnPosts extends Controller
      * @return \Illuminate\Http\Response
      */
 
-   public function destroy(Request $request,$pid,$commentid)
+   public function destroy(Request $request,$school_id,$pid,$commentid)
    {
+    $school=School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
     $post=CommunityPost::find($pid);
     if(is_null($post)){
         return response()->json(["message"=>"This post is not found!"],404);

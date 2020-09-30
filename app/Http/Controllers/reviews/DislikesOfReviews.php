@@ -10,72 +10,64 @@ use App\Models\LikesOfReview;
 class DislikesOfReviews extends Controller
 { public function __construct()
     {
-        $this->middleware('auth:api')->except(['numOfDislikes']);
+        $this->middleware('auth:api');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function numOfDislikes($id)
-    {
-        $review=review::find($id);
-        if(is_null($review)){
-            return response()->json(["message"=>"This review is not found!"],404);
-        }
-         $dislikes = DislikesOfReview::where("review_id",$id)->count();
-           return response()->json($dislikes,200);
-    }
+
 
     
       /**
-     * Add  dislike.
+     * Add or remove dislike and count numebr of dislikes.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function AddOrRemoveDislikes(Request $request,$id,$id2,$user_id)
+    public function Dislikes(Request $request,$school_id,$review_id)
     {
-    $review=review::find($id);
+     $school=School::find($school_id);
+        if(is_null($school)){
+            return response()->json(["message"=>"This school is not found!"],404);
+        }
+    $review=Review::find($review_id);
         if(is_null($review)){
             return response()->json(["message"=>"This review is not found!"],404);
         }
-            $likes=LikesOfReview::find($user_id);
-            $dislikes=DislikesOfReview::find($user_id);
+            $likes=LikesOfReview::where('user_id',$request->user()->id)->first();
+            $dislikes=DislikesOfReview::where('user_id',$request->user()->id)->first();
+          
 
-            if ( is_null ($likes) && is_null($dislikes))
+
+             if ( is_null ($dislikes))
             {
-       $dislikes=DislikesOfReview::create($request->all());
+       $dislikes=DislikesOfReviews::create($request->all());
        $dislikes->user_id= $request->user()->id;
        $dislikes->review_id= $id;
+       $review->num_of_dislikes++;
        $dislikes->save();
+
+       if(!(is_null($likes)))
+       {
+       if($request->user()->id!==$likes->user_id)
+      { return response()->json(["message"=>"You arenot the like owner!"],404);}
+
+         $likes->delete();
+       
+       $review->num_of_likes--;
+       }
        return response()->json($dislikes,201);
        }
 
-	
-}
 
+       if ((!(is_null($dislikes)) && is_null($likes))
+        {
+         if($request->user()->id!==$dislikes->user_id)
+      { return response()->json(["message"=>"You arenot the dislike owner!"],404);}
 
-/**
-     *  remove dislike.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-public function removeDislikes(Request $request,$id,$user_id,$id2)
- {
-    $review=review::find($id);
-    if(is_null($review)){
-            return response()->json(["message"=>"This review is not found!"],404);
-    }      
-            $likes=LikesOfReview::find($user_id);
-
-               if(DislikesOfReview::where('user_id', $user_id )->exists() && is_null($likes))
-               {
-             $dislikes=DislikesOfReview::find($id2);
-            $dislikes->delete();
+         $dislikes->delete();
         return response()->json(null,204);
+       
+       
         }
- }
+      
+
 
 }

@@ -32,7 +32,7 @@ class School extends JsonResource
         "estiblashing year"=>$this->establishing_year,
         "gallery"=>schoolImageResource::collection($this->images),
         "facilities"=>schoolFacilityResource::collection($this->facilities),
-        "external_urls"=>$this->when($this->external_url != NULL,$this->external_url),
+        "external_urls"=>$this->external_url,//$this->when($this->external_url != NULL,$this->external_url),
         "rating"=>$this->rating,
         "rated by"=>$this->rated_by,
         ];

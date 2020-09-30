@@ -4,13 +4,13 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
+    "\\app\\Http\\Controllers\\Posts",
+    "\\app\\Http\\Controllers\\reviews",
     "\\app\\Http\\Controllers\\School",
     "\\app\\Models",
     "\\config",
-    "\\database",
-    "\\database\\factories",
-    "\\database\\seeds"
+    "\\database"
   ],
-  "SelectedNode": "\\database\\factories\\ReviewFactory.php",
+  "SelectedNode": "\\package.json",
   "PreviewInSolutionExplorer": false
 }

@@ -131,7 +131,6 @@ class AuthController extends Controller
             'avatar' =>'image',
             'phone_no' =>'numeric',
             'address' =>'string',
-            'role' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 

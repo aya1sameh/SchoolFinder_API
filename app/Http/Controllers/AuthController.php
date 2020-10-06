@@ -38,8 +38,8 @@ class AuthController extends Controller
      * used to login and create token of this specific user
      *  
      *
-     * @bodyParam name 
-     * @bodyParam email required either the email or the name
+     * @bodyParam name either the email or the name
+     * @bodyParam email either the email or the name
      * @bodyParam password required
      * @response 200{
      *  
@@ -47,10 +47,10 @@ class AuthController extends Controller
      *      "token_type": "bearer",
      * }
      * @response 400{
-     *      "error" : "Not Registered"
+     *      "message" : "Not Registered"
      * }
      * @response 401{
-     *      "error" : "Unauthorized"
+     *      "message" : "Unauthorized"
      * }
      * 
      */
@@ -72,9 +72,9 @@ class AuthController extends Controller
             $user=User::where('email',$email)->first();
         }
         else 
-            return response()->json(['error' => 'Either name or email must be written'], 400);
+            return response()->json(["message" => 'Either name or email must be written'], 400);
 
-        if(!$user) return response()->json(['error' => 'Not Registered'], 400);
+        if(!$user) return response()->json(["message" => 'Not Registered'], 400);
 
         //if user sent their email 
         if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
@@ -82,10 +82,10 @@ class AuthController extends Controller
         //else if they sent their name instead 
         else $user=Auth::attempt(['name' => $name, 'password' => $request->password]);
         
-        if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
+        if(!$user) return response()->json(["message" => 'Unauthorized'], 401);
         
         $user = $request->user();
-        if($user->email_verified_at == null) return response()->json(['error' => 'Unverified'], 401);
+        if($user->email_verified_at == null) return response()->json(["message" => 'Check You mail please for Verification :D'], 401);
         $accessToken=$this->createToken($user);
         
         return response()->json([
@@ -116,7 +116,7 @@ class AuthController extends Controller
      *      "token_type": "Bearer"
      * }
      * @response 401{
-     *      "error" : 'A Specific Error will be displayed here acc. to what is missing'
+     *      "message" : 'A Specific Error will be displayed here acc. to what is missing'
      * }
      * 
      */
@@ -126,13 +126,16 @@ class AuthController extends Controller
         $rules = [
             'email' => 'required|string|email|unique:users', 
             'password' => 'required|string|min:8|confirmed', 
-            'name' =>'required|string|unique:users',
+            'name' =>'required|string|min:3|max:64|unique:users',
             'role' =>'string',
             'avatar' =>'image',
+            'phone_no' =>'numeric',
+            'address' =>'string',
+            'role' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 
-            return response()->json(['error'=>$validator->errors()], 400); //bad request    
+            return response()->json(["message"=>$validator->errors()], 400); //bad request    
         
         $input = $request->all(); 
         $input['password'] = Hash::make($input['password']); 

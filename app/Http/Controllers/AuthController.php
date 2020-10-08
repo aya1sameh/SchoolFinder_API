@@ -61,21 +61,14 @@ class AuthController extends Controller
             'name' => 'required|string',
             'password' => 'required|string',
         ]);
-        
-        
-        if($request->name != null){
-            $name = $request->name;
-            $user=User::where('name',$name)->first();
-        }
-        else if($request->email != null){
-            $email = $request->email;
-            $name =$email;
-            $user=User::where('email',$email)->first();
-        }
-        else 
-            return response()->json(["message" => 'Either name or email must be written'], 400);
 
-        if(!$user) return response()->json(["message" => 'Not Registered'], 400);
+        $name = $request->name;
+        //if user sent their email 
+        if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
+            $user=User::where('email',$name)->first();
+        //else if they sent their name instead 
+        else $user=User::where('name',$name)->first();
+        if(!$user) return response()->json(["message" => 'Register First Please :D'], 400);
 
         //if user sent their email 
         if(filter_var($name, FILTER_VALIDATE_EMAIL)) 

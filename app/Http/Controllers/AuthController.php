@@ -68,7 +68,7 @@ class AuthController extends Controller
             $user=User::where('email',$name)->first();
         //else if they sent their name instead 
         else $user=User::where('name',$name)->first();
-        if(!$user) return response()->json(["message" => 'Register First Please :D'], 400);
+        if(!$user) return response()->json(["message" => 'Register First Please :DU'], 400);
 
         //if user sent their email 
         if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
@@ -76,7 +76,7 @@ class AuthController extends Controller
         //else if they sent their name instead 
         else $user=Auth::attempt(['name' => $name, 'password' => $request->password]);
         
-        if(!$user) return response()->json(["message" => 'Wrong Name/Email or Password!!'], 401);
+        if(!$user) return response()->json(["message" => 'Wrong Name/Email or Password!!'], 402);
         
         $user = $request->user();
         if($user->email_verified_at == null) return response()->json(["message" => 'Check You mail please for Verification :D'], 401);
@@ -128,9 +128,9 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed', 
             'name' =>'required|string|min:3|max:64',
             'role' =>'sometimes|string',
-            'avatar' =>'sometimes|image',
-            'phone_no' =>'sometimes|numeric',
-            'address' =>'sometimes|string',
+            'avatar' =>'image',
+            'phone_no' =>'string',
+            'address' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 

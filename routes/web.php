@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 //for forgetting the password page (to be changed in the front end)
-Route::view('forgot_password', 'auth.reset_password')->name('password.reset');
+Route::view('/reset_password', 'auth.reset_password')->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 
 /*Route::get('/login', function () {

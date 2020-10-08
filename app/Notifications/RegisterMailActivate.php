@@ -40,7 +40,7 @@ class RegisterMailActivate extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/api/register/activate/'.$notifiable->remember_token);
+        $url = 'http://127.0.0.1:8000/api/register/activate/'.$notifiable->remember_token;
         ///TODO: add the app key to the url() helper function
         return (new MailMessage)
             ->subject('Verify your account')

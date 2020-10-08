@@ -17,16 +17,16 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('verified');
 
-Auth::routes(['verify' => true]);
+//Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 //for forgetting the password page (to be changed in the front end)
-Route::view('forgot_password', 'auth.reset_password')->name('password.reset');
+//Route::view('forgot_password', 'auth.reset_password')->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 
-Route::get('/login', function () {
-    return view('notlogin');
-})->name('login');
+/*Route::get('/login', function () {
+    return view('welcome');
+})->name('login');*/
 
 
 

@@ -27,7 +27,7 @@ Route::get('/reset_password', function () {
     $request = request();
     $email= $request->email;
     $token= $request->token;
-    $url = 'http://192.168.1.12:8081/reset_password';
+    $url = 'http://192.168.1.12:8081/reset_password?token='.$token.'&email='.$email;
     return redirect($url,302,['email'=>$email,'token'=>$token]);
 })->name('password.reset');
 

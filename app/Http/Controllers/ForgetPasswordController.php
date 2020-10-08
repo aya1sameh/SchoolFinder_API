@@ -37,6 +37,7 @@ class ForgetPasswordController extends Controller
         $key_base64 = base64_encode($key);
         $final_key = base64_encode('school_finder_app_key').$key_base64;
         $request->headers->set('APP_KEY', $final_key);
+
         Password::sendResetLink($credentials);
 
         return response()->json(["message" => 'Reset password link sent on your email id.']);

@@ -24,8 +24,11 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('verified'
 //Route::view('/reset_password', 'auth.reset_password')->name('password.reset');
 
 Route::get('/reset_password', function () {
+    $request = request();
+    $email= $request->email;
+    $token= $request->token;
     $url = 'http://192.168.1.12:8081/reset_password';
-    return redirect($url);
+    return redirect($url,302,[$email,$token]);
 })->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 

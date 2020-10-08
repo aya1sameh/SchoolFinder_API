@@ -190,7 +190,7 @@ class AuthController extends Controller
         }
         $user->email_verified_at = Carbon::now();
         $user->save();
-        $url = url('/login');
+        $url = 'http://192.168.1.12:8081/login';
         return redirect($url);
     }
 

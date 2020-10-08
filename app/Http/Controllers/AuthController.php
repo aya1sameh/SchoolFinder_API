@@ -129,8 +129,8 @@ class AuthController extends Controller
             'name' =>'required|string|min:3|max:64',
             'role' =>'sometimes|string',
             'avatar' =>'image',
-            'phone_no' =>'string',
-            'address' =>'string',
+            // 'phone_no' =>'string',
+            // 'address' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 

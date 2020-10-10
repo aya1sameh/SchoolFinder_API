@@ -71,6 +71,13 @@ class UserController extends Controller
             return response()->json(["message"=>"User not Found!!"],404);
         }
         $input = $request->all();
+        $name = $input['remove_avatar']??null;
+        if($name){
+            $user=User::where('name',$name)->first();
+            if($user){
+                return response()->json(["message"=>"Username is already taken!!"],404);
+            }
+        }
         $removeAvatar = $input['remove_avatar']??false;
         if($removeAvatar){
             $id = $user->id;

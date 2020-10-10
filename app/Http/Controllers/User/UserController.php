@@ -72,7 +72,7 @@ class UserController extends Controller
         }
         $input = $request->all();
         $name = $input['name']??null;
-        if($name){
+        if($name && $name != $user->name){
             $userName=User::where('name',$name)->first();
             if($userName){
                 return response()->json(["message"=>"Username is already taken!!"],404);

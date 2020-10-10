@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 //Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
+//Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 //for forgetting the password page (to be changed in the front end)
 //Route::view('/reset_password', 'auth.reset_password')->name('password.reset');
 
@@ -37,8 +37,3 @@ Route::get('/reset_password', function () {
 })->name('login');*/
 
 
-
-Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
-Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
-Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
-Route::apiResource('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPosts');

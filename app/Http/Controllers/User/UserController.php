@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
         return response()->json($user,200);
     }
@@ -67,7 +67,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
         $input = $request->all();
         $removeAvatar = $input['remove_avatar']??false;

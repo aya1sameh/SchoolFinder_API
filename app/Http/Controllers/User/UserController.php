@@ -54,7 +54,7 @@ class UserController extends Controller
         if(is_null($user)){
             return response()->json(["message"=>"User not Found!!"],404);
         }
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**
@@ -71,10 +71,10 @@ class UserController extends Controller
             return response()->json(["message"=>"User not Found!!"],404);
         }
         $input = $request->all();
-        $name = $input['remove_avatar']??null;
+        $name = $input['name']??null;
         if($name){
-            $user=User::where('name',$name)->first();
-            if($user){
+            $userName=User::where('name',$name)->first();
+            if($userName){
                 return response()->json(["message"=>"Username is already taken!!"],404);
             }
         }

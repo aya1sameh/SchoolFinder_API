@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use App\Models\School;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -106,7 +107,7 @@ class UserController extends Controller
             $user->update($input);
         }
         $user->save();
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**

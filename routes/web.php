@@ -15,22 +15,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('verified');
+});
 
-Auth::routes(['verify' => true]);
+//Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
+//Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 //for forgetting the password page (to be changed in the front end)
-Route::view('forgot_password', 'auth.reset_password')->name('password.reset');
+//Route::view('/reset_password', 'auth.reset_password')->name('password.reset');
+
+Route::get('/reset_password', function () {
+    $request = request();
+    $email= $request->email;
+    $token= $request->token;
+    $url = 'http://192.168.1.12:8081/reset_password?token='.$token.'&email='.$email;
+    return redirect($url,302,['email'=>$email,'token'=>$token]);
+})->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 
 Route::get('/login', function () {
-    return view('notlogin');
+    $url = 'http://192.168.1.12:8081/login';
+    return redirect($url);
 })->name('login');
 
 
-
-Route::apiResource('/schools/{school_id}/CommunityPosts', 'Posts\CommunityPostsController');
-Route::post('/schools/{school_id}/CommunityPosts/update/{post_id}', 'Posts\CommunityPostsController@update');
-Route::apiResource('/schools/{school_id}/Reviews', 'reviews\ReviewsController');
-Route::apiResource('/schools/{id}/CommunityPosts/{pid}/CommentsOnPosts', 'Posts\CommentsOnPosts');

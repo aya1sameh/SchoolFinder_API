@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use App\Models\School;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -51,9 +52,9 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**
@@ -67,9 +68,16 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
         $input = $request->all();
+        $name = $input['name']??null;
+        if($name && $name != $user->name){
+            $userName=User::where('name',$name)->first();
+            if($userName){
+                return response()->json(["message"=>"Username is already taken!!"],404);
+            }
+        }
         $removeAvatar = $input['remove_avatar']??false;
         if($removeAvatar){
             $id = $user->id;
@@ -106,7 +114,7 @@ class UserController extends Controller
             $user->update($input);
         }
         $user->save();
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**

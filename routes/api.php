@@ -26,11 +26,11 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::post('password/reset', 'ForgetPasswordController@reset');
 
     /*School Routes*/
-    Route::apiResource('/schools','School\schoolController')->parameters(['schools' => 'id',]);
-    Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
-    Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
-    Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
-    Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
+    Route::apiResource('/schools','School\SchoolController')->parameters(['schools' => 'id',]);
+    Route::post('/schools/{id}/facilities','School\SchoolController@addSchoolFacility');
+    Route::post('/schools/{id}/images','School\SchoolController@uploadSchoolImage');
+    Route::delete('/schools/{id}/facilities','School\SchoolController@deleteSchoolFacility');
+    Route::delete('/schools/{id}/images','School\SchoolController@deleteSchoolImage');
 
     /*Search and filter */
     Route::post('/schools/filter', 'Search\SearchController@filter');

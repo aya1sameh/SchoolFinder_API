@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use App\Models\User;
 use Validator;
 
 /*Used Models and Resources*/
+use App\Models\User;
+use App\Http\Resources\Models\School as SchoolResource;
 use App\Models\School;
 
 class SearchController extends Controller
@@ -17,9 +18,10 @@ class SearchController extends Controller
     public function searchSchool(Request $request)
     {
         $name = $request->get('name');
-        $school_info = School::where('name', 'like', "%{$name}%")
+        $school_info = SchoolResource::collection(School::where('name', 'like', "%{$name}%")
                         ->orderBy('rating','desc')
-                        ->paginate(10);
+                        ->paginate(10));
+       
 
         return response()->json($school_info,200);
     }
@@ -127,6 +129,6 @@ class SearchController extends Controller
                 ->orderBy('rating','desc')
                 ->paginate(10);  
          } 
-        return Response()->json($Filtered, 200);
+        return Response()->json(SchoolResource::collection($Filtered), 200);
     }
 }

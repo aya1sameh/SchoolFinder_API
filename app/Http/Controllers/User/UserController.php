@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
 use App\Models\School;
+use App\Http\Resources\Models\School as SchoolResource;
 use Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -148,7 +149,7 @@ class UserController extends Controller
             return response()->json(["message"=>"Unauthorized"],401);
         }
         $favorites_ids = $user->favorites;
-        $favorites = School::find($favorites_ids);
+        $favorites = SchoolResource::collection(School::find($favorites_ids));
         return response()->json($favorites,200);              
     }
 

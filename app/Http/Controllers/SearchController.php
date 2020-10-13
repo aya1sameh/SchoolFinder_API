@@ -34,121 +34,99 @@ class SearchController extends Controller
         $FilteredIDS = array();
 
         if(!is_null($maxfees)) {
+            $Filtered = DB::table('schools')
+                        ->where('fees', '<', (int)$maxfees)
+                        ->orderBy('rating','desc')
+                        ->paginate(10);
+            if(count($Filtered) < 1)
+                return response()->json(["message"=>"No school found"],404);
+            foreach($Filtered as $filtaraya){
+                array_push($FilteredIDS,$filtaraya->id); 
+            } 
+       }
+        
+       if(!is_null($language)){
             if(!$FilteredIDS){
                 $Filtered = DB::table('schools')
-                            ->where('fees', '<', (int)$maxfees)
+                            ->where('language', (string)$language)
                             ->orderBy('rating','desc')
                             ->paginate(10);
-                foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
+            }else{
+                $Filtered = DB::table('schools')
+                                ->where('language', (string)$language)
+                                ->whereIn('id', $FilteredIDS)
+                                ->orderBy('rating','desc')
+                                ->paginate(10);  
                 }
-            }
+            if(count($Filtered) < 1)
+                return response()->json(["message"=>"No school found"],404);
+            $FilteredIDS=array();
+            foreach($Filtered as $filtaraya){
+                array_push($FilteredIDS,$filtaraya->id);} 
         }
-        if(!is_null($language)){
-           if(!$FilteredIDS){
-                $Filtered = DB::table('schools')
-                            ->where('language', (string)$language)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-            }else{
-            $Filtered = DB::table('schools')
-                            ->where('language', (string)$language)
-                            ->whereIn('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);  
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-            }   
-        } 
-        if(!is_null($address)){
-           if(!$FilteredIDS){
-                $Filtered = DB::table('schools')
-                            ->where('address', 'like', '%' . $address . '%')
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-            }else{
-            $Filtered = DB::table('schools')
-                            ->where('address', 'like', '%' . $address . '%')
-                            ->whereIn('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-            }   
-        } 
-       
-        if(!is_null($certificate)){
-           if(!$FilteredIDS){
-                $Filtered = DB::table('school_certificates')
-                            ->where('certificate', $certificate )
-                            ->get();
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-                $Filtered = DB::table('schools')
-                            ->where('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-            }else{
-                $Filtered = DB::table('school_certificates')
-                            ->where('certificate', $certificate )
-                            ->whereIn('school_id', $FilteredIDS)
-                            ->get();
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-                $Filtered = DB::table('schools')
-                            ->where('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
 
-            }   
-        }
-        
-        if(!is_null($stage)){
-           if(!$FilteredIDS){
-                $Filtered = DB::table('school_stages')
-                            ->where('stage', $stage )
-                            ->get();
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-                $Filtered = DB::table('schools')
-                            ->where('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-            }else{
-                $Filtered = DB::table('school_stages')
-                            ->where('stage', $stage )
-                            ->whereIn('school_id', $FilteredIDS)
-                            ->get();
-              foreach($Filtered as $filtaraya){
-                    $FilteredIDS=array_merge($FilteredIDS,[$filtaraya->id]);
-                    $FilteredIDS=array_filter($FilteredIDS);
-                }
-                $Filtered = DB::table('schools')
-                            ->where('id', $FilteredIDS)
-                            ->orderBy('rating','desc')
-                            ->paginate(10);
-            }   
-        }
+        if(!is_null($address)){
+            if(!$FilteredIDS){
+                 $Filtered = DB::table('schools')
+                             ->where('address', 'like', '%' . $address . '%')
+                             ->orderBy('rating','desc')
+                             ->paginate(10);
+             }else{
+             $Filtered = DB::table('schools')
+                             ->where('address', 'like', '%' . $address . '%')
+                             ->whereIn('id', $FilteredIDS)
+                             ->orderBy('rating','desc')
+                             ->paginate(10);
+             } 
+            if(count($Filtered) < 1)
+                return response()->json(["message"=>"No school found"],404);
+            $FilteredIDS=array();
+            foreach($Filtered as $filtaraya){
+                array_push($FilteredIDS,$filtaraya->id);} 
+        }  
+        if(!is_null($certificate)){
+            if(!$FilteredIDS){
+                 $Filtered = DB::table('school_certificates')
+                             ->where('certificate', $certificate )
+                             ->get();
+             }else{
+                 $Filtered = DB::table('school_certificates')
+                             ->where('certificate', $certificate )
+                             ->whereIn('school_id', $FilteredIDS)
+                             ->get();
+             } 
+             if(count($Filtered) < 1)
+                return response()->json(["message"=>"No school found"],404);
+            $FilteredIDS=array();
+            foreach($Filtered as $filtaraya){
+                array_push($FilteredIDS,$filtaraya->school_id);} 
+            $Filtered = DB::table('schools')
+                ->where('id', $FilteredIDS)
+                ->orderBy('rating','desc')
+                ->paginate(10); 
+         } 
+         if(!is_null($stage)){
+            if(!$FilteredIDS){
+                 $Filtered = DB::table('school_stages')
+                             ->where('stage', $stage )
+                             ->get();
+             }else{
+                 $Filtered = DB::table('school_stages')
+                             ->where('stage', $stage )
+                             ->whereIn('school_id', $FilteredIDS)
+                             ->get();
+                 
+             }
+             if(count($Filtered) < 1)
+                return response()->json(["message"=>"No school found"],404);
+            $FilteredIDS=array();
+            foreach($Filtered as $filtaraya){
+                array_push($FilteredIDS,$filtaraya->school_id);}  
+            $Filtered = DB::table('schools')
+                ->where('id', $FilteredIDS)
+                ->orderBy('rating','desc')
+                ->paginate(10);  
+         } 
         return Response()->json($Filtered, 200);
     }
-
 }

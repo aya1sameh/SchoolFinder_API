@@ -181,6 +181,7 @@ class UserController extends Controller
         $favorites[(int)$length] = (int)$school_id;
         $user->favorites = $favorites;
         $user->save();
+        sort($favorites);
         return response()->json($favorites,200);              
     }
 
@@ -209,6 +210,7 @@ class UserController extends Controller
                 $favorites = array_values($favorites);        //Re-indexing the array
                 $user->favorites = $favorites;
                 $user->save();
+                sort($favorites);
                 return response()->json($favorites,200); 
             } 
             else

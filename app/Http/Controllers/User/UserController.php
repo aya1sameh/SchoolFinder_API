@@ -206,7 +206,7 @@ class UserController extends Controller
         else{
 
             if(in_array ( $school_id, $favorites , False)){
-                $index = array_search( $school_id,$favorites,true); 
+                $index = array_search( (int)$school_id,$favorites); 
                 unset($favorites[$index]);                    //Delete the item
                 $favorites = array_values($favorites);        //Re-indexing the array
                 $user->favorites = $favorites;

@@ -39,7 +39,7 @@ class SearchController extends Controller
             $Filtered = DB::table('schools')
                         ->where('fees', '<', (int)$maxfees)
                         ->orderBy('rating','desc')
-                        ->paginate(10);
+                        ->get();
             if(count($Filtered) < 1)
                 return response()->json(["message"=>"No school found"],404);
             foreach($Filtered as $filtaraya){
@@ -52,13 +52,13 @@ class SearchController extends Controller
                 $Filtered = DB::table('schools')
                             ->where('language', (string)$language)
                             ->orderBy('rating','desc')
-                            ->paginate(10);
+                            ->get();
             }else{
                 $Filtered = DB::table('schools')
                                 ->where('language', (string)$language)
                                 ->whereIn('id', $FilteredIDS)
                                 ->orderBy('rating','desc')
-                                ->paginate(10);  
+                                ->get();  
                 }
             if(count($Filtered) < 1)
                 return response()->json(["message"=>"No school found"],404);
@@ -72,13 +72,13 @@ class SearchController extends Controller
                  $Filtered = DB::table('schools')
                              ->where('address', 'like', '%' . $address . '%')
                              ->orderBy('rating','desc')
-                             ->paginate(10);
+                             ->get();
              }else{
              $Filtered = DB::table('schools')
                              ->where('address', 'like', '%' . $address . '%')
                              ->whereIn('id', $FilteredIDS)
                              ->orderBy('rating','desc')
-                             ->paginate(10);
+                             ->get();
              } 
             if(count($Filtered) < 1)
                 return response()->json(["message"=>"No school found"],404);
@@ -105,7 +105,7 @@ class SearchController extends Controller
             $Filtered = DB::table('schools')
                 ->where('id', $FilteredIDS)
                 ->orderBy('rating','desc')
-                ->paginate(10); 
+                ->get();
          } 
          if(!is_null($stage)){
             if(!$FilteredIDS){
@@ -127,8 +127,8 @@ class SearchController extends Controller
             $Filtered = DB::table('schools')
                 ->where('id', $FilteredIDS)
                 ->orderBy('rating','desc')
-                ->paginate(10);  
+                ->get();  
          } 
-        return Response()->json(SchoolResource::collection($Filtered), 200);
+        return Response()->json($Filtered, 200);
     }
 }

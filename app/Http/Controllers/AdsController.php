@@ -26,7 +26,7 @@ class AdsController extends Controller
     public function index()
     {
         //retrieve the ads by the latest creation
-        $ads = Ads::orderBy('created_at', 'desc')->paginate(5);
+        $ads = Ads::orderBy('created_at', 'desc')->get();
         return response()->json($ads,200);
     }
 

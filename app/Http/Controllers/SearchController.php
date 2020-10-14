@@ -36,8 +36,8 @@ class SearchController extends Controller
         $FilteredIDS = array();
 
         if(!is_null($maxfees)) {
-            $Filtered = DB::table('schools')
-                        ->where('fees', '<', (int)$maxfees)
+            $Filtered = School::
+                        where('fees', '<', (int)$maxfees)
                         ->orderBy('rating','desc')
                         ->get();
             if(count($Filtered) < 1)
@@ -49,13 +49,13 @@ class SearchController extends Controller
         
        if(!is_null($language)){
             if(!$FilteredIDS){
-                $Filtered = DB::table('schools')
-                            ->where('language', (string)$language)
+                $Filtered = School::
+                            where('language', (string)$language)
                             ->orderBy('rating','desc')
                             ->get();
             }else{
-                $Filtered = DB::table('schools')
-                                ->where('language', (string)$language)
+                $Filtered = School::
+                                where('language', (string)$language)
                                 ->whereIn('id', $FilteredIDS)
                                 ->orderBy('rating','desc')
                                 ->get();  
@@ -69,13 +69,13 @@ class SearchController extends Controller
 
         if(!is_null($address)){
             if(!$FilteredIDS){
-                 $Filtered = DB::table('schools')
-                             ->where('address', 'like', '%' . $address . '%')
+                 $Filtered = School::
+                             where('address', 'like', '%' . $address . '%')
                              ->orderBy('rating','desc')
                              ->get();
              }else{
-             $Filtered = DB::table('schools')
-                             ->where('address', 'like', '%' . $address . '%')
+             $Filtered = School::
+                             where('address', 'like', '%' . $address . '%')
                              ->whereIn('id', $FilteredIDS)
                              ->orderBy('rating','desc')
                              ->get();
@@ -102,8 +102,8 @@ class SearchController extends Controller
             $FilteredIDS=array();
             foreach($Filtered as $filtaraya){
                 array_push($FilteredIDS,$filtaraya->school_id);} 
-            $Filtered = DB::table('schools')
-                ->where('id', $FilteredIDS)
+            $Filtered = School::
+                where('id', $FilteredIDS)
                 ->orderBy('rating','desc')
                 ->get();
          } 
@@ -124,11 +124,11 @@ class SearchController extends Controller
             $FilteredIDS=array();
             foreach($Filtered as $filtaraya){
                 array_push($FilteredIDS,$filtaraya->school_id);}  
-            $Filtered = DB::table('schools')
-                ->where('id', $FilteredIDS)
+            $Filtered = School::
+                where('id', $FilteredIDS)
                 ->orderBy('rating','desc')
                 ->get();  
          } 
-        return Response()->json($Filtered, 200);
+        return Response()->json(SchoolResource::collection($Filtered), 200);
     }
 }

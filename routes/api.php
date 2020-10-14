@@ -77,6 +77,7 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::group(['middleware' => 'auth:api'], function(){
         /*User's Profile Routes */
         Route::get('user','User\UserController@index');//getting all the users
+        Route::get('user/{id}','User\UserController@show');//getting a specific user by id
         Route::get('user/profile','User\UserController@profile');//getting the user's profile 
         Route::post('user','User\UserController@update');//updating the user's profile
         Route::delete('user','User\UserController@destroy');//deleting the user

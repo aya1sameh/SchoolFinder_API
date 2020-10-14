@@ -29,8 +29,13 @@ class CommunityPostsController extends Controller
         if(is_null($school)){
             return response()->json(["message"=>"This school is not found!"],404);
         }
-        $post = CommunityPost::where("school_id",$id)->orderBy('updated_at','desc')->paginate(10);
-           return response()->json($post, 200);
+        $posts = CommunityPost::where("school_id",$id)->orderBy('updated_at','desc')->paginate(10);
+        $users= array();
+        foreach($posts as $post)
+        {   $users =array_merge($users,[User::where('id',$post->user_id)->first()]);
+            $users=array_filter($users);
+        }
+       return response()->json(array('Posts' => $posts,'Users'=> $users));   
         
     }
 

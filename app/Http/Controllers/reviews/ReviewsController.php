@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Models\School;
+use App\Models\User;
 use Validator;
 class ReviewsController extends Controller
 {
@@ -25,7 +26,12 @@ class ReviewsController extends Controller
             return response()->json(["message"=>"This school is not found!"],404);
         }
         $reviews = Review::where("school_id",$id)->orderBy('updated_at','desc')->paginate(10);
-        return response()->json($reviews,200);
+        $users= array();
+        foreach($reviews as $review)
+        {   $users =array_merge($users,[User::where('id',$review->user_id)->first()]);
+            $users=array_filter($users);
+        }
+       return response()->json(array('Review' => $reviews,'Users'=> $users));
     }
 
     /**

@@ -42,7 +42,7 @@ class CommentsOnPostOwner extends Notification
      */
     public function toMail($notifiable)/// postowner
     {  $Post=CommunityPost::where('user_id',$notifiable->id)->first();
-         $url = url('/api/schools/'.$Post->school_id.'/community_posts'.'/'.$Post->id);
+         $url = url('http://192.168.1.12:8081/school/'.$Post->school_id.'/posts'.'/'.$Post->id);
         return (new MailMessage)
                     ->subject('Comments on your post')
                     ->line('Please review your post, Someone commented on your post')

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    private $userImagesDirectory="/imgs/users_avatars";
+    private $userImagesDirectory="\imgs\users_avatars";
     
      /**
      * Display a listing of Users, 10 per page.

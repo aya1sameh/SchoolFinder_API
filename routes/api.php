@@ -46,20 +46,20 @@ Route::group(['middleware' => 'app_key'], function(){
     //TODO::remove user id from endpoint and use token instead->won't use user_id :)
     //add numberofLikes& dislikes to review object->done!
     //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like->done
-    Route::post ('/schools/{school_id}/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@Likes');//add or remove likes on reviews.
-    Route::post ('/schools/{school_id}/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviewsController@Dislikes');//add or remove dislikes on reviews..
+    Route::post ('/schools/{school_id}/reviews/{review_id}/likes', 'reviews\LikesOfReviews@Likes');//add or remove likes on reviews.
+    Route::post ('/schools/{school_id}/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviews@Dislikes');//add or remove dislikes on reviews..
    
      
     /*comments on posts  Routes*/
     //NOTE::YOU CANNOT DELETE OR UPDATE A COMMENT UNLESS IT"S YOURS->done
     
-    Route::apiResource('/schools/{school_id}/community_posts/{post_id}/comments', 'Posts\LikesOfPostsController');
+    Route::apiResource('/schools/{school_id}/community_posts/{post_id}/comments', 'Posts\CommentsOnPosts');
     
 
     /*Likes on posts Routes*/
    
-    Route::get('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@ShowLikes');//show likes.
-    Route::post('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@addOrRemoveLike');//show num of likes on post
+    Route::get('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsr@ShowLikes');//show likes.
+    Route::post('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPosts@addOrRemoveLike');//show num of likes on post
   
     /*Ads Routes*/
     Route::post('/ads/{id}', 'AdsController@update');

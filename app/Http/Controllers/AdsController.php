@@ -26,7 +26,7 @@ class AdsController extends Controller
     public function index()
     {
         //retrieve the ads by the latest creation
-        $ads = Ads::orderBy('created_at', 'desc')->paginate(5);
+        $ads = Ads::orderBy('created_at', 'desc')->get();
         return response()->json($ads,200);
     }
 
@@ -73,7 +73,7 @@ class AdsController extends Controller
     public function show($id)
     {
         $ad = Ads::find($id);
-        if(!$ad) return response()->json(['error'=>'Response not Found'],404);
+        if(!$ad) return response()->json(["message"=>'Response not Found'],404);
         return response()->json($ad,200);
     }
 

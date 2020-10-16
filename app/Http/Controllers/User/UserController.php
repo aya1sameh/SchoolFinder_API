@@ -5,14 +5,16 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use App\Models\School;
+use App\Http\Resources\Models\School as SchoolResource;
 use Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    private $userImagesDirectory="/imgs/users_avatars";
+    private $userImagesDirectory="\imgs\users_avatars";
     
      /**
      * Display a listing of Users, 10 per page.
@@ -51,9 +53,9 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**
@@ -67,9 +69,16 @@ class UserController extends Controller
     {
         $user = $request->user();
         if(is_null($user)){
-            return response()->json(["message"=>"Response not Found!!"],404);
+            return response()->json(["message"=>"User not Found!!"],404);
         }
         $input = $request->all();
+        $name = $input['name']??null;
+        if($name && $name != $user->name){
+            $userName=User::where('name',$name)->first();
+            if($userName){
+                return response()->json(["message"=>"Username is already taken!!"],404);
+            }
+        }
         $removeAvatar = $input['remove_avatar']??false;
         if($removeAvatar){
             $id = $user->id;
@@ -106,7 +115,7 @@ class UserController extends Controller
             $user->update($input);
         }
         $user->save();
-        return response()->json($user,200);
+        return response()->json(new UserResource($user),200);
     }
 
     /**
@@ -140,7 +149,7 @@ class UserController extends Controller
             return response()->json(["message"=>"Unauthorized"],401);
         }
         $favorites_ids = $user->favorites;
-        $favorites = School::find($favorites_ids);
+        $favorites = SchoolResource::collection(School::find($favorites_ids));
         return response()->json($favorites,200);              
     }
 
@@ -173,6 +182,7 @@ class UserController extends Controller
         $favorites[(int)$length] = (int)$school_id;
         $user->favorites = $favorites;
         $user->save();
+        sort($favorites);
         return response()->json($favorites,200);              
     }
 
@@ -196,11 +206,12 @@ class UserController extends Controller
         else{
 
             if(in_array ( $school_id, $favorites , False)){
-                $index = array_search( $school_id,$favorites,true); 
+                $index = array_search( (int)$school_id,$favorites); 
                 unset($favorites[$index]);                    //Delete the item
                 $favorites = array_values($favorites);        //Re-indexing the array
                 $user->favorites = $favorites;
                 $user->save();
+                sort($favorites);
                 return response()->json($favorites,200); 
             } 
             else

@@ -42,14 +42,13 @@ class NewCommunityPostInASchool extends Notification
     public function toMail($notifiable)
     {   
         $School=School::where('admin_id',$notifiable->id)->first();
-        $url = url('/api/schools/'.$School->id.'/community_posts');
+        $url = url('http://192.168.1.12:8081/school/'.$School->id.'/posts');
         return (new MailMessage)
                     ->subject('A new Post in your school page')
                     ->line('Please review the school Community Posts page, Someone created a new post')
                     ->action('View post', url($url))
                     ->line('Thank you for using our application!');
     }
-
     /**
      * Get the array representation of the notification.
      *

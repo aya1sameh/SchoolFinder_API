@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use Validator;
 use Illuminate\Support\Facades\Auth; 
 use Carbon\Carbon;
@@ -38,8 +39,8 @@ class AuthController extends Controller
      * used to login and create token of this specific user
      *  
      *
-     * @bodyParam name 
-     * @bodyParam email required either the email or the name
+     * @bodyParam name either the email or the name
+     * @bodyParam email either the email or the name
      * @bodyParam password required
      * @response 200{
      *  
@@ -47,34 +48,27 @@ class AuthController extends Controller
      *      "token_type": "bearer",
      * }
      * @response 400{
-     *      "error" : "Not Registered"
+     *      "message" : "Not Registered"
      * }
      * @response 401{
-     *      "error" : "Unauthorized"
+     *      "message" : "Unauthorized"
      * }
      * 
      */
     public function login(Request $request)
     {
         $request->validate([
-            'name' => 'string',
-            'email' => 'string',
+            'name' => 'required|string',
             'password' => 'required|string',
         ]);
-        
-        if($request->name != null){
-            $name = $request->name;
-            $user=User::where('name',$name)->first();
-        }
-        else if($request->email != null){
-            $email = $request->email;
-            $name =$email;
-            $user=User::where('email',$email)->first();
-        }
-        else 
-            return response()->json(['error' => 'Either name or email must be written'], 400);
 
-        if(!$user) return response()->json(['error' => 'Not Registered'], 400);
+        $name = $request->name;
+        //if user sent their email 
+        if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
+            $user=User::where('email',$name)->first();
+        //else if they sent their name instead 
+        else $user=User::where('name',$name)->first();
+        if(!$user) return response()->json(["message" => 'Register First Please :DU'], 400);
 
         //if user sent their email 
         if(filter_var($name, FILTER_VALIDATE_EMAIL)) 
@@ -82,10 +76,10 @@ class AuthController extends Controller
         //else if they sent their name instead 
         else $user=Auth::attempt(['name' => $name, 'password' => $request->password]);
         
-        if(!$user) return response()->json(['error' => 'Unauthorized'], 401);
+        if(!$user) return response()->json(["message" => 'Wrong Name/Email or Password!!'], 402);
         
         $user = $request->user();
-        if($user->email_verified_at == null) return response()->json(['error' => 'Unverified'], 401);
+        if($user->email_verified_at == null) return response()->json(["message" => 'Check You mail please for Verification :D'], 401);
         $accessToken=$this->createToken($user);
         
         return response()->json([
@@ -105,18 +99,24 @@ class AuthController extends Controller
      * @bodyParam email required Unique email for each user
      * @bodyParam password required Minimun 8 char
      * @bodyParam password_confirmation required Must be a the same as the password 
-     * @bodyParam role {app_admin or school_admin or school_finder}
-     * @response 200{
-     *      "message": "Successfully created user, just verify it!"
+     * @bodyParam role {school_admin or school_finder}
+     * @bodyParam phone_no {string -> "+201x-xxx-xxxx" Format}
+     * @bodyParam address {string -> "Street - City" Format}
+     * @bodyParam avatar {image}
+     * 
+     * @response 201{
+     *      "message": "Successfully created user, just verify it!",
+     *      "user": User object
      * }
      * if app_admin
-     * @response 200{ 
+     * @response 201{ 
      *      "message": "Successfully created user!",
      *      "access_token": "YOUR TOKEN HERE",
-     *      "token_type": "Bearer"
+     *      "token_type": "Bearer",
+     *      "user": User object
      * }
      * @response 401{
-     *      "error" : 'A Specific Error will be displayed here acc. to what is missing'
+     *      "message" : 'A Specific Error will be displayed here acc. to what is missing'
      * }
      * 
      */
@@ -126,13 +126,15 @@ class AuthController extends Controller
         $rules = [
             'email' => 'required|string|email|unique:users', 
             'password' => 'required|string|min:8|confirmed', 
-            'name' =>'required|string|unique:users',
-            'role' =>'string',
+            'name' =>'required|string|min:3|max:64|unique:users',
+            'role' =>'sometimes|string',
             'avatar' =>'image',
+            // 'phone_no' =>'string',
+            // 'address' =>'string',
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) 
-            return response()->json(['error'=>$validator->errors()], 400); //bad request    
+            return response()->json(["message"=>$validator->errors()], 400); //bad request    
         
         $input = $request->all(); 
         $input['password'] = Hash::make($input['password']); 
@@ -155,15 +157,20 @@ class AuthController extends Controller
             $user->email_verified_at = Carbon::now();
             $user->save();
             $accessToken=$this->createToken($user);
-            return response()->json([
+            $response = [
                 'message' => 'Successfully created user!',
                 'access_token' => $accessToken,
                 'token_type' => 'Bearer',
-            ]);
+                'user'=>new UserResource($user),
+            ];
+            return response()->json(
+                $response
+                ,201
+            );
         }
         else{ //else send email verification message
             $user->notify(new RegisterMailActivate($user));
-            return response()->json(['message' => 'Successfully created user, just verify it!'], 201);
+            return response()->json(['message' => 'Successfully created your account, just verify it at your email !','user'=>new UserResource($user),], 201);
         } 
     }
 
@@ -171,7 +178,7 @@ class AuthController extends Controller
      * Verify the Account by sending an email
      * @group  authentication system
      * 
-     * A "Thanks" View will be shown after the verification complete.
+     * It will be redirected to the "Login Page" after the verification complete.
      */
     public function registerActivate($token)
     {
@@ -183,7 +190,8 @@ class AuthController extends Controller
         }
         $user->email_verified_at = Carbon::now();
         $user->save();
-        return view('thanks');
+        $url = 'http://192.168.1.12:8081';
+        return redirect($url);
     }
 
      /**

@@ -91,7 +91,7 @@ class SchoolController extends Controller
     public function index()
     {
         /*Orders schools accroding to both rating and number of users who rated*/
-        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderByRaw('10*rating * rated_by DESC')->paginate(10));
+        $schoolList= SchoolResource::collection(School::where("is_approved",true)->orderByRaw('10 * rating * rated_by DESC')->paginate(10));
         return response()->json($schoolList,200);
     }
 

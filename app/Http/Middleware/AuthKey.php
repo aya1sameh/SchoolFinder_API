@@ -29,7 +29,7 @@ class AuthKey
                     return $next($request);
                 }
             }
-            return response()->json(['error'=>'App Key is not correct'],401);
+            return response()->json(["message"=>'App Key is not correct'],401);
         }
         return $next($request);
     }

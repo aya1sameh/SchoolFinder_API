@@ -25,11 +25,11 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::post('password/reset', 'ForgetPasswordController@reset');
 
     /*School Routes*/
-    Route::apiResource('/schools','School\schoolController')->parameters(['schools' => 'id',]);
-    Route::post('/schools/{id}/facilities','School\schoolController@addSchoolFacility');
-    Route::post('/schools/{id}/images','School\schoolController@uploadSchoolImage');
-    Route::delete('/schools/{id}/facilities','School\schoolController@deleteSchoolFacility');
-    Route::delete('/schools/{id}/images','School\schoolController@deleteSchoolImage');
+    Route::apiResource('/schools','School\SchoolController')->parameters(['schools' => 'id',]);
+    Route::post('/schools/{id}/facilities','School\SchoolController@addSchoolFacility');
+    Route::post('/schools/{id}/images','School\SchoolController@uploadSchoolImage');
+    Route::delete('/schools/{id}/facilities','School\SchoolController@deleteSchoolFacility');
+    Route::delete('/schools/{id}/images','School\SchoolController@deleteSchoolImage');
 
     /*Search and filter */
     Route::post('/schools/filter', 'School\SchoolController@Filter');
@@ -68,6 +68,7 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::group(['middleware' => 'auth:api'], function(){
         /*User's Profile Routes */
         Route::get('user','User\UserController@index');//getting all the users
+        
         Route::get('user/profile','User\UserController@profile');//getting the user's profile 
         Route::post('user','User\UserController@update');//updating the user's profile
         Route::delete('user','User\UserController@destroy');//deleting the user
@@ -76,7 +77,7 @@ Route::group(['middleware' => 'app_key'], function(){
         Route::post('user/favorites', 'User\UserController@getFavorites');
         Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
         Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
-
+        Route::get('user/{id}','User\UserController@show');//getting a specific user by id
         //logout
         Route::get('logout', 'AuthController@logout'); 
     });

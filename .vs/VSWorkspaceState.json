@@ -4,12 +4,13 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\app\\Http\\Controllers\\Posts",
     "\\app\\Http\\Controllers\\reviews",
     "\\app\\Http\\Controllers\\School",
     "\\app\\Models",
     "\\config",
-    "\\database"
+    "\\database",
+    "\\routes"
   ],
+  "SelectedNode": "\\routes\\api.php",
   "PreviewInSolutionExplorer": false
 }

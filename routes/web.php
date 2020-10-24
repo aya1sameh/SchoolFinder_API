@@ -27,13 +27,13 @@ Route::get('/reset_password', function () {
     $request = request();
     $email= $request->email;
     $token= $request->token;
-    $url = 'http://192.168.1.12:8081/reset_password?token='.$token.'&email='.$email;
+    $url = 'http://192.168.1.15:8081/reset_password?token='.$token.'&email='.$email;
     return redirect($url,302,['email'=>$email,'token'=>$token]);
 })->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 
 Route::get('/login', function () {
-    $url = 'http://192.168.1.12:8081/login';
+    $url = 'http://192.168.1.15:8081/';
     return redirect($url);
 })->name('login');
 

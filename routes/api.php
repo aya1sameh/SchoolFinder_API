@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//For mail verification
 Route::get('register/activate/{token}', 'AuthController@registerActivate');
 
 Route::group(['middleware' => 'app_key'], function(){
@@ -33,9 +32,8 @@ Route::group(['middleware' => 'app_key'], function(){
     Route::delete('/schools/{id}/images','School\SchoolController@deleteSchoolImage');
 
     /*Search and filter */
-    Route::post('/schools/filter', 'Search\SearchController@filter');
-    Route::post('/schools/search', 'Search\SearchController@searchSchool');
-    
+    Route::post('/schools/filter', 'School\SchoolController@Filter');
+    Route::post('/schools/search', 'School\SchoolController@searchSchool');
 
     /*CommunityPosts Routes*/
     Route::post('/schools/{school_id}/community_posts/{post_id}', 'Posts\CommunityPostsController@update');
@@ -45,31 +43,24 @@ Route::group(['middleware' => 'app_key'], function(){
     /*Review Routes*/
     Route::apiResource('/schools/{school_id}/reviews', 'reviews\ReviewsController');
 
-    //TODO::remove user id from endpoint and use token instead
-    //add numberofLikes& dislikes to review object
-    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like
-    Route::post('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@addLikes');//add like.
-    Route::delete('/reviews/{review_id}/likes', 'reviews\LikesOfReviewsController@removeLikes');//remove like.
-
-    Route::post('/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviewsController@addDislikes');//add dislike.
-    Route::delete('/reviews/{review_id}/dislikes', 'reviews\LikesOfReviewsController@removeDislikes');// remove dislike.
+    //TODO::remove user id from endpoint and use token instead->won't use user_id :)
+    //add numberofLikes& dislikes to review object->done!
+    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like->done
+    Route::post ('/schools/{school_id}/reviews/{review_id}/likes', 'reviews\LikesOfReviews@Likes');//add or remove likes on reviews.
+    Route::post ('/schools/{school_id}/reviews/{review_id}/dislikes', 'reviews\DislikesOfReviews@Dislikes');//add or remove dislikes on reviews..
+   
      
-
     /*comments on posts  Routes*/
-    //NOTE::YOU CANNOT DELETE OR UPDATE A COMMENT UNLESS IT"S YOURS
-    //TODO::API resource
-    Route::get('/community_posts/{post_id}/comments', 'Posts\LikesOfPostsController@index');//show comments on post.
-    Route::put('/community_posts/{post_id}/comments/{comment_id}', 'Posts\CommentsOnPostsController@update');//update comment.
-    Route::post('/community_posts/{post_id}/comments', 'Posts\CommentsOnPostsController@store');//store new comment.
-    Route::delete('/community_posts/{post_id}/comments/{comment_id}', 'Posts\LikesOfPostsController@destroy');//delete comment.
+    //NOTE::YOU CANNOT DELETE OR UPDATE A COMMENT UNLESS IT"S YOURS->done
+    
+    Route::apiResource('/schools/{school_id}/community_posts/{post_id}/comments', 'Posts\CommentsOnPosts');
+    
 
     /*Likes on posts Routes*/
-    //TODO:: show users instead of number of likes + Number of likes is an attribute in the post
-    //delete: post_id={post_id} && user_id={request->user->id} to avoid a user deleting another user's like
-    Route::get('community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@numOfLikes');//show num of likes on post
-    Route::post('community_posts/{post_id}/likes',  'Posts\LikesOfPostsController@addLike');//add  like.
-    Route::delete('community_posts/{post_id}/likes', 'Posts\LikesOfPostsController@removeLike');//remove like.
-
+   
+    Route::get('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPostsr@ShowLikes');//show likes.
+    Route::post('/schools/{school_id}/community_posts/{post_id}/likes', 'Posts\LikesOfPosts@addOrRemoveLike');//show num of likes on post
+  
     /*Ads Routes*/
     Route::post('/ads/{id}', 'AdsController@update');
     Route::apiResource('/ads', 'AdsController');
@@ -83,7 +74,7 @@ Route::group(['middleware' => 'app_key'], function(){
         Route::delete('user','User\UserController@destroy');//deleting the user
 
         /*favourite schools Routes*/
-        Route::get('user/favorites', 'User\UserController@getFavorites');
+        Route::post('user/favorites', 'User\UserController@getFavorites');
         Route::post('user/favorites/{school_id}/add', 'User\UserController@AddFavorites');
         Route::post('user/favorites/{school_id}/remove', 'User\UserController@RemoveFavorites');
         Route::get('user/{id}','User\UserController@show');//getting a specific user by id

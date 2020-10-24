@@ -235,5 +235,8 @@ class CommunityPostsController extends Controller
     } 
         
     
-    
-}
+  
+
+
+      }
+

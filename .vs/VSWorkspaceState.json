@@ -4,13 +4,13 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\app\\Http\\Controllers\\School",
+    "\\app\\Http\\Controllers\\Posts",
+    "\\app\\Http\\Controllers\\reviews",
     "\\app\\Models",
     "\\config",
     "\\database",
-    "\\database\\factories",
-    "\\database\\seeds"
+    "\\routes"
   ],
-  "SelectedNode": "\\database\\factories\\ReviewFactory.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\reviews\\ReviewsController.php",
   "PreviewInSolutionExplorer": false
 }

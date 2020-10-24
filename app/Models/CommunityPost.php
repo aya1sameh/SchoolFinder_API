@@ -14,6 +14,7 @@ class CommunityPost extends Model
             "user_id",
             "school_id",
             'CommunityPostImages',
+            'num_of_likes',
 
     ];
     protected $casts = [

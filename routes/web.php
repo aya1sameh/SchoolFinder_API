@@ -32,7 +32,7 @@ Route::get('/reset_password', function () {
 })->name('password.reset');
 
 //here i changed the login page that is redirected by the auth package.. 
-Route::get('/login', function () {
+Route::get('/', function () {
     $url = 'http://192.168.1.15:8081/';
     return redirect($url);
 })->name('login');

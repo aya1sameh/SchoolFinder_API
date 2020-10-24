@@ -20,6 +20,8 @@ class Review extends Model
         "id",
         'created_at',
         'updated_at',
+        'num_of_likes',
+        'num_of_dislikes',
     ];
     public function users()
     {
